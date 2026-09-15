@@ -1,0 +1,8 @@
+html, body { height: 100%; margin: 0; background: #fff; color: #202124; }
+#editor { height: 100%; }
+.toastui-editor-defaultUI { border: 0; }
+.toastui-editor-contents { font-family: system-ui, sans-serif; font-size: 16px; }
+.toastui-editor-ww-container .toastui-editor-contents { padding: 24px; }
+.toastui-editor-toolbar { padding: 0 8px; }
+/* Les images dans les notes ne sont pas chargées. Les icônes sont des fonds data: locaux. */
+.toastui-editor-contents img { display: none; }
