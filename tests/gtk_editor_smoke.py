@@ -44,12 +44,33 @@ with tempfile.TemporaryDirectory(prefix='notes-v2-test-') as data:
     with patch.object(Window, 'initial_unlock', return_value=False), patch.object(Window, 'refresh'):
         win = Window(app)
         win.present()
+        assert win.header.get_title_widget() is not None
+        assert win.header_logo.get_paintable() is not None
+        expected_actions = (
+            (win.new_button, 'document-new-symbolic', 'Nouvelle note'),
+            (win.refresh_button, 'view-refresh-symbolic', 'Actualiser'),
+            (win.publish_button, 'mail-send-symbolic', 'Publier'),
+            (win.delete_button, 'edit-delete-symbolic', 'Supprimer'),
+            (win.pdf_button, 'document-save-as-symbolic', 'Exporter en PDF'),
+            (win.settings_button, 'preferences-system-symbolic', 'Compte et relais'),
+        )
+        for action, icon_name, tooltip in expected_actions:
+            assert action.get_icon_name() == icon_name
+            assert action.get_tooltip_text() == tooltip
         win.login(Identity('0' * 63 + '1'))
         editor = win.editor
         wait_for(lambda: editor.ready or editor.failed)
         assert editor.ready, editor.notice.get_text()
         wait_for(lambda: not editor.pending_document)
         assert editor.visual_active
+        # Un clic pendant le chargement affiche un avertissement temporaire,
+        # qui doit disparaître dès que le document visuel est prêt.
+        editor.set_text('# Synchronisation temporaire')
+        assert editor.pending_document
+        editor.flush(lambda: None)
+        assert editor.notice.get_text().startswith('Synchronisation en cours')
+        wait_for(lambda: not editor.pending_document)
+        assert editor.notice.get_text().startswith('Le mode visuel peut normaliser')
         samples = ['# Titre\n\nCafé **gras** et *italique*.\n',
                    'Un lien [local](https://example.org).\n\n- un\n- deux\n',
                    '```python\nprint("bonjour")\n```\n\n> Une citation\n',

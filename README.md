@@ -1,9 +1,37 @@
-# Notes privées Nostr — V3.1 Linux
+# Notes privées Nostr — V3.4 Linux
 
-Documentation mise à jour le 15 septembre 2026. Version du paquet Python : `0.3.1`.
+Documentation mise à jour le 17 septembre 2026. Version du paquet Python : `0.3.4`.
 
 Application Python 3 + GTK4/libadwaita pour lire et éditer des notes Markdown privées
 au format des **documents personnels Pages by Formstr**. Interface en français.
+
+## Nouveauté V3.4 : barre d’actions compacte
+
+Les actions principales utilisent des icônes dans la barre supérieure : nouvelle
+note, actualisation, publication, suppression, export PDF, compte et relais. Le nom
+complet de chaque action apparaît au survol de l’icône. Il est aussi fourni aux
+outils d’accessibilité et aux lecteurs d’écran.
+
+## Nouveauté V3.3 : identité visuelle
+
+Le logo Notestr apparaît à côté du titre dans la barre supérieure et en plus grand
+sur les fenêtres de création, de saisie et de modification du mot de passe. Il est
+également déclaré comme icône de la fenêtre pour le sélecteur d’applications et la
+barre des tâches lorsque l’environnement de bureau prend cette indication en charge.
+L’image est embarquée dans l’application et ne nécessite aucune connexion réseau.
+
+## Nouveauté V3.2 : export PDF
+
+Le bouton **Exporter PDF** enregistre la note actuellement affichée dans un fichier
+PDF. L’application propose un nom tiré du premier titre ou de la première ligne,
+puis demande l’emplacement du fichier. Le document est produit directement et
+localement au format A4 avec WeasyPrint, sans passer par le système d’impression.
+Aucune note n’est envoyée vers un service externe.
+
+L’export fonctionne aussi depuis le mode Markdown : le texte courant est d’abord
+synchronisé avant la génération. Les images et pièces jointes ne sont pas exportées
+dans cette version. Le fichier est d’abord créé sous un nom temporaire privé, puis
+remplace atomiquement la destination uniquement après validation du PDF.
 
 ## Nouveauté V3 : verrouillage au démarrage
 
@@ -197,6 +225,8 @@ personnelle de la clé privée indépendamment du projet.
    fournit le titre de la liste ; aucun titre séparé n’est envoyé au relais.
 6. Modifier puis **Publier** conserve exactement le même tag `d`.
 7. **Supprimer** demande confirmation et publie une demande NIP-09.
+8. **Exporter PDF** choisit un emplacement local et crée une copie PDF de la note
+   actuellement affichée, sans la publier ni modifier son contenu.
 
 L’éditeur permet de choisir entre la mise en forme visuelle et le Markdown source. Les changements non publiés
 sont signalés dans le titre de fenêtre. Changer de note, actualiser, changer de

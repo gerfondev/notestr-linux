@@ -19,6 +19,9 @@ EDITOR_URI = "notes-editor://app/index.html"
 MIME = {"purify.min.js": "application/javascript", "index.html": "text/html", "editor.js": "application/javascript",
         "toastui-editor.js": "application/javascript", "fr-fr.js": "application/javascript",
         "editor.css": "text/css", "toastui-editor.css": "text/css"}
+VISUAL_NOTICE = ("Le mode visuel peut normaliser le Markdown modifié. "
+                 "Pour les syntaxes spéciales ou le HTML, utiliser Markdown.")
+SYNC_NOTICE = "Synchronisation en cours ; réessayer dans un instant."
 
 
 class MarkdownEditor(Gtk.Box):
@@ -196,6 +199,8 @@ class MarkdownEditor(Gtk.Box):
                 return
             self.pending_document = False
             self.web.set_sensitive(True)
+            if result is not None and self.visual_active:
+                self.notice.set_text(VISUAL_NOTICE)
             if result is not None and callback:
                 callback()
         self._evaluate("window.notesEditor.setDocument(" + json.dumps(self.markdown) + "," + str(revision) + ")", loaded)
@@ -203,7 +208,7 @@ class MarkdownEditor(Gtk.Box):
     def flush(self, callback):
         """Barrière avant publier/quitter : recevoir les toutes dernières frappes JS."""
         if self.switching or self.pending_document:
-            self.notice.set_text("Synchronisation en cours ; réessayer dans un instant.")
+            self.notice.set_text(SYNC_NOTICE)
             return
         if not self.visual_active or not self.ready:
             callback()
@@ -232,7 +237,7 @@ class MarkdownEditor(Gtk.Box):
             self.visual_active = True
             self.visual_button.set_active(True)
             self.stack.set_visible_child_name("visual")
-            self.notice.set_text("Le mode visuel peut normaliser le Markdown modifié. Pour les syntaxes spéciales ou le HTML, utiliser Markdown.")
+            self.notice.set_text(VISUAL_NOTICE)
             self._load_visual()
         else:
             def done():

@@ -4,10 +4,10 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "nostr-private-notes"
-version = "0.3.1"
+version = "0.3.4"
 description = "Notes privées Nostr pour Linux, compatibles avec les documents personnels Pages"
 requires-python = ">=3.10"
-dependencies = ["monstr==0.1.9", "websockets>=14,<18", "keyring>=24,<26", "markdown-it-py>=3,<5", "argon2-cffi>=23,<26"]
+dependencies = ["monstr==0.1.9", "websockets>=14,<18", "keyring>=24,<26", "markdown-it-py>=3,<5", "argon2-cffi>=23,<26", "weasyprint>=70,<71"]
 
 [project.optional-dependencies]
 test = ["pytest>=8,<10"]

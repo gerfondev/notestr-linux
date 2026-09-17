@@ -1,21 +1,43 @@
 """Interface GTK4/libadwaita. Réseau et crypto hors du thread graphique."""
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
+import re
 import gi
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
-from gi.repository import Adw, GLib, Gtk
+from gi.repository import Adw, Gio, GLib, Gtk
 
 from .core import Identity, Note, valid_event
 from .editor import MarkdownEditor
 from .lock import PasswordLock
+from .pdf_export import export_markdown_pdf
 from .relay import across, publish_one, query_one
 from .storage import Storage, load_secret, save_secret, relays_from_text
 
 
-def button(label, callback):
-    widget = Gtk.Button(label=label)
+ASSETS = Path(__file__).with_name("assets")
+APP_ICON_NAME = "fr.decentralia.NostrNotes"
+LOGO = ASSETS / f"{APP_ICON_NAME}.png"
+
+
+def logo_picture(size):
+    """Create a consistently scaled Notestr logo without altering its aspect ratio."""
+    picture = Gtk.Picture.new_for_filename(str(LOGO))
+    picture.set_content_fit(Gtk.ContentFit.CONTAIN)
+    picture.set_can_shrink(True)
+    picture.set_keep_aspect_ratio(True)
+    picture.set_size_request(size, size)
+    picture.set_alternative_text("Logo Notestr")
+    return picture
+
+
+def button(label, callback, icon_name=None):
+    widget = Gtk.Button(icon_name=icon_name) if icon_name else Gtk.Button(label=label)
+    if icon_name:
+        widget.set_tooltip_text(label)
+        widget.update_property([Gtk.AccessibleProperty.LABEL], [label])
     widget.connect("clicked", lambda _: callback())
     return widget
 
@@ -23,6 +45,8 @@ def button(label, callback):
 class Window(Adw.ApplicationWindow):
     def __init__(self, app):
         super().__init__(application=app, title="Notes privées Nostr", default_width=1000, default_height=700)
+        Gtk.IconTheme.get_for_display(self.get_display()).add_search_path(str(ASSETS))
+        self.set_icon_name(APP_ICON_NAME)
         self.pool = ThreadPoolExecutor(max_workers=1)
         self.identity = None
         self.events = {}
@@ -37,17 +61,28 @@ class Window(Adw.ApplicationWindow):
         self.config = self.store.config()
         root = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.set_content(root)
-        header = Adw.HeaderBar()
-        root.append(header)
+        self.header = Adw.HeaderBar()
+        root.append(self.header)
+        title = Gtk.Box(spacing=8, valign=Gtk.Align.CENTER)
+        self.header_logo = logo_picture(30)
+        title.append(self.header_logo)
+        title_label = Gtk.Label(label="Notes privées Nostr")
+        title_label.add_css_class("title")
+        title.append(title_label)
+        self.header.set_title_widget(title)
         self.controls = Gtk.Box(spacing=6)
-        header.pack_start(self.controls)
-        self.controls.append(button("Nouvelle", self.new_note))
-        self.controls.append(button("Actualiser", self.refresh))
-        self.controls.append(button("Publier", self.publish))
-        self.controls.append(button("Supprimer", self.delete))
+        self.header.pack_start(self.controls)
+        self.new_button = button("Nouvelle note", self.new_note, "document-new-symbolic")
+        self.refresh_button = button("Actualiser", self.refresh, "view-refresh-symbolic")
+        self.publish_button = button("Publier", self.publish, "mail-send-symbolic")
+        self.delete_button = button("Supprimer", self.delete, "edit-delete-symbolic")
+        self.pdf_button = button("Exporter en PDF", self.export_pdf, "document-save-as-symbolic")
+        for action in (self.new_button, self.refresh_button, self.publish_button,
+                       self.delete_button, self.pdf_button):
+            self.controls.append(action)
         self.controls.set_sensitive(False)
-        self.settings_button = button("Compte et relais", self.settings)
-        header.pack_end(self.settings_button)
+        self.settings_button = button("Compte et relais", self.settings, "preferences-system-symbolic")
+        self.header.pack_end(self.settings_button)
         paned = Gtk.Paned(orientation=Gtk.Orientation.HORIZONTAL, position=280, vexpand=True)
         root.append(paned)
         sidebar = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8, width_request=220)
@@ -83,6 +118,9 @@ class Window(Adw.ApplicationWindow):
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12,
                       margin_start=24, margin_end=24, margin_top=24, margin_bottom=24)
         dialog.set_child(box)
+        logo = logo_picture(80)
+        logo.set_halign(Gtk.Align.CENTER)
+        box.append(logo)
         return dialog, box
 
     def close_from_password_window(self, dialog):
@@ -358,6 +396,46 @@ class Window(Adw.ApplicationWindow):
         if not self.identity or self.busy:
             return
         self.editor.flush(self.publish_synced)
+
+    def export_pdf(self):
+        if not self.identity or self.busy:
+            return
+        self.editor.flush(self.choose_pdf_destination)
+
+    def choose_pdf_destination(self):
+        first = next((line.strip().lstrip("#").strip() for line in self.text().splitlines()
+                      if line.strip()), "Note Nostr")
+        basename = re.sub(r"[^\w .-]+", "_", first, flags=re.UNICODE).strip(" ._")[:80]
+        chooser = Gtk.FileDialog(title="Exporter la note en PDF")
+        chooser.set_initial_name((basename or "Note Nostr") + ".pdf")
+        filters = Gio.ListStore.new(Gtk.FileFilter)
+        pdf_filter = Gtk.FileFilter(name="Document PDF")
+        pdf_filter.add_mime_type("application/pdf")
+        pdf_filter.add_pattern("*.pdf")
+        filters.append(pdf_filter)
+        chooser.set_filters(filters)
+
+        def selected(dialog, result):
+            try:
+                file = dialog.save_finish(result)
+            except GLib.Error as exc:
+                if exc.matches(Gtk.dialog_error_quark(), Gtk.DialogError.CANCELLED) or \
+                        exc.matches(Gtk.dialog_error_quark(), Gtk.DialogError.DISMISSED):
+                    return
+                self.status.set_text(f"Export PDF impossible : {exc.message}")
+                return
+            path = file.get_path()
+            if not path:
+                self.status.set_text("Choisir un emplacement local pour le fichier PDF.")
+                return
+            destination = Path(path)
+            if destination.suffix.lower() != ".pdf":
+                destination = destination.with_suffix(".pdf")
+            markdown = self.text()
+            self.work(lambda: export_markdown_pdf(markdown, destination),
+                      lambda exported: self.status.set_text(f"PDF exporté : {exported}"))
+
+        chooser.save(self, None, selected)
 
     def publish_synced(self):
         try:

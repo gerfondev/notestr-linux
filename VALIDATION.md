@@ -1,5 +1,37 @@
 # Validation de Notestr
 
+## V3.4 — barre d’actions compacte
+
+- Remplacement des six libellés de la barre supérieure par des icônes symboliques.
+- Infobulle descriptive au survol de chaque action.
+- Nom accessible conservé pour les lecteurs d’écran.
+- Les boutons explicites des fenêtres de mot de passe restent en texte.
+- Test graphique du nom des icônes et de leurs infobulles.
+
+## V3.3 — identité visuelle
+
+- Logo PNG transparent embarqué dans le paquet de l’application.
+- Affichage proportionnel dans la barre supérieure et les fenêtres de mot de passe.
+- Déclaration du logo comme icône de la fenêtre GTK.
+- Contrôle automatisé du format, des dimensions et de la présence de la ressource.
+- Test graphique GTK/WebKit de chargement du logo et de la barre supérieure.
+
+## V3.2 — export PDF
+
+- Ajout du bouton **Exporter PDF** et d’un sélecteur d’emplacement local.
+- Synchronisation des dernières frappes avant export, y compris depuis le mode Markdown.
+- Génération A4 directe par WeasyPrint, sans backend d’impression ni service externe.
+- Écriture temporaire privée et remplacement atomique de la destination validée.
+- Test d’un PDF contenant titre, gras, liste, tableau et bloc de code, avec contrôle
+  de sa structure, de son texte et de son rendu PNG.
+
+## Correctif d’affichage — 17 septembre 2026
+
+- L’avertissement « Synchronisation en cours » est maintenant remplacé par le
+  texte d’aide normal dès que le document est chargé dans l’éditeur visuel.
+- Le test GTK/WebKit reproduit un clic pendant ce chargement et vérifie la
+  disparition automatique de l’avertissement.
+
 ## V3.1 — modification du mot de passe
 
 - 29 tests automatisés réussis, compilation Python et contrôle intégré réussis.
