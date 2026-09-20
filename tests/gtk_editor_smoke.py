@@ -85,6 +85,38 @@ with tempfile.TemporaryDirectory(prefix='notes-v2-test-') as data:
             assert editor.get_text() == sample
             editor.switch_mode(True)
             wait_for(lambda: not editor.pending_document)
+        # Copier doit préserver le texte exact du bloc et le Markdown de la note.
+        sample = '```python\nprint("Café ☕")\n  # espaces\n```\n\n```\nsecond bloc\n```\n'
+        editor.set_text(sample)
+        wait_for(lambda: not editor.pending_document)
+        assert evaluate(editor, "JSON.stringify(document.querySelectorAll('.notes-copy-code').length)") == 2
+        assert evaluate(editor, "JSON.stringify(document.querySelector('.notes-copy-code').textContent)") == 'Copier'
+        for index, expected in enumerate(('print("Café ☕")\n  # espaces', 'second bloc')):
+            evaluate(editor, f"JSON.stringify(document.querySelectorAll('.notes-copy-code')[{index}].click() ?? true)")
+            copied = []
+            clipboard = editor.get_clipboard()
+            clipboard.read_text_async(None, lambda cb, result: copied.append(cb.read_text_finish(result)))
+            wait_for(lambda: bool(copied))
+            assert copied[0] == expected, repr(copied[0])
+            flush(editor)
+            assert editor.get_text() == sample
+        assert evaluate(editor, "JSON.stringify(!document.querySelector('.toastui-editor-ww-code-block-language'))")
+        # L’ajout du bouton ne doit pas empêcher l’édition du code.
+        evaluate(editor, """(() => {
+          const code = document.querySelector('.toastui-editor-ww-code-block code');
+          const range = document.createRange();
+          range.selectNodeContents(code);
+          range.collapse(false);
+          const selection = window.getSelection();
+          selection.removeAllRanges();
+          selection.addRange(range);
+          code.closest('.ProseMirror').focus();
+          document.execCommand('insertText', false, ' ajouté');
+          return window.notesEditor.snapshot();
+        })()""")
+        flush(editor)
+        assert '# espaces ajouté' in editor.get_text()
+        assert 'Copier' not in editor.get_text()
         editor.set_text('# Format\n\n**Texte gras**')
         wait_for(lambda: not editor.pending_document)
         assert evaluate(editor, "JSON.stringify(!!document.querySelector('.toastui-editor-ww-container h1'))")

@@ -2,6 +2,10 @@ import sys
 
 
 def main():
+    if "--version" in sys.argv:
+        from . import __version__
+        print(f"Notestr {__version__}")
+        return 0
     if "--check" in sys.argv:
         from .core import Identity, Note, valid_event
         from . import relay, storage

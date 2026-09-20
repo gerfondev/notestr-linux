@@ -1,3 +1,34 @@
+# Validation V3.5 — 20 septembre 2026
+
+- 34 tests pytest réussis, dont le contrôle de cohérence de la version 3.5.
+- Test graphique GTK4/WebKit réussi dans la session Linux, puis avec Python,
+  GTK4 et WebKit embarqués dans l’AppImage amd64.
+- Bouton « Copier » sur deux blocs, avec et sans langage : presse-papiers
+  vérifié (Unicode, espaces et retours à la ligne), Markdown original conservé.
+- Édition du code après ajout du bouton vérifiée ; le libellé n’entre pas dans
+  le Markdown. Les autres contrôles du test graphique restent réussis.
+- Export PDF exécuté avec les bibliothèques embarquées : fichier PDF valide.
+- Empreinte SHA-256 du paquet final vérifiée.
+- `--check` de l’image : imports, chiffrement, déchiffrement, signatures et
+  disponibilité WebKitGTK 6.0 vérifiés.
+- Construction sur Zorin OS 18.1 amd64, base Ubuntu 24.04. Compatibilité avec
+  d’autres distributions non testée. Exécution après extraction temporaire
+  vérifiée ; montage FUSE non vérifié.
+- Construction du paquet Python `nostr_private_notes-3.5` vérifiée.
+- Audit des 40 fichiers sources candidats et des 3 413 fichiers embarqués :
+  aucun chemin personnel de l’utilisateur détecté. Les quatre correspondances
+  cryptographiques restantes sont des délimiteurs de format ou un exemple public
+  de la documentation tierce, pas des secrets du compte utilisateur.
+- Icônes d’autres applications et autotests cryptographiques tiers exclus ;
+  61 notices de licence des paquets système embarqués conservées.
+- Historique Git existant conservé ; la publication ajoute un commit et des tags
+  sans réécrire les versions précédentes.
+- Aucun accès au compte réel et aucune publication réseau pendant les tests.
+- Deux avertissements MESA relatifs à des formats vidéo Vulkan apparaissent
+  lors des tests graphiques, sans échec du test.
+
+---
+
 # Validation de Notestr
 
 ## V3.4 — barre d’actions compacte

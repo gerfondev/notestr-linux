@@ -30,3 +30,12 @@ Le convertisseur Markdown vers visuel traitait `softbreak` mais ignorait
 `linebreak`. Il traite maintenant les sauts explicites dans les paragraphes
 comme des séparations visuelles, y compris dans les citations et listes.
 Le test graphique contrôle les positions des textes à l’écran après rechargement.
+
+## Adaptation locale de TOAST UI Editor
+
+Le NodeView des blocs de code crée un bouton « Copier » hors du contenu éditable.
+Il émet un événement DOM `notes-copy-code` traité par le pont GTK de l’application.
+Les mutations du bouton sont ignorées par le NodeView ; les modifications du code
+restent observées. Le sélecteur de langage est masqué par `editor.css` ; les
+langages des blocs existants restent conservés dans le Markdown.
+`SHA256SUMS` reflète cette adaptation locale du fichier JavaScript.

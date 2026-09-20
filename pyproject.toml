@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "nostr-private-notes"
-version = "0.3.4"
+dynamic = ["version"]
 description = "Notes privées Nostr pour Linux, compatibles avec les documents personnels Pages"
 requires-python = ">=3.10"
 dependencies = ["monstr==0.1.9", "websockets>=14,<18", "keyring>=24,<26", "markdown-it-py>=3,<5", "argon2-cffi>=23,<26", "weasyprint>=70,<71"]
@@ -24,3 +24,6 @@ pythonpath = ["src"]
 
 [tool.setuptools.package-data]
 nostr_notes = ["assets/*"]
+
+[tool.setuptools.dynamic]
+version = {attr = "nostr_notes.__version__"}

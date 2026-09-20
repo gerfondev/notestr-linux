@@ -25,6 +25,9 @@
     });
     return instance;
   }
+  document.addEventListener('notes-copy-code', (event) => {
+    send({type: 'copyCode', epoch, text: event.detail});
+  });
   editor = createEditor();
   function state() {
     const value = editor.getMarkdown();

@@ -146,6 +146,11 @@ class MarkdownEditor(Gtk.Box):
                 self.ready = True
                 self.visual_button.set_sensitive(True)
                 self.switch_mode(True)
+            elif (message.get("type") == "copyCode" and self.visual_active
+                  and not self.pending_document and message.get("epoch") == self.epoch
+                  and isinstance(message.get("text"), str)):
+                self.get_clipboard().set(message["text"])
+                self.notice.set_text("Code copié dans le presse-papiers.")
             elif message.get("type") == "change" and self.visual_active and not self.pending_document:
                 self._accept(message)
         except (ValueError, TypeError, AttributeError):

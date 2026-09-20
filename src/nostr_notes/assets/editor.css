@@ -6,3 +6,15 @@ html, body { height: 100%; margin: 0; background: #fff; color: #202124; }
 .toastui-editor-toolbar { padding: 0 8px; }
 /* Les images dans les notes ne sont pas chargées. Les icônes sont des fonds data: locaux. */
 .toastui-editor-contents img { display: none; }
+
+/* Remplace le pseudo-bouton de langage fourni par TOAST UI. */
+.toastui-editor-ww-code-block::after { display: none !important; }
+.toastui-editor-ww-code-block { position: relative; }
+.toastui-editor-ww-code-block .notes-copy-code {
+  position: absolute; top: 8px; right: 8px;
+  padding: 4px 10px; border: 1px solid #bbb; border-radius: 5px;
+  background: #fff; color: #202124; cursor: pointer; font: 13px system-ui;
+}
+.toastui-editor-ww-code-block .notes-copy-code:hover { background: #eee; }
+.toastui-editor-ww-code-block .notes-copy-code:focus-visible { outline: 2px solid #3584e4; }
+.toastui-editor-contents .toastui-editor-ww-code-block pre { padding-top: 42px; }

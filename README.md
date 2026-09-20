@@ -1,9 +1,40 @@
-# Notes privées Nostr — V3.4 Linux
+# Notes privées Nostr — V3.5 Linux
 
-Documentation mise à jour le 17 septembre 2026. Version du paquet Python : `0.3.4`.
+Documentation mise à jour le 20 septembre 2026. Version du paquet Python : `3.5`.
 
 Application Python 3 + GTK4/libadwaita pour lire et éditer des notes Markdown privées
 au format des **documents personnels Pages by Formstr**. Interface en français.
+
+## Nouveautés de la version 3.5
+
+- Ajout d’un bouton **Copier** dans les champs **Code Block**.
+- Création d’un fichier **AppImage amd64** pour lancer l’application Linux.
+
+La version **3.5** est désormais commune à la documentation, au paquet Python et
+à l’AppImage. Les anciennes éditions étaient affichées « V3.x » avec une version
+Python « 0.3.x ». Cette harmonisation ne modifie pas l’historique des versions
+sur ngit, ni les sections historiques ci-dessous.
+
+En mode visuel, chaque bloc de code dispose d’un bouton **Copier**, à la place
+du sélecteur de langage « text ». Il copie uniquement le code dans le
+presse-papiers Linux, avec ses espaces et ses retours à la ligne. Le Markdown
+et le langage déjà enregistré sont conservés. Pour modifier le langage d’un bloc,
+utiliser le mode Markdown.
+
+Un AppImage **x86_64 (amd64, Intel et AMD 64 bits)** peut être produit avec
+[les instructions de construction](packaging/README.md). Il embarque Python,
+les dépendances Python, GTK4/libadwaita et WebKitGTK. La construction actuelle
+cible Ubuntu 24.04 / Zorin OS 18 et nécessite glibc 2.39 ou ultérieure ; elle
+ne garantit pas la compatibilité avec les distributions plus anciennes.
+Le trousseau Secret Service et la session graphique restent fournis par le système.
+
+```bash
+chmod +x Notestr-3.5-x86_64.AppImage
+./Notestr-3.5-x86_64.AppImage
+```
+
+Si FUSE est indisponible, utiliser `./Notestr-3.5-x86_64.AppImage --appimage-extract-and-run`.
+Les notes et réglages existants sont réutilisés, comme avec le lancement Python.
 
 ## Nouveauté V3.4 : barre d’actions compacte
 

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Notestr
+Comment=Notes Markdown privées sur Nostr
+Exec=AppRun
+Icon=fr.decentralia.NostrNotes
+Terminal=false
+Categories=Office;Utility;
