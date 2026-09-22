@@ -41,7 +41,7 @@ with tempfile.TemporaryDirectory(prefix='notes-v2-test-') as data:
     os.environ['XDG_DATA_HOME'] = data
     app = Application()
     app.register(None)
-    with patch.object(Window, 'initial_unlock', return_value=False), patch.object(Window, 'refresh'):
+    with patch.object(Window, 'initial_unlock', return_value=False), patch.object(Window, 'do_refresh'):
         win = Window(app)
         win.present()
         assert win.header.get_title_widget() is not None

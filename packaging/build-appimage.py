@@ -2,6 +2,7 @@
 """Build on Ubuntu 24.04 amd64 using an installed project venv and official runtime."""
 import hashlib
 import ast
+import argparse
 import json
 import os
 from pathlib import Path
@@ -15,9 +16,12 @@ import tempfile
 ROOT = Path(__file__).resolve().parents[1]
 if platform.machine() != 'x86_64' or sys.version_info[:2] != (3, 12):
     raise SystemExit('Build requires Linux amd64 and Python 3.12 (Ubuntu 24.04).')
-if len(sys.argv) != 2:
-    raise SystemExit('Usage: python3 packaging/build-appimage.py /path/to/runtime-x86_64')
-runtime = Path(sys.argv[1]).resolve()
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument('runtime', type=Path)
+parser.add_argument('--native-debs', type=Path,
+                    help='Directory of trusted Ubuntu updates downloaded with apt-get download')
+args = parser.parse_args()
+runtime = args.runtime.resolve()
 header = runtime.read_bytes()[:20]
 if header[:4] != b'\x7fELF' or header[8:11] != b'AI\x02' or header[18:20] != b'>\x00':
     raise SystemExit('Expected an official type-2 amd64 AppImage runtime.')
@@ -122,6 +126,23 @@ print(json.dumps(files))
              'libsecret-1.so.0', 'libgdk_pixbuf-2.0.so.0', 'libgthread-2.0.so.0']
     for name in roots:
         copy(lib / name)
+    # Extract verified distribution packages locally, without changing the host.
+    native_updates = {}
+    overlay = Path(work) / 'native-updates'
+    if args.native_debs:
+        debs = sorted(args.native_debs.glob('*.deb'))
+        if not debs:
+            raise SystemExit('No native update packages found.')
+        for deb in debs:
+            package, version, architecture = subprocess.check_output(
+                ['dpkg-deb', '-f', str(deb), 'Package', 'Version', 'Architecture'],
+                text=True).splitlines()
+            package, version, architecture = (value.split(': ', 1)[1]
+                                              for value in (package, version, architecture))
+            if architecture not in ('amd64', 'all'):
+                raise SystemExit('Native update architecture must be amd64 or all.')
+            subprocess.run(['dpkg-deb', '-x', str(deb), str(overlay)], check=True)
+            native_updates[package] = version
     # Keep glibc and the graphics driver stack supplied by the destination OS.
     excluded = re.compile(r'^(ld-linux|lib(c|m|pthread|dl|rt|resolv|nss_[^.]+)\.so)')
     pending = [p for p in app.rglob('*') if p.is_file() and ('.so' in p.name or p.parent.name in ('bin', 'webkitgtk-6.0'))]
@@ -144,14 +165,38 @@ print(json.dumps(files))
     copyrights.mkdir(parents=True)
     packages = set()
     paths = copied_system_paths | {p.removeprefix('/usr') for p in copied_system_paths if p.startswith('/usr/lib/')}
+    paths |= {'/usr' + p for p in copied_system_paths if p.startswith('/lib/')}
     for listing in Path('/var/lib/dpkg/info').glob('*.list'):
         if paths.intersection(listing.read_text().splitlines()):
             packages.add(listing.name.removesuffix('.list').split(':')[0])
     for package in sorted(packages):
-        notice = Path('/usr/share/doc') / package / 'copyright'
+        notice = overlay / 'usr/share/doc' / package / 'copyright'
+        if not notice.is_file():
+            notice = Path('/usr/share/doc') / package / 'copyright'
         if not notice.is_file():
             raise SystemExit(f'Missing copyright notice for {package}')
         shutil.copyfile(notice, copyrights / (package + '.copyright'))
+    # Replace only files already selected for the application, not entire debs.
+    for item in overlay.rglob('*'):
+        relative = item.relative_to(overlay)
+        if relative.parts[0] == 'lib':
+            relative = Path('usr') / relative
+        target = app / relative
+        if item.is_file() and target.is_file():
+            shutil.copy2(item, target)
+    if native_updates.keys() - packages:
+        raise SystemExit('Update packages not bundled: ' + ', '.join(sorted(native_updates.keys() - packages)))
+    versions = {}
+    for package in sorted(packages):
+        installed = subprocess.check_output(
+            ['dpkg-query', '-W', '-f=${binary:Package} ${Version}\n', package], text=True)
+        candidates = dict(line.split() for line in installed.splitlines())
+        versions[package] = native_updates.get(package) or candidates.get(
+            package + ':amd64', candidates.get(package))
+        if not versions[package]:
+            raise SystemExit(f'Cannot determine native version: {package}')
+    (copyrights.parent / 'native-versions.json').write_text(
+        json.dumps(versions, indent=2, sort_keys=True) + '\n')
     copy(ROOT / 'packaging/AppRun', 'AppRun').chmod(0o755)
     copy(ROOT / 'packaging/fr.decentralia.NostrNotes.desktop', 'fr.decentralia.NostrNotes.desktop')
     icon = ROOT / 'src/nostr_notes/assets/fr.decentralia.NostrNotes.png'

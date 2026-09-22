@@ -12,7 +12,7 @@ Depuis la racine du projet :
 ```bash
 curl -fL https://github.com/AppImage/type2-runtime/releases/download/continuous/runtime-x86_64 -o /tmp/notestr-runtime-x86_64
 python3 packaging/build-appimage.py /tmp/notestr-runtime-x86_64
-./dist/Notestr-3.5-x86_64.AppImage --appimage-extract-and-run --check
+./dist/Notestr-3.5.1-x86_64.AppImage --appimage-extract-and-run --check
 ```
 
 Le runtime provient du projet officiel [AppImage/type2-runtime](https://github.com/AppImage/type2-runtime).
@@ -32,7 +32,7 @@ ni sauvegarde. Le bac à sable WebKit reste actif.
 Vérification graphique de l’image produite, dans une session Linux :
 
 ```bash
-python3 packaging/test-appimage.py dist/Notestr-3.5-x86_64.AppImage
+python3 packaging/test-appimage.py dist/Notestr-3.5.1-x86_64.AppImage
 ```
 
 Ce test extrait temporairement l’image et exécute le test GTK/WebKit avec son
@@ -53,3 +53,27 @@ Chaque publication ajoute un nouveau commit et un tag correspondant à la versio
 (par exemple `v3.5`), sans modifier les commits des versions précédentes et sans
 push forcé. Les tags `v3.1` et `v3.4` identifient les publications historiques.
 Le fichier AppImage et son SHA-256 doivent correspondre à cette version.
+
+## Reconstruction 3.5.1 et mises à jour natives
+
+Installer les versions Python validées avant la construction :
+
+```bash
+.venv/bin/python -m pip install -r packaging/requirements-3.5.1.txt
+.venv/bin/python -m pip install -e '.[test]' build
+mkdir -p build/native-updates
+(cd build/native-updates && apt-get download libkrb5-3:amd64 libk5crypto3:amd64 libkrb5support0:amd64 libgssapi-krb5-2:amd64)
+python3 packaging/build-appimage.py /tmp/notestr-runtime-x86_64 --native-debs build/native-updates
+.venv/bin/python packaging/build-python.py
+```
+
+N’utiliser pour `--native-debs` que les paquets officiels récupérés avec APT pour
+la même distribution et la même architecture. La version 3.5.1 utilise Kerberos
+`1.20.1-6ubuntu2.10`. L’option remplace uniquement les fichiers déjà embarqués,
+et ajoute les versions à `usr/share/doc/native-versions.json` dans l’image.
+Les alias `/lib` et `/usr/lib` sont pris en compte pour retrouver les licences.
+Le constructeur Python normalise les propriétaires des archives source afin
+de ne pas publier le nom du compte Linux de construction.
+
+Le runtime AppImage du 22 septembre conserve l’empreinte documentée ci-dessus.
+Les résultats d’audit et leurs limites sont décrits dans [SECURITY.md](../SECURITY.md).

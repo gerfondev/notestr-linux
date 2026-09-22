@@ -1,0 +1,4 @@
+include README.md SECURITY.md VALIDATION.md lancer-notes.sh
+recursive-include packaging *.py *.md *.txt *.desktop AppRun
+recursive-include releases *.md *.json
+recursive-include tests *.py

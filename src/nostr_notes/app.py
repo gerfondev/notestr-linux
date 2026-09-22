@@ -369,7 +369,9 @@ class Window(Adw.ApplicationWindow):
         self.controls.set_sensitive(True)
         self.editor.set_sensitive(True)
         self.status.set_text(f"{len(self.notes)} note(s) en cache · {unreadable} indéchiffrable(s).")
-        self.refresh()
+        # display() vient de réinitialiser le document : aucune saisie à protéger.
+        # Le chargement asynchrone de l’éditeur ne doit pas bloquer la connexion.
+        self.do_refresh()
 
     def refresh(self):
         self.guard(self.do_refresh)

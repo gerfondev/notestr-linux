@@ -1,3 +1,22 @@
+# Validation V3.5.1 — 22 septembre 2026
+
+- 37 tests pytest réussis avec les dépendances mises à jour.
+- Régression reproduite avec l’ancien appel au démarrage : le chargement du
+  document visuel empêchait l’actualisation. Le test passe avec le correctif.
+- Actualisation manuelle : confirmation toujours requise pour abandonner une saisie.
+- Tests GTK/WebKit réussis depuis les sources et depuis l’AppImage 3.5.1.
+- Vérification intégrée des imports, du chiffrement et des signatures réussie.
+- Export PDF embarqué réussi ; aucun accès au compte réel pendant les tests.
+- Audit de 41 dépendances Python : aucune vulnérabilité connue signalée par PyPI.
+- 181 paquets système recensés dans l’image, sans mise à jour candidate en attente.
+- Bibliothèques Kerberos embarquées : `1.20.1-6ubuntu2.10`.
+- Contrôle de confidentialité des sources et des archives ; propriétaires de
+  l’archive source anonymisés. Détails et limites dans [SECURITY.md](SECURITY.md).
+- Les avertissements MESA Vulkan déjà observés en 3.5 ne font pas échouer les tests.
+- Compatibilité vérifiée sur Zorin OS 18.1 amd64 ; montage FUSE non testé.
+
+---
+
 # Validation V3.5 — 20 septembre 2026
 
 - 34 tests pytest réussis, dont le contrôle de cohérence de la version 3.5.

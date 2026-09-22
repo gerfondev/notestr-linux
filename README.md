@@ -1,9 +1,15 @@
-# Notes privées Nostr — V3.5 Linux
+# Notes privées Nostr — V3.5.1 Linux
 
-Documentation mise à jour le 20 septembre 2026. Version du paquet Python : `3.5`.
+Documentation mise à jour le 22 septembre 2026. Version du paquet Python : `3.5.1`.
 
 Application Python 3 + GTK4/libadwaita pour lire et éditer des notes Markdown privées
 au format des **documents personnels Pages by Formstr**. Interface en français.
+
+## Nouveautés de la version 3.5.1
+
+- Actualisation automatique des notes à l’ouverture du compte, même pendant le chargement de l’éditeur visuel.
+- Mise à jour des dépendances Python et des bibliothèques Kerberos embarquées.
+- Audit de sécurité et contrôle des données personnelles avant publication.
 
 ## Nouveautés de la version 3.5
 
@@ -29,11 +35,11 @@ ne garantit pas la compatibilité avec les distributions plus anciennes.
 Le trousseau Secret Service et la session graphique restent fournis par le système.
 
 ```bash
-chmod +x Notestr-3.5-x86_64.AppImage
-./Notestr-3.5-x86_64.AppImage
+chmod +x Notestr-3.5.1-x86_64.AppImage
+./Notestr-3.5.1-x86_64.AppImage
 ```
 
-Si FUSE est indisponible, utiliser `./Notestr-3.5-x86_64.AppImage --appimage-extract-and-run`.
+Si FUSE est indisponible, utiliser `./Notestr-3.5.1-x86_64.AppImage --appimage-extract-and-run`.
 Les notes et réglages existants sont réutilisés, comme avec le lancement Python.
 
 ## Nouveauté V3.4 : barre d’actions compacte
@@ -353,7 +359,7 @@ séparément `33457` et `5`, recouvrent la seconde frontière, puis dédupliquen
 saturations détectées sont signalées ; un relais peut néanmoins omettre des données.
 La récupération n’est donc pas une garantie d’exhaustivité globale.
 
-Les actualisations sont manuelles. Il n’y a pas de fusion de modifications simultanées
+Les notes sont actualisées automatiquement à l’ouverture du compte. Ensuite, les actualisations sont manuelles. Il n’y a pas de fusion de modifications simultanées
 entre clients : actualiser avant de modifier un document aussi utilisé dans Pages.
 Le dernier événement retenu par le relais fait foi. Les relais doivent autoriser
 `33457` et `5`, accepter les connexions sans NIP-42 et les tailles de messages utilisées.
