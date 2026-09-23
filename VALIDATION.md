@@ -1,4 +1,14 @@
-# Validation V3.5.1 — 22 septembre 2026
+# Validation V3.5.2 — 23 septembre 2026
+
+- 41 tests automatisés réussis et contrôle graphique de l’AppImage, incluant
+  le chargement de la version précédente et sa republication simulée.
+- Audit des 41 dépendances Python : aucune vulnérabilité connue signalée.
+- Les 181 paquets natifs ont été comparés aux index Ubuntu/Zorin actualisés :
+  aucune mise à jour supplémentaire en attente pour les versions embarquées.
+- Vérification des sources, de l’image extraite, du wheel et de l’archive source
+  avant publication ; détails et limites dans SECURITY.md.
+
+## Validation historique 3.5.1 — 22 septembre 2026
 
 - 37 tests pytest réussis avec les dépendances mises à jour.
 - Régression reproduite avec l’ancien appel au démarrage : le chargement du
@@ -141,3 +151,19 @@ Les tests existants, notamment les blocs de code et la conservation du source, p
 - La publication du test est interceptée avant envoi : aucun compte utilisateur
   ni relais public n’a été utilisé. Le rendu externe est validé avec markdown-it-py
   CommonMark, sans session interactive dans Pages.
+
+## 3.5.2 — sauvegarde précédente, test local du 23 septembre 2026
+
+- 41 tests pytest réussis, dont rotation du backup chiffré, restauration,
+  suppression, isolation par note et compte, refus du backup et échec partiel.
+- Test GTK/WebKit exécuté avec les bibliothèques de l’AppImage : réussi.
+  Le bouton de restauration charge un brouillon ; sa publication prépare un
+  backup contenant la version remplacée. Les publications sont simulées.
+- Autotest des imports et du chiffrement, puis export PDF embarqué : réussis.
+- AppImage 3.5.2 produite localement avec le runtime précédemment vérifié et
+  les mises à jour natives utilisées pour 3.5.1. Aucune publication GitHub.
+- La compatibilité avec les relais réels reste à vérifier pendant le test
+  utilisateur, notamment leur acceptation des événements kind 30078.
+- Deux envois distincts ne constituent pas une transaction : le backup peut
+  être renouvelé même si l’envoi de la note échoue ensuite. Les modifications
+  simultanées sur plusieurs appareils ne sont pas fusionnées automatiquement.

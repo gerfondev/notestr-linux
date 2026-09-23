@@ -1,19 +1,23 @@
-# Vérification de la version 3.5.1 — 22 septembre 2026
+# Vérification de la version 3.5.2 — 23 septembre 2026
 
 ## Dépendances Python
 
 Les dépendances d’exécution et leurs dépendances indirectes ont été résolues
 avec mise à jour complète dans l’environnement de construction. Les versions
 exactes des 41 distributions sont enregistrées dans
-`packaging/requirements-3.5.1.txt`. Ce fichier décrit la construction Linux
+`packaging/requirements-3.5.2.txt`. Ce fichier décrit la construction Linux
 Python 3.12 ; il ne promet pas la compatibilité avec tous les environnements.
 
 `pip-audit` 2.10.1, service PyPI, ne signale aucune vulnérabilité connue pour ces
 41 versions, sans exclusion d’avis. Le résultat est conservé dans
-`releases/3.5.1-python-audit.json`. Cette vérification ne constitue pas une preuve
+`releases/3.5.2-python-audit.json`. Cette vérification ne constitue pas une preuve
 d’absence de vulnérabilités inconnues.
 
-Principales mises à jour par rapport à l’environnement précédent :
+Les versions restent identiques à celles de 3.5.1 après résolution complète avec
+actualisation des index. Aucun correctif supplémentaire n’est disponible dans
+les versions compatibles consultées. Les correctifs déjà intégrés sont conservés.
+
+Principales mises à jour intégrées depuis les versions antérieures à 3.5.1 :
 
 | Bibliothèque | Avant | Version embarquée |
 | --- | --- | --- |
@@ -27,12 +31,12 @@ Principales mises à jour par rapport à l’environnement précédent :
 
 ## Bibliothèques natives et JavaScript
 
-L’inventaire `releases/3.5.1-native-versions.json` recense les 181 paquets système
+L’inventaire `releases/3.5.2-native-versions.json` recense les 181 paquets système
 dont des fichiers sont présents dans l’AppImage. Les versions embarquées ont
-été comparées aux candidats des index Ubuntu/Zorin actualisés le 22 septembre :
+été comparées aux candidats des index Ubuntu/Zorin actualisés le 23 septembre :
 aucune version embarquée n’est antérieure au candidat disponible.
 
-Les quatre bibliothèques Kerberos passent de `1.20.1-6ubuntu2.8` à
+Les quatre bibliothèques Kerberos conservent la mise à jour de `1.20.1-6ubuntu2.8` à
 `1.20.1-6ubuntu2.10`. Les paquets officiels sont téléchargés par APT, extraits
 localement et appliqués aux seuls fichiers déjà sélectionnés pour l’image.
 Les licences correspondantes sont incluses. Les autres applications du système
@@ -64,7 +68,8 @@ UID/GID 0 ; le système de fichiers AppImage est également construit avec
 `-all-root -no-xattrs`.
 
 Aucune donnée personnelle du compte utilisateur n’a été détectée. Les alertes
-restantes ont été examinées : délimiteurs de formats cryptographiques, clé
+restantes ont été examinées : délimiteurs et blocs cryptographiques intégrés aux bibliothèques amont
+(notamment GnuTLS, dont le fichier correspond à l’empreinte du paquet système), clé
 privée d’exemple déjà publiée dans la documentation amont de monstr, chemins d’exemples ou de construction amont de GTK, monstr et Rust.
 Ces éléments proviennent des bibliothèques distribuées, pas du compte utilisateur.
 Les mentions légales et les noms de contributeurs dans les licences sont conservés.

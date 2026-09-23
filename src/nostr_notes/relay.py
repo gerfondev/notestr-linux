@@ -3,7 +3,7 @@ import asyncio
 import json
 import secrets
 from websockets.asyncio.client import connect
-from .core import valid_event
+from .core import BACKUP_KIND, valid_event
 
 TIMEOUT = 25
 PAGE_SIZE = 1000
@@ -14,7 +14,7 @@ async def query_one(url, pubkey):
         events = {}
         async with connect(url, open_timeout=10, close_timeout=2, max_size=2**20) as ws:
             # Paginer séparément pour ne pas masquer les anciennes suppressions.
-            for kind in (33457, 5):
+            for kind in (33457, 5, BACKUP_KIND):
                 until = None
                 for _ in range(100):
                     sub = secrets.token_hex(8)
@@ -86,3 +86,10 @@ async def across(relays, operation, *args):
     if not good:
         raise ConnectionError("\n".join(errors))
     return good, errors
+
+
+async def publish_update(url, event, backup=None):
+    """Each relay must acknowledge the backup before receiving the update."""
+    if backup is not None:
+        await publish_one(url, backup)
+    return await publish_one(url, event)

@@ -147,7 +147,7 @@ with tempfile.TemporaryDirectory(prefix='notes-v2-test-') as data:
         wait_for(lambda: evaluate(editor, 'JSON.stringify(window.blockedFetch)'))
         assert editor.web.get_network_session().is_ephemeral()
         captured = []
-        with patch.object(win, 'send', side_effect=lambda event, deleting: captured.append(event)):
+        with patch.object(win, 'send', side_effect=lambda event, deleting, backup=None: captured.append(event)):
             win.publish()
             wait_for(lambda: captured)
         notes, failures = win.identity.notes(captured)
@@ -200,7 +200,7 @@ with tempfile.TemporaryDirectory(prefix='notes-v2-test-') as data:
         wait_for(lambda: not editor.visual_active)
         editor.buffer.set_text('Je suis content\nje suis pas content')
         captured = []
-        with patch.object(win, 'send', side_effect=lambda event, deleting: captured.append(event)):
+        with patch.object(win, 'send', side_effect=lambda event, deleting, backup=None: captured.append(event)):
             win.publish()
             wait_for(lambda: captured)
         notes, failures = win.identity.notes(captured)
@@ -216,5 +216,28 @@ with tempfile.TemporaryDirectory(prefix='notes-v2-test-') as data:
         assert paragraphs[0]['text'] == 'Je suis content', paragraphs
         assert paragraphs[1]['text'] == 'je suis pas content', paragraphs
         assert paragraphs[1]['y'] > paragraphs[0]['y'], paragraphs
+        # Restaurer charge un brouillon sans publier et conserve la note courante.
+        with patch('nostr_notes.core.time.time', return_value=100):
+            old = win.identity.save('Ancienne version')
+        original = win.identity.notes([old])[0][0]
+        with patch('nostr_notes.core.time.time', return_value=101):
+            updated = win.identity.save('Version actuelle', original)
+        backup = win.identity.backup(original, updated)
+        current = win.identity.notes([updated])[0][0]
+        win.events = {e['id']: e for e in (updated, backup)}
+        win.display(current)
+        wait_for(lambda: not editor.pending_document)
+        win.restore_previous()
+        wait_for(lambda: win.dirty and not editor.pending_document)
+        flush(editor)
+        assert editor.get_text() == 'Ancienne version'
+        assert win.current == current
+        captured = []
+        with patch.object(win, 'send', side_effect=lambda event, deleting, backup=None: captured.append((event, backup))):
+            win.publish()
+            wait_for(lambda: captured)
+        restored, replaced_backup = captured[0]
+        assert win.identity.notes([restored])[0][0].markdown == 'Ancienne version'
+        assert win.identity.previous(current, [replaced_backup]).markdown == 'Version actuelle'
         win.close_clean()
         print('GTK/WebKit OK : modes, conservation exacte, frappe, publication chiffrée, CSP et révisions.')

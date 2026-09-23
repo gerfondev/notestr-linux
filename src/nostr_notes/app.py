@@ -9,11 +9,11 @@ gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 from gi.repository import Adw, Gio, GLib, Gtk
 
-from .core import Identity, Note, valid_event
+from .core import Identity, Note, valid_event, compact_backups
 from .editor import MarkdownEditor
 from .lock import PasswordLock
 from .pdf_export import export_markdown_pdf
-from .relay import across, publish_one, query_one
+from .relay import across, publish_update, query_one
 from .storage import Storage, load_secret, save_secret, relays_from_text
 
 
@@ -76,9 +76,10 @@ class Window(Adw.ApplicationWindow):
         self.refresh_button = button("Actualiser", self.refresh, "view-refresh-symbolic")
         self.publish_button = button("Publier", self.publish, "mail-send-symbolic")
         self.delete_button = button("Supprimer", self.delete, "edit-delete-symbolic")
+        self.restore_button = button("Version précédente", self.restore_previous, "edit-undo-symbolic")
         self.pdf_button = button("Exporter en PDF", self.export_pdf, "document-save-as-symbolic")
         for action in (self.new_button, self.refresh_button, self.publish_button,
-                       self.delete_button, self.pdf_button):
+                       self.delete_button, self.restore_button, self.pdf_button):
             self.controls.append(action)
         self.controls.set_sensitive(False)
         self.settings_button = button("Compte et relais", self.settings, "preferences-system-symbolic")
@@ -382,6 +383,7 @@ class Window(Adw.ApplicationWindow):
             events = dict(self.events)
             for items in good.values():
                 events.update((e["id"], e) for e in items)
+            events = compact_backups(events.values())
             notes, unreadable = self.identity.notes(events.values())
             self.store.save_events(self.identity.pubkey, list(events.values()))
             return events, notes, unreadable, errors
@@ -448,7 +450,24 @@ class Window(Adw.ApplicationWindow):
         except Exception as exc:
             self.status.set_text(str(exc))
             return
-        self.send(event, deleting=False)
+        backup = self.identity.backup(self.current, event) if self.current else None
+        self.send(event, deleting=False, backup=backup)
+
+    def restore_previous(self):
+        def restore():
+            if not self.current:
+                self.status.set_text("Sélectionner une note publiée.")
+                return
+            previous = self.identity.previous(self.current, self.events.values())
+            if previous is None:
+                self.status.set_text("Aucune version précédente disponible pour cette note.")
+                return
+            self.loading = True
+            self.editor.set_text(previous.markdown)
+            self.loading = False
+            self.changed(None)
+            self.status.set_text("Version précédente chargée. Vérifier puis cliquer sur Publier pour la restaurer.")
+        self.guard(restore)
 
     def delete(self):
         if not self.current:
@@ -459,11 +478,14 @@ class Window(Adw.ApplicationWindow):
                      lambda: self.send(self.identity.delete(self.current), deleting=True),
                      "Supprimer")
 
-    def send(self, event, deleting):
+    def send(self, event, deleting, backup=None):
         def operation():
-            good, errors = asyncio.run(across(self.config["relays"], publish_one, event))
+            good, errors = asyncio.run(across(self.config["relays"], publish_update, event, backup))
             events = dict(self.events)
             events[event["id"]] = event
+            if backup is not None:
+                events[backup["id"]] = backup
+            events = compact_backups(events.values())
             # La publication est déjà effective même si le disque local échoue.
             try:
                 self.store.save_events(self.identity.pubkey, list(events.values()))

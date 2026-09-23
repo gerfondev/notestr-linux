@@ -1,9 +1,16 @@
-# Notes privées Nostr — V3.5.1 Linux
+# Notes privées Nostr — V3.5.2 Linux
 
-Documentation mise à jour le 22 septembre 2026. Version du paquet Python : `3.5.1`.
+Documentation mise à jour le 23 septembre 2026. Version du paquet Python : `3.5.2`.
 
 Application Python 3 + GTK4/libadwaita pour lire et éditer des notes Markdown privées
 au format des **documents personnels Pages by Formstr**. Interface en français.
+
+## Nouveautés de la version 3.5.2
+
+- Conservation d’une seule version précédente chiffrée, envoyée sur les relais avant chaque mise à jour.
+- Bouton **Version précédente** pour charger le backup dans l’éditeur avant restauration par **Publier**.
+- Renouvellement du backup et demande de suppression avec la note.
+- Vérification actualisée des dépendances et de la confidentialité des paquets.
 
 ## Nouveautés de la version 3.5.1
 
@@ -35,11 +42,11 @@ ne garantit pas la compatibilité avec les distributions plus anciennes.
 Le trousseau Secret Service et la session graphique restent fournis par le système.
 
 ```bash
-chmod +x Notestr-3.5.1-x86_64.AppImage
-./Notestr-3.5.1-x86_64.AppImage
+chmod +x Notestr-3.5.2-x86_64.AppImage
+./Notestr-3.5.2-x86_64.AppImage
 ```
 
-Si FUSE est indisponible, utiliser `./Notestr-3.5.1-x86_64.AppImage --appimage-extract-and-run`.
+Si FUSE est indisponible, utiliser `./Notestr-3.5.2-x86_64.AppImage --appimage-extract-and-run`.
 Les notes et réglages existants sont réutilisés, comme avec le lancement Python.
 
 ## Nouveauté V3.4 : barre d’actions compacte
@@ -447,3 +454,19 @@ structure Markdown pour effectuer cette transformation.
 Les notes stockées ne sont pas modifiées en arrière-plan : ouvrir une ancienne
 note puis cliquer **Publier** suffit à enregistrer ses sauts explicites. Une simple
 consultation sans publication conserve exactement le texte source existant.
+
+## Version précédente (3.5.2)
+
+Chaque mise à jour publiée sauvegarde le contenu chiffré de la note courante
+dans un événement distinct (kind 30078), remplacé à la mise à jour suivante.
+Le bouton « Version précédente » charge ce contenu dans l’éditeur ; cliquer
+sur « Publier » après vérification pour restaurer la note. Aucun backup n’existe
+avant la première mise à jour réalisée avec cette version.
+
+Chaque relais doit accepter le backup avant de recevoir la nouvelle note. Les
+deux envois ne sont pas atomiques : si le second échoue, le backup peut déjà
+contenir la note encore courante. Éviter les modifications simultanées depuis
+plusieurs appareils et actualiser avant de modifier une note sur un autre appareil.
+Le cache ne conserve qu’un événement de backup par note ; les relais peuvent
+conserver leurs anciennes copies. La suppression d’une note demande également
+la suppression de son backup. Les anciens clients ne mettent pas ce backup à jour.

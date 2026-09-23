@@ -12,6 +12,29 @@ from monstr.event.event import Event
 from .markdown import explicit_line_breaks
 
 KIND = 33457
+BACKUP_KIND = 30078
+BACKUP_PREFIX = "notestr/previous/"
+
+
+def backup_address(d):
+    return BACKUP_PREFIX + hashlib.sha256(d.encode()).hexdigest()
+
+
+def compact_backups(events):
+    """Keep just the current encrypted backup per address in the local cache."""
+    result, latest = {}, {}
+    for event in events:
+        if event["kind"] != BACKUP_KIND:
+            result[event["id"]] = event
+            continue
+        ds = tag_values(event, "d")
+        if not ds or not ds[0].startswith(BACKUP_PREFIX):
+            continue
+        old = latest.get(ds[0])
+        if old is None or (-event["created_at"], event["id"]) < (-old["created_at"], old["id"]):
+            latest[ds[0]] = event
+    result.update((event["id"], event) for event in latest.values())
+    return result
 
 
 def parse_key(value: str) -> Keys:
@@ -34,7 +57,7 @@ def tag_values(event, name):
 def valid_event(data: dict, pubkey: str) -> bool:
     """monstr vérifie la signature de l'id, donc vérifier aussi son lien au contenu."""
     try:
-        if data["pubkey"] != pubkey or data["kind"] not in (KIND, 5):
+        if data["pubkey"] != pubkey or data["kind"] not in (KIND, BACKUP_KIND, 5):
             return False
         if type(data["created_at"]) is not int or data["created_at"] < 0:
             return False
@@ -88,13 +111,25 @@ class Identity:
         return self.signed(KIND, [["d", identifier]],
                            self.cipher.encrypt(markdown, self.pubkey), now)
 
+    def backup(self, note: Note, update):
+        """Reuse the already encrypted previous content; never publish plaintext."""
+        return self.signed(BACKUP_KIND,
+                           [["d", backup_address(note.d)], ["e", note.event["id"]]],
+                           note.event["content"], update["created_at"])
+
+    def previous(self, note, events):
+        backups, _ = self.notes(events, kind=BACKUP_KIND)
+        return next((backup for backup in backups if backup.d == backup_address(note.d)), None)
+
     def delete(self, note: Note):
         return self.signed(5, [["e", note.event["id"]],
-                               ["a", f"{KIND}:{self.pubkey}:{note.d}"], ["k", str(KIND)]],
+                               ["a", f"{KIND}:{self.pubkey}:{note.d}"], ["k", str(KIND)],
+                               ["a", f"{BACKUP_KIND}:{self.pubkey}:{backup_address(note.d)}"],
+                               ["k", str(BACKUP_KIND)]],
                            "", max(int(time.time()), note.event["created_at"]))
 
-    def notes(self, events):
-        valid = [e for e in events if valid_event(e, self.pubkey)]
+    def notes(self, events, kind=KIND):
+        valid = [e for e in events if valid_event(e, self.pubkey) and e["kind"] in (kind, 5)]
         latest, deleted_ids, deleted_addresses = {}, set(), {}
         for e in valid:
             if e["kind"] == 5:
@@ -112,7 +147,7 @@ class Identity:
         notes, unreadable = [], 0
         for d, event in latest.items():
             if event["id"] in deleted_ids or event["created_at"] <= deleted_addresses.get(
-                    f"{KIND}:{self.pubkey}:{d}", -1):
+                    f"{kind}:{self.pubkey}:{d}", -1):
                 continue
             try:
                 notes.append(Note(d, self.cipher.decrypt(event["content"], self.pubkey), event))
