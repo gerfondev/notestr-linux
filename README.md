@@ -2,8 +2,7 @@
 
 Documentation mise à jour le 23 septembre 2026. Version du paquet Python : `3.5.2`.
 
-Application Python 3 + GTK4/libadwaita pour lire et éditer des notes Markdown privées
-au format des **documents personnels Pages by Formstr**. Interface en français.
+Application Python 3 + GTK4/libadwaita pour lire et éditer des notes Markdown privées compatible avec la version Notestr Android. Interface en français.
 
 ## Nouveautés de la version 3.5.2
 
