@@ -1,5 +1,5 @@
 """Format Pages personnel. Toute la crypto NIP-44/Schnorr appartient à monstr."""
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 import hashlib
 import json
 import re
@@ -14,6 +14,10 @@ from .markdown import explicit_line_breaks
 KIND = 33457
 BACKUP_KIND = 30078
 BACKUP_PREFIX = "notestr/previous/"
+PIN_PREFIX = "notestr/pin/"
+
+def pin_address(d):
+    return PIN_PREFIX + hashlib.sha256(d.encode()).hexdigest()
 
 
 def backup_address(d):
@@ -28,7 +32,7 @@ def compact_backups(events):
             result[event["id"]] = event
             continue
         ds = tag_values(event, "d")
-        if not ds or not ds[0].startswith(BACKUP_PREFIX):
+        if not ds or not ds[0].startswith((BACKUP_PREFIX, PIN_PREFIX)):
             continue
         old = latest.get(ds[0])
         if old is None or (-event["created_at"], event["id"]) < (-old["created_at"], old["id"]):
@@ -79,6 +83,7 @@ class Note:
     d: str
     markdown: str
     event: dict
+    pinned: bool = False
 
     @property
     def title(self):
@@ -117,6 +122,16 @@ class Identity:
                            [["d", backup_address(note.d)], ["e", note.event["id"]]],
                            note.event["content"], update["created_at"])
 
+    def set_pinned(self, note, pinned, events):
+        address = pin_address(note.d)
+        metadata, _ = self.notes(events, kind=BACKUP_KIND)
+        old = next((item for item in metadata if item.d == address), None)
+        now = int(time.time())
+        if old and old.event["created_at"] >= now:
+            raise ValueError("Attendre la seconde suivante avant de changer l’épinglage ; vérifier l’horloge si nécessaire.")
+        return self.signed(BACKUP_KIND, [["d", address]],
+                           self.cipher.encrypt("true" if pinned else "false", self.pubkey), now)
+
     def previous(self, note, events):
         backups, _ = self.notes(events, kind=BACKUP_KIND)
         return next((backup for backup in backups if backup.d == backup_address(note.d)), None)
@@ -129,6 +144,7 @@ class Identity:
                            "", max(int(time.time()), note.event["created_at"]))
 
     def notes(self, events, kind=KIND):
+        events = list(events)
         valid = [e for e in events if valid_event(e, self.pubkey) and e["kind"] in (kind, 5)]
         latest, deleted_ids, deleted_addresses = {}, set(), {}
         for e in valid:
@@ -153,4 +169,9 @@ class Identity:
                 notes.append(Note(d, self.cipher.decrypt(event["content"], self.pubkey), event))
             except Exception:
                 unreadable += 1
-        return sorted(notes, key=lambda n: (-n.event["created_at"], n.d)), unreadable
+        if kind == KIND:
+            metadata, failed = self.notes(events, kind=BACKUP_KIND)
+            pins = {n.d for n in metadata if n.d.startswith(PIN_PREFIX) and n.markdown == "true"}
+            notes = [replace(n, pinned=pin_address(n.d) in pins) for n in notes]
+            unreadable += failed
+        return sorted(notes, key=lambda n: (not n.pinned, -n.event["created_at"], n.d)), unreadable

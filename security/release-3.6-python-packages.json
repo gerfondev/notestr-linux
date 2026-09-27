@@ -1,0 +1,11 @@
+{
+  "date": "2026-09-27",
+  "version": "3.6",
+  "wheelIsolatedImportAndPinning": "passed",
+  "archiveOwnerMetadata": "root uid/gid 0",
+  "privacyScan": "included in release-3.6-source-history-privacy.json",
+  "sha256": {
+    "nostr_private_notes-3.6-py3-none-any.whl": "0f0c05fd2b7cbd8e3bc834c3bdfbd7de3b986f0e157005961cf54153b946c34d",
+    "nostr-private-notes-3.6.tar.gz": "1e5d4190e585eed60b655997292a9191139fa7fb83910d4fb0f91286936a4421"
+  }
+}

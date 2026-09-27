@@ -26,7 +26,7 @@ def test_login_refreshes_even_while_visual_document_is_loading(visual_ready):
     window = SimpleNamespace(
         store=SimpleNamespace(events=Mock(return_value=[])),
         editor=editor, controls=Mock(), status=Mock(), set_title=Mock(),
-        render_list=Mock(), do_refresh=Mock(), busy=False, confirm=Mock(),
+        update_pin_button=Mock(), render_list=Mock(), do_refresh=Mock(), busy=False, confirm=Mock(),
     )
     window.display = lambda: Window.display(window)
     window.guard = lambda action: Window.guard(window, action)

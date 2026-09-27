@@ -239,5 +239,27 @@ with tempfile.TemporaryDirectory(prefix='notes-v2-test-') as data:
         restored, replaced_backup = captured[0]
         assert win.identity.notes([restored])[0][0].markdown == 'Ancienne version'
         assert win.identity.previous(current, [replaced_backup]).markdown == 'Version actuelle'
+        # Pinning changes the list, but preserves a dirty editor and note timestamp.
+        from unittest.mock import AsyncMock
+        win.notes = [current]
+        original_text = editor.get_text()
+        original_date = current.event['created_at']
+        with patch('nostr_notes.app.across', AsyncMock(return_value=({'synthetic': True}, []))):
+            win.pin_button.emit('clicked')
+            wait_for(lambda: not win.busy)
+        assert win.current.pinned and win.current.event['created_at'] == original_date
+        assert win.pin_button.get_tooltip_text() == 'Désépingler'
+        assert win.pin_button.get_icon_name() == 'notestr-unpin-symbolic'
+        assert Gtk.IconTheme.get_for_display(win.get_display()).has_icon('notestr-unpin-symbolic')
+        assert win.dirty and editor.get_text() == original_text
+        wait_for(lambda: int(time.time()) > max(e['created_at'] for e in win.events.values()))
+        with patch('nostr_notes.app.across', AsyncMock(return_value=({'synthetic': True}, []))):
+            win.pin_button.emit('clicked')
+            wait_for(lambda: not win.busy)
+        assert not win.current.pinned and win.dirty
+        assert win.pin_button.get_icon_name() == 'notestr-pin-symbolic'
+        assert editor.get_text() == original_text
+        assert evaluate(editor, "JSON.stringify(DOMPurify.version)") == '3.4.16'
+        assert 'onerror' not in evaluate(editor, "JSON.stringify(DOMPurify.sanitize('<img src=x onerror=alert(1)>'))")
         win.close_clean()
         print('GTK/WebKit OK : modes, conservation exacte, frappe, publication chiffrée, CSP et révisions.')

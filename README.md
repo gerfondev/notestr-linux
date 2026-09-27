@@ -1,8 +1,19 @@
-# Notes privées Nostr — V3.5.2 Linux
+# Notes privées Nostr — V3.6 Linux
 
-Documentation mise à jour le 23 septembre 2026. Version du paquet Python : `3.5.2`.
+Documentation mise à jour le 27 septembre 2026. Version du paquet Python : `3.6`.
 
 Application Python 3 + GTK4/libadwaita pour lire et éditer des notes Markdown privées compatible avec la version Notestr Android. Interface en français.
+
+## Nouveautés de la version 3.6
+
+- Épingler plusieurs notes en tête de liste ; les notes épinglées sont classées par date de modification.
+- Synchronisation chiffrée de l’épinglage et du désépinglage avec Notestr Android, sans modifier le texte ni sa date.
+- Épingle barrée pour l’action **Désépingler**, infobulles et descriptions accessibles.
+- Conservation du brouillon ouvert pendant le changement d’épinglage.
+- DOMPurify 3.4.16, retrait de l’ancien filtre HTML embarqué, correctifs cURL et Expat dans l’AppImage.
+- **Numéros de version Android et Linux alignés sur 3.6.**
+
+[Télécharger l’AppImage 3.6](https://github.com/gerfondev/notestr-linux/releases/download/v3.6/Notestr-3.6-x86_64.AppImage) · [Notes de version](RELEASE-NOTES-3.6.md).
 
 ## Nouveautés de la version 3.5.2
 
@@ -41,11 +52,11 @@ ne garantit pas la compatibilité avec les distributions plus anciennes.
 Le trousseau Secret Service et la session graphique restent fournis par le système.
 
 ```bash
-chmod +x Notestr-3.5.2-x86_64.AppImage
-./Notestr-3.5.2-x86_64.AppImage
+chmod +x Notestr-3.6-x86_64.AppImage
+./Notestr-3.6-x86_64.AppImage
 ```
 
-Si FUSE est indisponible, utiliser `./Notestr-3.5.2-x86_64.AppImage --appimage-extract-and-run`.
+Si FUSE est indisponible, utiliser `./Notestr-3.6-x86_64.AppImage --appimage-extract-and-run`.
 Les notes et réglages existants sont réutilisés, comme avec le lancement Python.
 
 ## Nouveauté V3.4 : barre d’actions compacte

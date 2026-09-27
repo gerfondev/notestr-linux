@@ -1,0 +1,33 @@
+{
+  "date": "2026-09-26",
+  "androidJVM": {
+    "passed": 14,
+    "failed": 0
+  },
+  "androidInstrumentedRelease": {
+    "passed": 8,
+    "failed": 0,
+    "emulator": "x86_64 API 30",
+    "coverage": [
+      "pin/unpin UI",
+      "local relay acceptance and rejection",
+      "restart with empty cache",
+      "Linux to Android encrypted fixture",
+      "backup isolation",
+      "unchanged content and timestamp",
+      "tie breaking and signature checks"
+    ]
+  },
+  "linuxPytest": {
+    "passed": 45,
+    "failed": 0
+  },
+  "linuxAppImageGUI": "Passed: GTK/WebKit editor, pin/unpin, preservation of dirty draft, sanitizer and PDF export; native updates included. Final metadata-only rebuild checked separately.",
+  "androidToLinux": "Passed: Android signed encrypted pin exported and read with Linux implementation.",
+  "limitations": [
+    "No physical smartphone test",
+    "No real Amber test",
+    "No public relay used",
+    "No manual screen reader test"
+  ]
+}

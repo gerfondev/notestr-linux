@@ -1,3 +1,19 @@
+# Validation de la version 3.6 — 27 septembre 2026
+
+14 tests JVM et 19 tests Android release sur émulateur x86_64/API 30 réussis. Couverture : épinglage, sauvegardes, relais local acceptant/refusant, redémarrage, format Linux, NIP-44, coffre, Amber simulé, clavier et Retour. 45 tests Linux et essais de l’AppImage GTK/WebKit réussis, dont les icônes d’épinglage, conservation du brouillon et export PDF.
+
+APK non débogable, certificat conservé, versionCode 22 ; signature et contenu décompressé vérifiés. Le changement de numéro 3.6 n’a pas été testé sur téléphone physique ; Amber réel et accessibilité exhaustive restent hors couverture. Aucun compte réel utilisé.
+
+---
+
+# Correctif d’icône — Linux 3.5.3.dev2
+
+Le bouton montre désormais une épingle barrée pour une note épinglée. Icônes locales cohérentes avec Android, infobulle et accessibilité conservées. 45 tests Python passent ; le test GTK/WebKit vérifie également le changement de nom d’icône et sa présence dans le thème chargé.
+
+# Épinglage local — 26 septembre 2026
+
+45 tests Python, tests graphiques GTK/WebKit et lecture des événements Android réussis. Aucun compte réel ni relais public utilisé. Les versions de test ne sont pas publiées. Voir PINNING.md et SECURITY.md.
+
 # Validation V3.5.2 — 23 septembre 2026
 
 - 41 tests automatisés réussis et contrôle graphique de l’AppImage, incluant

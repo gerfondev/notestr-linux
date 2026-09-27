@@ -1,0 +1,101 @@
+{
+  "date": "2026-09-27",
+  "sourceAndArchiveEntries": 1681,
+  "findings": [],
+  "images": [
+    {
+      "file": "notestr-android/app/src/main/res/drawable-nodpi/notestr_logo.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "notestr-android/app/src/main/res/mipmap-hdpi/ic_launcher.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "notestr-android/app/src/main/res/mipmap-hdpi/ic_launcher_foreground.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "notestr-android/app/src/main/res/mipmap-mdpi/ic_launcher.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "notestr-android/app/src/main/res/mipmap-mdpi/ic_launcher_foreground.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "notestr-android/app/src/main/res/mipmap-xhdpi/ic_launcher.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "notestr-android/app/src/main/res/mipmap-xhdpi/ic_launcher_foreground.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "notestr-android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "notestr-android/app/src/main/res/mipmap-xxhdpi/ic_launcher_foreground.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "notestr-android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "notestr-android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "notestr-android/artwork/notestr.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "notestr-linux/src/nostr_notes/assets/fr.decentralia.NostrNotes.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "nostr-private-notes-3.6.tar.gz!nostr-private-notes-3.6/src/nostr_notes/assets/fr.decentralia.NostrNotes.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "nostr_private_notes-3.6-py3-none-any.whl!nostr_notes/assets/fr.decentralia.NostrNotes.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    }
+  ],
+  "history": [
+    {
+      "repository": "notestr-android",
+      "commits": 11,
+      "existingCommitsWithPersonalAuthorMetadata": 2,
+      "rewritten": false,
+      "historicalBlobsInspected": 223,
+      "historicalBlobsWithOwnerMarkers": 0
+    },
+    {
+      "repository": "notestr-linux",
+      "commits": 6,
+      "existingCommitsWithPersonalAuthorMetadata": 1,
+      "rewritten": false,
+      "historicalBlobsInspected": 89,
+      "historicalBlobsWithOwnerMarkers": 0
+    }
+  ],
+  "limits": "Targeted patterns, known identity markers and image metadata. Upstream licence attributions retained. Existing author metadata is not rewritten; new commits use the neutral project identity. No guarantee for unknown or encoded data."
+}

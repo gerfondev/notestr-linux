@@ -1,0 +1,11 @@
+{
+  "date": "2026-09-27",
+  "version": "3.5.3.dev2",
+  "sha256": "e43d58b0f4620a44f68c8ee62883e015ab514c697fe08e3aa7389312b0d880e9",
+  "entriesScanned": 3669,
+  "targetedPrivacyFindings": [],
+  "svgAssetsMatch": true,
+  "scope": "Targeted owner-path and token patterns; unchanged PEM parser header literals reviewed in previous candidate. No exhaustive guarantee.",
+  "pythonTestsPassed": 45,
+  "appImageGuiTest": "Passed: icon switches both ways, symbolic icon available, dirty draft preserved, editor and PDF regressions"
+}

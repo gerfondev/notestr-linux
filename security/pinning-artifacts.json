@@ -1,0 +1,1398 @@
+{
+  "reviewedFormatMarkers": [
+    {
+      "file": "appimage/usr/lib/x86_64-linux-gnu/libgnutls.so.30",
+      "category": "secret"
+    },
+    {
+      "file": "appimage/usr/lib/x86_64-linux-gnu/libssh.so.4",
+      "category": "secret"
+    },
+    {
+      "file": "appimage/usr/lib/python3.12/site-packages/cryptography/hazmat/primitives/serialization/ssh.py",
+      "category": "secret"
+    }
+  ],
+  "date": "2026-09-26",
+  "apkSha256": "861e1ad1e2b7785cb43f742cdb23e92ec7000463b8567ad32d2f598906e0e78c",
+  "appimageSha256": "634c178626b98f48cc9dc61b1245a59fd6449e254a21c9dcd2d3b85c0b0c2bcc",
+  "versionCode": 21,
+  "versionName": "2.0-test.21",
+  "debuggable": false,
+  "signatureV2Verified": true,
+  "certificateMatches2_0": true,
+  "nativeLibrariesMatchVerifiedAARs": {
+    "lib/arm64-v8a/libnostr_sdk_ffi.so": true,
+    "lib/armeabi-v7a/libnostr_sdk_ffi.so": true,
+    "lib/x86/libnostr_sdk_ffi.so": true,
+    "lib/x86_64/libnostr_sdk_ffi.so": true,
+    "lib/arm64-v8a/libjnidispatch.so": true,
+    "lib/armeabi-v7a/libjnidispatch.so": true,
+    "lib/armeabi/libjnidispatch.so": true,
+    "lib/mips/libjnidispatch.so": true,
+    "lib/mips64/libjnidispatch.so": true,
+    "lib/x86/libjnidispatch.so": true,
+    "lib/x86_64/libjnidispatch.so": true
+  },
+  "entriesScanned": 4157,
+  "findings": [],
+  "images": [
+    {
+      "file": "apk/res/-B.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/-N.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/0c.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/0x.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/1I.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/1J.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/1e.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/2K.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/2P.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/2d.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/33.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/3u.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/42.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/49.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/4k.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/5D.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/5U.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/5c.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/62.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/65.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/6t.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/7C.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/7I.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/7_.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/7i.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/7o.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/8h.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/8h.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/9N.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/9X.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/9n.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/9w.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/9z.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/BG.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/BL.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/BM.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/CK.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/C_.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/DL.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/D_.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/E5.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/EA.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/EP.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/Em.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/FS.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/FW.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/G2.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/Gf.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/Gt.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/H-.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/IX.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/JJ.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/KH.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/KM.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/K_.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/Lf.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/Li.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/MF.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/MQ.png",
+      "metadataKeys": [
+        "transparency"
+      ],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/Ma.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/NA.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/NG.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/NZ.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/Nk.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/No.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/PL.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/Pa.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/Pb.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/Pg.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/QJ.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/QZ.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/RJ.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/RV.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/SV.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/Sq.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/Su.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/Th.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/Tj.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/U-.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/UE.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/UR.png",
+      "metadataKeys": [
+        "transparency"
+      ],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/W4.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/Wh.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/Wr.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/Wz.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/X3.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/X4.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/Y7.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/YG.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/Yt.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/Yw.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/Z8.png",
+      "metadataKeys": [
+        "transparency"
+      ],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/ZN.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/_U.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/_q.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/aU.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/ar.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/as.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/bX.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/d3.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/d5.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/dW.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/dY.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/eR.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/eT.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/ej.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/ev.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/fM.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/g-.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/gE.png",
+      "metadataKeys": [
+        "transparency"
+      ],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/gK.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/gZ.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/gj.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/gt.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/h7.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/hZ.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/hh.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/i6.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/iO.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/iR.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/io.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/j4.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/jS.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/jS1.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/jW.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/je.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/kJ.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/kp.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/lP.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/ly.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/m0.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/mm.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/nI.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/nf.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/o-.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/o9.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/o_.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/o_.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/op.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/pY.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/pk.png",
+      "metadataKeys": [
+        "transparency"
+      ],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/ps.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/pu.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/py.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/qD.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/qp.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/rP.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/rj.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/s0.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/s3.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/s4.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/sA.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/sg.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/tG.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/tS.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/tU.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/tZ.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/te.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/u3.png",
+      "metadataKeys": [
+        "transparency"
+      ],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/uL.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/uj.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/ut.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/uu.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/v4.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/vL.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/vz.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/wL.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/wN.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/w_.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/x3.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/x7.png",
+      "metadataKeys": [
+        "transparency"
+      ],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/xH.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/xR.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/xa.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/yH.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/yY.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/yg.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/yn.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/z-.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/z9.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/zE.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/zV.9.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "apk/res/zr.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "appimage/.DirIcon",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "appimage/fr.decentralia.NostrNotes.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/mimetypes/video-x-generic.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/mimetypes/application-x-addon.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/mimetypes/x-office-presentation.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/mimetypes/font-x-generic.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/mimetypes/x-package-repository.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/mimetypes/application-certificate.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/mimetypes/text-x-generic.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/mimetypes/image-x-generic.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/mimetypes/x-office-document-template.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/mimetypes/application-x-firmware.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/mimetypes/text-x-preview.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/mimetypes/text-x-script.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/mimetypes/model.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/mimetypes/audio-x-generic.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/mimetypes/x-office-drawing.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/mimetypes/text-html.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/mimetypes/x-office-presentation-template.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/mimetypes/application-x-executable.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/mimetypes/package-x-generic.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/mimetypes/inode-directory.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/mimetypes/inode-symlink.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/mimetypes/x-office-addressbook.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/mimetypes/x-office-spreadsheet.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/mimetypes/application-x-generic.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/mimetypes/x-office-document.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/mimetypes/application-x-sharedlib.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/mimetypes/x-office-spreadsheet-template.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/emblems/emblem-readonly.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/emblems/emblem-symbolic-link.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/emblems/emblem-shared.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/emblems/emblem-synchronizing.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/emblems/emblem-unreadable.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/places/folder-remote.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/places/folder-videos.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/places/network-server.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/places/folder-bookmarks.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/places/folder-publicshare.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/places/user-home.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/places/folder-music.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/places/folder-drag-accept.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/places/folder-pictures.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/places/user-desktop.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/places/folder-templates.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/places/user-bookmarks.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/places/user-trash.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/places/folder-download.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/places/folder.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/places/folder-documents.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/places/network-workgroup.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/devices/audio-headphones.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/share/icons/Adwaita/16x16/devices/audio-headset.png",
+      "metadataKeys": [
+        "srgb",
+        "exif"
+      ],
+      "exifEntries": 1
+    },
+    {
+      "file": "appimage/usr/lib/python3.12/site-packages/nostr_notes/assets/fr.decentralia.NostrNotes.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    }
+  ],
+  "nativeUpdates": {
+    "libcurl3t64-gnutls": "8.5.0-2ubuntu10.15",
+    "libexpat1": "2.6.1-2ubuntu0.6"
+  },
+  "limits": "Targeted patterns and image metadata inspection, not proof of absence of encoded or unknown secrets. No user data accessed."
+}

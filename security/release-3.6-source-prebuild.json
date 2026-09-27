@@ -1,0 +1,6 @@
+{
+  "date": "2026-09-27",
+  "files": 123,
+  "findings": [],
+  "scope": "Sources, resources, images and nested AAR/JAR content. Targeted patterns only; synthetic test keys excluded by format. No user note database accessed."
+}

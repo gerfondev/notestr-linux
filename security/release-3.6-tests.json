@@ -1,0 +1,15 @@
+{
+  "date": "2026-09-27",
+  "androidVersion": "3.6",
+  "androidVersionCode": 22,
+  "jvmPassed": 14,
+  "androidInstrumentedReleasePassed": 19,
+  "linuxPythonPassed": 45,
+  "linuxAppImageGraphical": "passed: editor, pin/unpin icons, dirty draft, sanitization, PDF export",
+  "transport": "synthetic keys and loopback relay only",
+  "limits": [
+    "No physical smartphone test of the final version label",
+    "Amber simulated, not real signer app",
+    "No exhaustive accessibility test"
+  ]
+}

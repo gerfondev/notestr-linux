@@ -15,7 +15,7 @@ def test_release_version_is_consistent():
     assert 'version = {attr = "nostr_notes.__version__"}' in config
     for name in ('README.md', 'packaging/README.md'):
         document = (ROOT / name).read_text()
-        versions = re.findall(r'Notestr-([\d.]+)-x86_64\.AppImage', document)
+        versions = re.findall(r'Notestr-([\w.]+)-x86_64\.AppImage', document)
         assert versions and set(versions) == {__version__}
     assert f'Version du paquet Python : `{__version__}`' in (ROOT / 'README.md').read_text()
     result = subprocess.check_output(

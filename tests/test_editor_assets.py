@@ -25,3 +25,12 @@ def test_application_logo_is_packaged_png():
     assert width == height
     assert width >= 256
     assert data[25] == 6  # PNG true colour with alpha channel
+
+
+def test_both_sanitizers_use_maintained_external_dompurify():
+    html = (ASSETS / 'index.html').read_text()
+    assert html.index('purify.min.js') < html.index('toastui-editor.js')
+    bundle = (ASSETS / 'toastui-editor.js').read_text()
+    assert 'DOMPurify 2.3.3' not in bundle
+    assert 'e.exports=self.DOMPurify' in bundle
+    assert '3.4.16' in (ASSETS / 'purify.min.js').read_text()[:300]

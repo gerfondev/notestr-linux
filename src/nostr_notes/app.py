@@ -77,9 +77,10 @@ class Window(Adw.ApplicationWindow):
         self.publish_button = button("Publier", self.publish, "mail-send-symbolic")
         self.delete_button = button("Supprimer", self.delete, "edit-delete-symbolic")
         self.restore_button = button("Version précédente", self.restore_previous, "edit-undo-symbolic")
+        self.pin_button = button("Épingler", self.toggle_pin, "notestr-pin-symbolic")
         self.pdf_button = button("Exporter en PDF", self.export_pdf, "document-save-as-symbolic")
         for action in (self.new_button, self.refresh_button, self.publish_button,
-                       self.delete_button, self.restore_button, self.pdf_button):
+                       self.delete_button, self.restore_button, self.pin_button, self.pdf_button):
             self.controls.append(action)
         self.controls.set_sensitive(False)
         self.settings_button = button("Compte et relais", self.settings, "preferences-system-symbolic")
@@ -288,6 +289,7 @@ class Window(Adw.ApplicationWindow):
 
     def display(self, note=None):
         self.current = note
+        self.update_pin_button()
         self.draft_d = None
         self.loading = True
         self.editor.set_text(note.markdown if note else "")
@@ -356,7 +358,7 @@ class Window(Adw.ApplicationWindow):
                 continue
             row = Gtk.ListBoxRow()
             row.note = note
-            row.set_child(Gtk.Label(label=note.title, xalign=0, ellipsize=3,
+            row.set_child(Gtk.Label(label=("📌 " if note.pinned else "") + note.title, xalign=0, ellipsize=3,
                                     margin_start=12, margin_end=12, margin_top=10, margin_bottom=10))
             self.listbox.append(row)
 
@@ -468,6 +470,36 @@ class Window(Adw.ApplicationWindow):
             self.changed(None)
             self.status.set_text("Version précédente chargée. Vérifier puis cliquer sur Publier pour la restaurer.")
         self.guard(restore)
+
+    def update_pin_button(self):
+        label = "Désépingler" if self.current and self.current.pinned else "Épingler"
+        self.pin_button.set_icon_name("notestr-unpin-symbolic" if self.current and self.current.pinned else "notestr-pin-symbolic")
+        self.pin_button.set_tooltip_text(label)
+        self.pin_button.update_property([Gtk.AccessibleProperty.LABEL], [label])
+        self.pin_button.set_sensitive(self.current is not None)
+
+    def toggle_pin(self):
+        if not self.current or self.busy:
+            return
+        # Preserve the current editor and any unpublished changes.
+        note = self.current
+        def operation():
+            event = self.identity.set_pinned(note, not note.pinned, self.events.values())
+            good, errors = asyncio.run(across(self.config["relays"], publish_update, event, None))
+            events = compact_backups([*self.events.values(), event])
+            try:
+                self.store.save_events(self.identity.pubkey, list(events.values()))
+            except Exception:
+                errors.append("Épinglage accepté, mais écriture du cache local impossible.")
+            notes, _ = self.identity.notes(events.values())
+            return events, notes, errors
+        def success(result):
+            self.events, self.notes, errors = result
+            self.current = next(n for n in self.notes if n.d == note.d)
+            self.update_pin_button()
+            self.render_list()
+            self.status.set_text(("Note épinglée." if self.current.pinned else "Note désépinglée.") + "\n" + "\n".join(errors))
+        self.work(operation, success)
 
     def delete(self):
         if not self.current:

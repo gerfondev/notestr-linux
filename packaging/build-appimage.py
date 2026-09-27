@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Build on Ubuntu 24.04 amd64 using an installed project venv and official runtime."""
 import hashlib
+import re
+import csv
+import base64
 import ast
 import argparse
 import json
@@ -101,6 +104,24 @@ print(json.dumps(files))
         if (Path(source).exists() and not relative.endswith('.pyc')
                 and not {'__pycache__', 'tests', 'test', 'SelfTest'}.intersection(Path(relative).parts)):
             copy(source, f'{site}/{relative}')
+    # Omit private-key-shaped upstream documentation examples from distribution metadata.
+    # This does not alter package code, dependency headers or separate licence files.
+    for metadata in (app / site).glob('*.dist-info/METADATA'):
+        original = metadata.read_text()
+        cleaned = re.sub(r'nsec1[023456789acdefghjklmnpqrstuvwxyz]{58}',
+                         '[upstream documentation example omitted]', original)
+        if cleaned != original:
+            metadata.write_text(cleaned)
+            record = metadata.with_name('RECORD')
+            if record.exists():
+                with record.open(newline='') as stream:
+                    rows = list(csv.reader(stream))
+                digest = base64.urlsafe_b64encode(hashlib.sha256(metadata.read_bytes()).digest()).decode().rstrip('=')
+                for row in rows:
+                    if row[0] == str(metadata.relative_to(app / site)):
+                        row[1:] = ['sha256=' + digest, str(metadata.stat().st_size)]
+                with record.open('w', newline='') as stream:
+                    csv.writer(stream).writerows(rows)
     copy(ROOT / 'src/nostr_notes', f'{site}/nostr_notes')
     lib = Path('/usr/lib/x86_64-linux-gnu')
     typelibs = ('Adw-1', 'Gtk-4.0', 'Gdk-4.0', 'Gsk-4.0', 'GLib-2.0',
