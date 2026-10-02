@@ -1,4 +1,6 @@
 """Interface GTK4/libadwaita. Réseau et crypto hors du thread graphique."""
+from .i18n import tr, set_language, get_language
+from . import __version__
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
@@ -29,7 +31,7 @@ def logo_picture(size):
     picture.set_can_shrink(True)
     picture.set_keep_aspect_ratio(True)
     picture.set_size_request(size, size)
-    picture.set_alternative_text("Logo Notestr")
+    picture.set_alternative_text(tr('Logo Notestr'))
     return picture
 
 
@@ -44,7 +46,7 @@ def button(label, callback, icon_name=None):
 
 class Window(Adw.ApplicationWindow):
     def __init__(self, app):
-        super().__init__(application=app, title="Notes privées Nostr", default_width=1000, default_height=700)
+        super().__init__(application=app, title=tr('Notes privées Nostr'), default_width=1000, default_height=700)
         Gtk.IconTheme.get_for_display(self.get_display()).add_search_path(str(ASSETS))
         self.set_icon_name(APP_ICON_NAME)
         self.pool = ThreadPoolExecutor(max_workers=1)
@@ -56,6 +58,7 @@ class Window(Adw.ApplicationWindow):
         self.dirty = False
         self.loading = False
         self.busy = False
+        self.refreshing = False
         self.store = Storage()
         self.password_lock = PasswordLock(self.store)
         self.config = self.store.config()
@@ -66,29 +69,29 @@ class Window(Adw.ApplicationWindow):
         title = Gtk.Box(spacing=8, valign=Gtk.Align.CENTER)
         self.header_logo = logo_picture(30)
         title.append(self.header_logo)
-        title_label = Gtk.Label(label="Notes privées Nostr")
+        title_label = Gtk.Label(label=tr('Notes privées Nostr'))
         title_label.add_css_class("title")
         title.append(title_label)
         self.header.set_title_widget(title)
         self.controls = Gtk.Box(spacing=6)
         self.header.pack_start(self.controls)
-        self.new_button = button("Nouvelle note", self.new_note, "document-new-symbolic")
-        self.refresh_button = button("Actualiser", self.refresh, "view-refresh-symbolic")
-        self.publish_button = button("Publier", self.publish, "mail-send-symbolic")
-        self.delete_button = button("Supprimer", self.delete, "edit-delete-symbolic")
-        self.restore_button = button("Version précédente", self.restore_previous, "edit-undo-symbolic")
-        self.pin_button = button("Épingler", self.toggle_pin, "notestr-pin-symbolic")
-        self.pdf_button = button("Exporter en PDF", self.export_pdf, "document-save-as-symbolic")
+        self.new_button = button(tr('Nouvelle note'), self.new_note, "document-new-symbolic")
+        self.refresh_button = button(tr('Actualiser'), self.refresh, "view-refresh-symbolic")
+        self.publish_button = button(tr('Publier'), self.publish, "mail-send-symbolic")
+        self.delete_button = button(tr('Supprimer'), self.delete, "edit-delete-symbolic")
+        self.restore_button = button(tr('Version précédente'), self.restore_previous, "edit-undo-symbolic")
+        self.pin_button = button(tr('Épingler'), self.toggle_pin, "notestr-pin-symbolic")
+        self.pdf_button = button(tr('Exporter en PDF'), self.export_pdf, "document-save-as-symbolic")
         for action in (self.new_button, self.refresh_button, self.publish_button,
                        self.delete_button, self.restore_button, self.pin_button, self.pdf_button):
             self.controls.append(action)
         self.controls.set_sensitive(False)
-        self.settings_button = button("Compte et relais", self.settings, "preferences-system-symbolic")
+        self.settings_button = button(tr('Compte et relais'), self.settings, "preferences-system-symbolic")
         self.header.pack_end(self.settings_button)
         paned = Gtk.Paned(orientation=Gtk.Orientation.HORIZONTAL, position=280, vexpand=True)
         root.append(paned)
         sidebar = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8, width_request=220)
-        self.search = Gtk.SearchEntry(placeholder_text="Rechercher dans les notes")
+        self.search = Gtk.SearchEntry(placeholder_text=tr('Rechercher dans les notes'))
         self.search.connect("search-changed", lambda _: self.render_list())
         sidebar.append(self.search)
         self.listbox = Gtk.ListBox(selection_mode=Gtk.SelectionMode.NONE)
@@ -100,7 +103,7 @@ class Window(Adw.ApplicationWindow):
         self.editor = MarkdownEditor(self.changed)
         self.editor.set_sensitive(False)
         paned.set_end_child(self.editor)
-        self.status = Gtk.Label(label="Importer une clé privée pour commencer.", xalign=0,
+        self.status = Gtk.Label(label=tr('Importer une clé privée pour commencer.'), xalign=0,
                                 wrap=True, selectable=True, margin_start=12, margin_end=12,
                                 margin_top=8, margin_bottom=8)
         root.append(self.status)
@@ -130,12 +133,12 @@ class Window(Adw.ApplicationWindow):
         self.close_clean()
 
     def show_password_setup(self):
-        dialog, box = self.password_window("Créer le mot de passe Notestr")
+        dialog, box = self.password_window(tr('Créer le mot de passe Notestr'))
         box.append(Gtk.Label(
-            label="Choisissez le mot de passe demandé à chaque ouverture de Notestr.",
+            label=tr('Choisissez le mot de passe demandé à chaque ouverture de Notestr.'),
             wrap=True, xalign=0))
-        first = Gtk.PasswordEntry(show_peek_icon=True, placeholder_text="Mot de passe (8 caractères minimum)")
-        second = Gtk.PasswordEntry(show_peek_icon=True, placeholder_text="Confirmer le mot de passe")
+        first = Gtk.PasswordEntry(show_peek_icon=True, placeholder_text=tr('Mot de passe (8 caractères minimum)'))
+        second = Gtk.PasswordEntry(show_peek_icon=True, placeholder_text=tr('Confirmer le mot de passe'))
         box.append(first)
         box.append(second)
         info = Gtk.Label(wrap=True, xalign=0)
@@ -144,7 +147,7 @@ class Window(Adw.ApplicationWindow):
         def create():
             try:
                 if first.get_text() != second.get_text():
-                    raise ValueError("Les deux mots de passe sont différents.")
+                    raise ValueError(tr('Les deux mots de passe sont différents.'))
                 self.password_lock.set_password(first.get_text())
                 first.set_text("")
                 second.set_text("")
@@ -153,9 +156,9 @@ class Window(Adw.ApplicationWindow):
             except Exception as exc:
                 info.set_text(str(exc) or type(exc).__name__)
 
-        create_button = button("Créer et ouvrir", create)
+        create_button = button(tr('Créer et ouvrir'), create)
         box.append(create_button)
-        box.append(button("Quitter", lambda: self.close_from_password_window(dialog)))
+        box.append(button(tr("Quitter"), lambda: self.close_from_password_window(dialog)))
         first.connect("activate", lambda _: second.grab_focus())
         second.connect("activate", lambda _: create())
         dialog.connect("close-request", lambda _: self.close_from_password_window(dialog) or True)
@@ -163,9 +166,9 @@ class Window(Adw.ApplicationWindow):
         first.grab_focus()
 
     def show_unlock(self):
-        dialog, box = self.password_window("Déverrouiller Notestr")
-        box.append(Gtk.Label(label="Saisissez le mot de passe de l’application.", wrap=True, xalign=0))
-        secret = Gtk.PasswordEntry(show_peek_icon=True, placeholder_text="Mot de passe")
+        dialog, box = self.password_window(tr('Déverrouiller Notestr'))
+        box.append(Gtk.Label(label=tr('Saisissez le mot de passe de l’application.'), wrap=True, xalign=0))
+        secret = Gtk.PasswordEntry(show_peek_icon=True, placeholder_text=tr('Mot de passe'))
         box.append(secret)
         info = Gtk.Label(wrap=True, xalign=0)
         box.append(info)
@@ -173,7 +176,7 @@ class Window(Adw.ApplicationWindow):
 
         def enable_again():
             unlock_button.set_sensitive(True)
-            info.set_text("Vous pouvez réessayer.")
+            info.set_text(tr('Vous pouvez réessayer.'))
             secret.grab_focus()
             return False
 
@@ -192,27 +195,27 @@ class Window(Adw.ApplicationWindow):
             if attempts["count"] >= 5:
                 attempts["count"] = 0
                 unlock_button.set_sensitive(False)
-                info.set_text("Trop de tentatives. Nouvel essai dans 30 secondes.")
+                info.set_text(tr('Trop de tentatives. Nouvel essai dans 30 secondes.'))
                 GLib.timeout_add_seconds(30, enable_again)
             else:
-                info.set_text("Mot de passe incorrect.")
+                info.set_text(tr('Mot de passe incorrect.'))
 
-        unlock_button = button("Déverrouiller", unlock)
+        unlock_button = button(tr('Déverrouiller'), unlock)
         box.append(unlock_button)
-        box.append(button("Quitter", lambda: self.close_from_password_window(dialog)))
+        box.append(button(tr("Quitter"), lambda: self.close_from_password_window(dialog)))
         secret.connect("activate", lambda _: unlock())
         dialog.connect("close-request", lambda _: self.close_from_password_window(dialog) or True)
         dialog.present()
         secret.grab_focus()
 
     def show_change_password(self, parent, feedback):
-        dialog, box = self.password_window("Modifier le mot de passe", parent)
+        dialog, box = self.password_window(tr('Modifier le mot de passe'), parent)
         box.append(Gtk.Label(
-            label="Saisissez le mot de passe actuel, puis choisissez le nouveau.",
+            label=tr('Saisissez le mot de passe actuel, puis choisissez le nouveau.'),
             wrap=True, xalign=0))
-        current = Gtk.PasswordEntry(show_peek_icon=True, placeholder_text="Mot de passe actuel")
-        new = Gtk.PasswordEntry(show_peek_icon=True, placeholder_text="Nouveau mot de passe (8 caractères minimum)")
-        confirmation = Gtk.PasswordEntry(show_peek_icon=True, placeholder_text="Confirmer le nouveau mot de passe")
+        current = Gtk.PasswordEntry(show_peek_icon=True, placeholder_text=tr('Mot de passe actuel'))
+        new = Gtk.PasswordEntry(show_peek_icon=True, placeholder_text=tr('Nouveau mot de passe (8 caractères minimum)'))
+        confirmation = Gtk.PasswordEntry(show_peek_icon=True, placeholder_text=tr('Confirmer le nouveau mot de passe'))
         box.append(current)
         box.append(new)
         box.append(confirmation)
@@ -222,20 +225,20 @@ class Window(Adw.ApplicationWindow):
         def change():
             try:
                 if new.get_text() != confirmation.get_text():
-                    raise ValueError("Les deux nouveaux mots de passe sont différents.")
+                    raise ValueError(tr('Les deux nouveaux mots de passe sont différents.'))
                 self.password_lock.change_password(current.get_text(), new.get_text())
                 current.set_text("")
                 new.set_text("")
                 confirmation.set_text("")
                 dialog.destroy()
-                feedback.set_text("Le mot de passe de l’application a été modifié.")
+                feedback.set_text(tr('Le mot de passe de l’application a été modifié.'))
             except Exception as exc:
                 current.set_text("")
                 info.set_text(str(exc) or type(exc).__name__)
                 current.grab_focus()
 
-        box.append(button("Enregistrer le nouveau mot de passe", change))
-        box.append(button("Annuler", dialog.destroy))
+        box.append(button(tr('Enregistrer le nouveau mot de passe'), change))
+        box.append(button(tr('Annuler'), dialog.destroy))
         current.connect("activate", lambda _: new.grab_focus())
         new.connect("activate", lambda _: confirmation.grab_focus())
         confirmation.connect("activate", lambda _: change())
@@ -256,18 +259,20 @@ class Window(Adw.ApplicationWindow):
         else:
             self.settings()
 
-    def work(self, operation, success):
+    def work(self, operation, success, readable=False):
         if self.busy:
             return
         self.busy = True
         self.controls.set_sensitive(False)
         self.settings_button.set_sensitive(False)
-        self.editor.set_sensitive(False)
-        self.listbox.set_sensitive(False)
-        self.status.set_text("Opération en cours…")
+        self.refreshing = readable
+        self.editor.set_sensitive(readable)
+        self.listbox.set_sensitive(readable)
+        self.status.set_text(tr('Notes en cache disponibles · synchronisation des relais…') if readable else tr('Opération en cours…'))
         future = self.pool.submit(operation)
         def finish():
             self.busy = False
+            self.refreshing = False
             self.controls.set_sensitive(self.identity is not None)
             self.settings_button.set_sensitive(True)
             self.editor.set_sensitive(self.identity is not None)
@@ -285,7 +290,7 @@ class Window(Adw.ApplicationWindow):
     def changed(self, _):
         if not self.loading:
             self.dirty = True
-            self.set_title("Notes privées Nostr • modifications non publiées")
+            self.set_title(tr('Notes privées Nostr • modifications non publiées'))
 
     def display(self, note=None):
         self.current = note
@@ -295,13 +300,13 @@ class Window(Adw.ApplicationWindow):
         self.editor.set_text(note.markdown if note else "")
         self.loading = False
         self.dirty = False
-        self.set_title("Notes privées Nostr")
+        self.set_title(tr('Notes privées Nostr'))
 
-    def confirm(self, text, action, label="Abandonner les modifications"):
+    def confirm(self, text, action, label=None):
         dialog = Gtk.MessageDialog(transient_for=self, modal=True, text=text,
                                    message_type=Gtk.MessageType.WARNING)
-        dialog.add_button("Annuler", Gtk.ResponseType.CANCEL)
-        dialog.add_button(label, Gtk.ResponseType.ACCEPT)
+        dialog.add_button(tr('Annuler'), Gtk.ResponseType.CANCEL)
+        dialog.add_button(label or tr("Abandonner les modifications"), Gtk.ResponseType.ACCEPT)
         dialog.set_default_response(Gtk.ResponseType.CANCEL)
         def response(widget, value):
             widget.destroy()
@@ -310,12 +315,12 @@ class Window(Adw.ApplicationWindow):
         dialog.connect("response", response)
         dialog.present()
 
-    def guard(self, action):
-        if self.busy:
+    def guard(self, action, allow_read=False):
+        if self.busy and not (allow_read and self.refreshing):
             return
         def checked():
             if self.dirty:
-                self.confirm("Des modifications ne sont pas publiées. Les abandonner ?", action)
+                self.confirm(tr('Des modifications ne sont pas publiées. Les abandonner ?'), action)
             else:
                 action()
         self.editor.flush(checked)
@@ -325,11 +330,11 @@ class Window(Adw.ApplicationWindow):
             self.pool.shutdown(wait=False)
             return False
         if self.busy:
-            self.status.set_text("Attendre la fin de l’opération avant de fermer.")
+            self.status.set_text(tr('Attendre la fin de l’opération avant de fermer.'))
             return True
         def checked():
             if self.dirty:
-                self.confirm("Fermer et perdre les modifications non publiées ?", self.close_clean)
+                self.confirm(tr('Fermer et perdre les modifications non publiées ?'), self.close_clean)
             else:
                 self.close_clean()
         self.editor.flush(checked)
@@ -344,7 +349,7 @@ class Window(Adw.ApplicationWindow):
         self.guard(lambda: self.display())
 
     def select_row(self, _, row):
-        self.guard(lambda: self.display(row.note))
+        self.guard(lambda: self.display(row.note), allow_read=True)
 
     def render_list(self):
         child = self.listbox.get_first_child()
@@ -371,7 +376,7 @@ class Window(Adw.ApplicationWindow):
         self.render_list()
         self.controls.set_sensitive(True)
         self.editor.set_sensitive(True)
-        self.status.set_text(f"{len(self.notes)} note(s) en cache · {unreadable} indéchiffrable(s).")
+        self.status.set_text(tr('{0} note(s) en cache · {1} indéchiffrable(s).', len(self.notes), unreadable))
         # display() vient de réinitialiser le document : aucune saisie à protéger.
         # Le chargement asynchrone de l’éditeur ne doit pas bloquer la connexion.
         self.do_refresh()
@@ -391,12 +396,12 @@ class Window(Adw.ApplicationWindow):
             return events, notes, unreadable, errors
         def success(result):
             events, notes, unreadable, errors = result
-            selected = self.current.d if self.current else None
             self.events, self.notes = events, notes
-            self.display(next((n for n in notes if n.d == selected), None))
+            # Never replace an editor draft while a background refresh finishes.
+            # Keep the opened version so publish can detect a conflicting update.
             self.render_list()
-            self.status.set_text(f"{len(notes)} note(s) · {unreadable} indéchiffrable(s). " + "\n".join(errors))
-        self.work(operation, success)
+            self.status.set_text(tr('{0} note(s) · {1} indéchiffrable(s). ', len(notes), unreadable) + "\n".join(errors))
+        self.work(operation, success, readable=bool(self.notes))
 
     def publish(self):
         if not self.identity or self.busy:
@@ -410,12 +415,12 @@ class Window(Adw.ApplicationWindow):
 
     def choose_pdf_destination(self):
         first = next((line.strip().lstrip("#").strip() for line in self.text().splitlines()
-                      if line.strip()), "Note Nostr")
+                      if line.strip()), tr('Note Nostr'))
         basename = re.sub(r"[^\w .-]+", "_", first, flags=re.UNICODE).strip(" ._")[:80]
-        chooser = Gtk.FileDialog(title="Exporter la note en PDF")
-        chooser.set_initial_name((basename or "Note Nostr") + ".pdf")
+        chooser = Gtk.FileDialog(title=tr('Exporter la note en PDF'))
+        chooser.set_initial_name((basename or tr('Note Nostr')) + ".pdf")
         filters = Gio.ListStore.new(Gtk.FileFilter)
-        pdf_filter = Gtk.FileFilter(name="Document PDF")
+        pdf_filter = Gtk.FileFilter(name=tr('Document PDF'))
         pdf_filter.add_mime_type("application/pdf")
         pdf_filter.add_pattern("*.pdf")
         filters.append(pdf_filter)
@@ -428,23 +433,27 @@ class Window(Adw.ApplicationWindow):
                 if exc.matches(Gtk.dialog_error_quark(), Gtk.DialogError.CANCELLED) or \
                         exc.matches(Gtk.dialog_error_quark(), Gtk.DialogError.DISMISSED):
                     return
-                self.status.set_text(f"Export PDF impossible : {exc.message}")
+                self.status.set_text(tr('Export PDF impossible : {0}', exc.message))
                 return
             path = file.get_path()
             if not path:
-                self.status.set_text("Choisir un emplacement local pour le fichier PDF.")
+                self.status.set_text(tr('Choisir un emplacement local pour le fichier PDF.'))
                 return
             destination = Path(path)
             if destination.suffix.lower() != ".pdf":
                 destination = destination.with_suffix(".pdf")
             markdown = self.text()
             self.work(lambda: export_markdown_pdf(markdown, destination),
-                      lambda exported: self.status.set_text(f"PDF exporté : {exported}"))
+                      lambda exported: self.status.set_text(tr('PDF exporté : {0}', exported)))
 
         chooser.save(self, None, selected)
 
     def publish_synced(self):
         try:
+            if self.current:
+                latest = next((note for note in self.notes if note.d == self.current.d), None)
+                if latest is None or latest.event["id"] != self.current.event["id"]:
+                    raise ValueError(tr('La note a changé sur les relais. Copiez vos modifications puis ouvrez sa dernière version avant de publier.'))
             event = self.identity.save(self.text(), self.current, self.draft_d)
             # Conserver le même identifiant après un échec de publication.
             if self.current is None:
@@ -458,21 +467,21 @@ class Window(Adw.ApplicationWindow):
     def restore_previous(self):
         def restore():
             if not self.current:
-                self.status.set_text("Sélectionner une note publiée.")
+                self.status.set_text(tr('Sélectionner une note publiée.'))
                 return
             previous = self.identity.previous(self.current, self.events.values())
             if previous is None:
-                self.status.set_text("Aucune version précédente disponible pour cette note.")
+                self.status.set_text(tr('Aucune version précédente disponible pour cette note.'))
                 return
             self.loading = True
             self.editor.set_text(previous.markdown)
             self.loading = False
             self.changed(None)
-            self.status.set_text("Version précédente chargée. Vérifier puis cliquer sur Publier pour la restaurer.")
+            self.status.set_text(tr('Version précédente chargée. Vérifier puis cliquer sur Publier pour la restaurer.'))
         self.guard(restore)
 
     def update_pin_button(self):
-        label = "Désépingler" if self.current and self.current.pinned else "Épingler"
+        label = tr('Désépingler') if self.current and self.current.pinned else tr('Épingler')
         self.pin_button.set_icon_name("notestr-unpin-symbolic" if self.current and self.current.pinned else "notestr-pin-symbolic")
         self.pin_button.set_tooltip_text(label)
         self.pin_button.update_property([Gtk.AccessibleProperty.LABEL], [label])
@@ -490,7 +499,7 @@ class Window(Adw.ApplicationWindow):
             try:
                 self.store.save_events(self.identity.pubkey, list(events.values()))
             except Exception:
-                errors.append("Épinglage accepté, mais écriture du cache local impossible.")
+                errors.append(tr('Épinglage accepté, mais écriture du cache local impossible.'))
             notes, _ = self.identity.notes(events.values())
             return events, notes, errors
         def success(result):
@@ -498,17 +507,16 @@ class Window(Adw.ApplicationWindow):
             self.current = next(n for n in self.notes if n.d == note.d)
             self.update_pin_button()
             self.render_list()
-            self.status.set_text(("Note épinglée." if self.current.pinned else "Note désépinglée.") + "\n" + "\n".join(errors))
+            self.status.set_text((tr('Note épinglée.') if self.current.pinned else tr('Note désépinglée.')) + "\n" + "\n".join(errors))
         self.work(operation, success)
 
     def delete(self):
         if not self.current:
-            self.status.set_text("Sélectionner une note publiée à supprimer.")
+            self.status.set_text(tr('Sélectionner une note publiée à supprimer.'))
             return
-        self.confirm("Demander la suppression de cette note sur les relais ? Les éventuelles modifications seront abandonnées. "
-                     "Nostr ne garantit pas l’effacement de toutes les copies.",
+        self.confirm(tr('Demander la suppression de cette note sur les relais ? Les éventuelles modifications seront abandonnées. Nostr ne garantit pas l’effacement de toutes les copies.'),
                      lambda: self.send(self.identity.delete(self.current), deleting=True),
-                     "Supprimer")
+                     tr('Supprimer'))
 
     def send(self, event, deleting, backup=None):
         def operation():
@@ -522,14 +530,14 @@ class Window(Adw.ApplicationWindow):
             try:
                 self.store.save_events(self.identity.pubkey, list(events.values()))
             except Exception:
-                errors.append("Publication acceptée, mais écriture du cache local impossible.")
+                errors.append(tr('Publication acceptée, mais écriture du cache local impossible.'))
             notes, _ = self.identity.notes(events.values())
             return events, notes, len(good), errors
         def success(result):
             self.events, self.notes, count, errors = result
             self.display(None if deleting else next(n for n in self.notes if n.event["id"] == event["id"]))
             self.render_list()
-            self.status.set_text(f"{'Suppression' if deleting else 'Publication'} acceptée par {count}/{len(self.config['relays'])} relais. "
+            self.status.set_text(tr('{0} acceptée par {1}/{2} relais. ', tr('Suppression') if deleting else tr('Publication'), count, len(self.config['relays']))
                                  + "\n".join(errors))
         self.work(operation, success)
 
@@ -537,32 +545,51 @@ class Window(Adw.ApplicationWindow):
         self.guard(self.show_settings)
 
     def show_settings(self):
-        dialog = Gtk.Window(title="Compte et relais", transient_for=self, modal=True, default_width=560)
+        dialog = Gtk.Window(title=tr('Compte et relais'), transient_for=self, modal=True, default_width=560, default_height=650)
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12,
                       margin_start=20, margin_end=20, margin_top=20, margin_bottom=20)
-        dialog.set_child(box)
-        account = self.identity.keys.public_key_bech32() if self.identity else "Aucun compte ouvert"
+        scroll = Gtk.ScrolledWindow(vexpand=True)
+        scroll.set_child(box)
+        dialog.set_child(scroll)
+        box.append(Gtk.Label(label=tr("Version de l’application") + " : " + __version__, selectable=True))
+        box.append(Gtk.Label(label=tr("Langue"), xalign=0))
+        language = Gtk.DropDown.new_from_strings(["Français", "English"])
+        saved_language = self.store.read("preferences.json", {}).get("language", "fr")
+        language.set_selected(1 if saved_language == "en" else 0)
+        box.append(language)
+        language_info = Gtk.Label(label=tr("La langue sera appliquée au prochain lancement."), wrap=True)
+        box.append(language_info)
+        def save_language():
+            preferences = self.store.read("preferences.json", {})
+            preferences["language"] = "en" if language.get_selected() == 1 else "fr"
+            try:
+                self.store.write("preferences.json", preferences)
+                language_info.set_text(tr("Langue enregistrée. Relancez Notestr pour l’appliquer."))
+            except (OSError, ValueError) as exc:
+                language_info.set_text(str(exc))
+        box.append(button(tr("Enregistrer la langue"), save_language))
+        account = self.identity.keys.public_key_bech32() if self.identity else tr('Aucun compte ouvert')
         box.append(Gtk.Label(label=account, selectable=True, wrap=True))
-        box.append(Gtk.Label(label="Clé privée nsec ou hex (laisser vide pour garder le compte ouvert)", wrap=True))
+        box.append(Gtk.Label(label=tr('Clé privée nsec ou hex (laisser vide pour garder le compte ouvert)'), wrap=True))
         secret = Gtk.PasswordEntry(show_peek_icon=True)
         box.append(secret)
-        remember = Gtk.CheckButton(label="Enregistrer cette clé dans le trousseau Linux")
+        remember = Gtk.CheckButton(label=tr('Enregistrer cette clé dans le trousseau Linux'))
         remember.set_active(True)
         box.append(remember)
-        box.append(Gtk.Label(label="Relais wss://, un par ligne"))
+        box.append(Gtk.Label(label=tr('Relais wss://, un par ligne')))
         relays = Gtk.TextView(wrap_mode=Gtk.WrapMode.WORD_CHAR, height_request=100)
         relays.get_buffer().set_text("\n".join(self.config["relays"]))
         box.append(relays)
         info = Gtk.Label(wrap=True)
         box.append(info)
-        box.append(button("Modifier le mot de passe", lambda: self.show_change_password(dialog, info)))
+        box.append(button(tr('Modifier le mot de passe'), lambda: self.show_change_password(dialog, info)))
         def apply():
             try:
                 buf = relays.get_buffer()
                 urls = relays_from_text(buf.get_text(buf.get_start_iter(), buf.get_end_iter(), True))
                 identity = Identity(secret.get_text()) if secret.get_text().strip() else self.identity
                 if identity is None:
-                    raise ValueError("Saisir la clé privée du compte Pages.")
+                    raise ValueError(tr('Saisir la clé privée du compte Pages.'))
                 if remember.get_active():
                     save_secret(identity)
                 config = {"relays": urls}
@@ -574,10 +601,9 @@ class Window(Adw.ApplicationWindow):
                 dialog.destroy()
                 self.login(identity)
             except Exception as exc:
-                info.set_text("Enregistrement impossible. Vérifier la clé et le trousseau, ou décocher l’enregistrement "
-                              "pour utiliser la clé uniquement pendant cette session.\n" + str(exc))
-        box.append(button("Ouvrir le compte", apply))
-        box.append(button("Annuler", dialog.destroy))
+                info.set_text(tr('Enregistrement impossible. Vérifier la clé et le trousseau, ou décocher l’enregistrement pour utiliser la clé uniquement pendant cette session.\n') + str(exc))
+        box.append(button(tr('Ouvrir le compte'), apply))
+        box.append(button(tr('Annuler'), dialog.destroy))
         dialog.present()
 
 
@@ -588,5 +614,6 @@ class Application(Adw.Application):
     def do_activate(self):
         window = self.get_active_window()
         if window is None:
+            set_language(Storage().read("preferences.json", {}).get("language", "fr"))
             window = Window(self)
         window.present()

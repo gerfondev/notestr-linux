@@ -1,19 +1,17 @@
-# Notes privées Nostr — V3.6 Linux
+# Notes privées Nostr — V3.7 Linux
 
-Documentation mise à jour le 27 septembre 2026. Version du paquet Python : `3.6`.
+Version du paquet Python : `3.7`.
 
 Application Python 3 + GTK4/libadwaita pour lire et éditer des notes Markdown privées compatible avec la version Notestr Android. Interface en français.
 
-## Nouveautés de la version 3.6
+## Nouveautés de la version 3.7
 
-- Épingler plusieurs notes en tête de liste ; les notes épinglées sont classées par date de modification.
-- Synchronisation chiffrée de l’épinglage et du désépinglage avec Notestr Android, sans modifier le texte ni sa date.
-- Épingle barrée pour l’action **Désépingler**, infobulles et descriptions accessibles.
-- Conservation du brouillon ouvert pendant le changement d’épinglage.
-- DOMPurify 3.4.16, retrait de l’ancien filtre HTML embarqué, correctifs cURL et Expat dans l’AppImage.
-- **Numéros de version Android et Linux alignés sur 3.6.**
+- Consultation des notes en cache pendant la synchronisation, brouillon conservé.
+- Liens ouverts dans le navigateur, par clic gauche ou menu contextuel ; curseur main au survol.
+- Numéro de version dans les paramètres.
+- Français ou anglais mémorisé dans les paramètres, appliqué au prochain lancement.
 
-[Télécharger l’AppImage 3.6](https://github.com/gerfondev/notestr-linux/releases/download/v3.6/Notestr-3.6-x86_64.AppImage) · [Notes de version](RELEASE-NOTES-3.6.md).
+[Notes de version](RELEASE-NOTES-3.7.md) · [Télécharger la dernière version](https://github.com/gerfondev/notestr-linux/releases/latest).
 
 ## Nouveautés de la version 3.5.2
 
@@ -52,11 +50,11 @@ ne garantit pas la compatibilité avec les distributions plus anciennes.
 Le trousseau Secret Service et la session graphique restent fournis par le système.
 
 ```bash
-chmod +x Notestr-3.6-x86_64.AppImage
-./Notestr-3.6-x86_64.AppImage
+chmod +x Notestr-3.7-x86_64.AppImage
+./Notestr-3.7-x86_64.AppImage
 ```
 
-Si FUSE est indisponible, utiliser `./Notestr-3.6-x86_64.AppImage --appimage-extract-and-run`.
+Si FUSE est indisponible, utiliser `./Notestr-3.7-x86_64.AppImage --appimage-extract-and-run`.
 Les notes et réglages existants sont réutilisés, comme avec le lancement Python.
 
 ## Nouveauté V3.4 : barre d’actions compacte
@@ -480,3 +478,7 @@ plusieurs appareils et actualiser avant de modifier une note sur un autre appare
 Le cache ne conserve qu’un événement de backup par note ; les relais peuvent
 conserver leurs anciennes copies. La suppression d’une note demande également
 la suppression de son backup. Les anciens clients ne mettent pas ce backup à jour.
+
+### Moteur visuel et sécurité
+
+Les installations depuis le wheel ou les sources nécessitent WebKitGTK 2.54.0 ou ultérieur pour le mode Visuel. Un moteur plus ancien conserve uniquement le mode Markdown. Utiliser l’AppImage pour bénéficier du moteur corrigé embarqué.

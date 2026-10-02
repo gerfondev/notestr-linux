@@ -23,6 +23,9 @@ parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('runtime', type=Path)
 parser.add_argument('--native-debs', type=Path,
                     help='Directory of trusted Ubuntu updates downloaded with apt-get download')
+parser.add_argument('--webkit-install', type=Path, required=True,
+                    help='Reviewed WebKitGTK 2.54.0 DESTDIR built with build-webkit.py')
+parser.add_argument('--webkit-runtime-root', type=Path, required=True, help='Reviewed Ubuntu build root for additional ELF dependencies')
 args = parser.parse_args()
 runtime = args.runtime.resolve()
 header = runtime.read_bytes()[:20]
@@ -218,6 +221,23 @@ print(json.dumps(files))
             raise SystemExit(f'Cannot determine native version: {package}')
     (copyrights.parent / 'native-versions.json').write_text(
         json.dumps(versions, indent=2, sort_keys=True) + '\n')
+    # Source-built security replacement; distribution versions above describe the baseline.
+    subprocess.run([sys.executable, str(ROOT / 'packaging/overlay-webkit.py'),
+                    str(app), str(args.webkit_install)], check=True)
+    subprocess.run([sys.executable, str(ROOT / 'packaging/bundle-webkit-deps.py'),
+                    str(app), str(args.webkit_runtime_root)], check=True)
+    # Validate the final replacement against the libraries actually distributed.
+    runtime_env = dict(os.environ, LD_LIBRARY_PATH=str(app / 'usr/lib/x86_64-linux-gnu'))
+    for binary in app.rglob('*'):
+        if not binary.is_file():
+            continue
+        with binary.open('rb') as stream:
+            if stream.read(4) != b'\x7fELF':
+                continue
+        resolved = subprocess.run(['ldd', str(binary)], capture_output=True,
+                                  text=True, env=runtime_env)
+        if 'not found' in resolved.stdout + resolved.stderr:
+            raise SystemExit(f'Unresolved runtime dependency: {binary.relative_to(app)}')
     copy(ROOT / 'packaging/AppRun', 'AppRun').chmod(0o755)
     copy(ROOT / 'packaging/fr.decentralia.NostrNotes.desktop', 'fr.decentralia.NostrNotes.desktop')
     icon = ROOT / 'src/nostr_notes/assets/fr.decentralia.NostrNotes.png'

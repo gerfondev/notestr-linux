@@ -1,4 +1,5 @@
 """Format Pages personnel. Toute la crypto NIP-44/Schnorr appartient à monstr."""
+from .i18n import tr
 from dataclasses import dataclass, replace
 import hashlib
 import json
@@ -51,7 +52,7 @@ def parse_key(value: str) -> Keys:
             raise ValueError()
         return keys
     except Exception:
-        raise ValueError("Clé privée invalide : saisir une nsec ou 64 caractères hexadécimaux.") from None
+        raise ValueError(tr('Clé privée invalide : saisir une nsec ou 64 caractères hexadécimaux.')) from None
 
 
 def tag_values(event, name):
@@ -88,7 +89,7 @@ class Note:
     @property
     def title(self):
         return next((line.lstrip("# ").strip()[:100] for line in self.markdown.splitlines()
-                     if line.lstrip("# ").strip()), "Sans titre")
+                     if line.lstrip("# ").strip()), tr('Sans titre'))
 
 
 class Identity:
@@ -107,10 +108,10 @@ class Identity:
         markdown = explicit_line_breaks(markdown)
         size = len(markdown.encode("utf-8"))
         if not 1 <= size <= 65535:
-            raise ValueError("Le Markdown doit contenir entre 1 et 65 535 octets UTF-8 (NIP-44 v2).")
+            raise ValueError(tr('Le Markdown doit contenir entre 1 et 65 535 octets UTF-8 (NIP-44 v2).'))
         now = int(time.time())
         if previous and previous.event["created_at"] >= now:
-            raise ValueError("Attendre la seconde suivante avant de republier cette note ; vérifier l’horloge si nécessaire.")
+            raise ValueError(tr('Attendre la seconde suivante avant de republier cette note ; vérifier l’horloge si nécessaire.'))
         identifier = previous.d if previous else d or "".join(
             secrets.choice(string.ascii_lowercase + string.digits) for _ in range(6))
         return self.signed(KIND, [["d", identifier]],
@@ -128,7 +129,7 @@ class Identity:
         old = next((item for item in metadata if item.d == address), None)
         now = int(time.time())
         if old and old.event["created_at"] >= now:
-            raise ValueError("Attendre la seconde suivante avant de changer l’épinglage ; vérifier l’horloge si nécessaire.")
+            raise ValueError(tr('Attendre la seconde suivante avant de changer l’épinglage ; vérifier l’horloge si nécessaire.'))
         return self.signed(BACKUP_KIND, [["d", address]],
                            self.cipher.encrypt("true" if pinned else "false", self.pubkey), now)
 

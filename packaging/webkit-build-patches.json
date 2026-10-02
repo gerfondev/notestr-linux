@@ -1,0 +1,8 @@
+[
+  {
+    "file": "Source/WebCore/bindings/js/JSHTMLMediaElementCustom.cpp",
+    "beforeSha256": "049da5c241a843e48f965532a7c4d38c76e15d2d8fcb2d7f1e660777e4a0ed26",
+    "afterSha256": "cc6b65103c7c43f3f1937f73915ff44480281ca4ee26f734d5a8656b1b1db315",
+    "change": "Wrap video-only implementation in ENABLE(VIDEO), matching generated JSHTMLMediaElement.h. No code enabled in the video-disabled build."
+  }
+]

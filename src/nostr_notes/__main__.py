@@ -15,8 +15,8 @@ def main():
         notes, failures = identity.notes([event])
         assert failures == 0 and notes[0].markdown == "# Vérification\n\nBonjour 👋"
         from .app import Application
-        from .editor import WebKit
-        print("Éditeur visuel WebKitGTK 6.0 : " + ("disponible" if WebKit else "absent, mode Markdown disponible"))
+        from .editor import supported_webkit
+        print("Éditeur visuel WebKitGTK 6.0 : " + ("disponible" if supported_webkit() else "absent, mode Markdown disponible"))
         print("Imports GTK4/libadwaita et Nostr OK ; chiffrement, déchiffrement et signature OK.")
         return 0
     try:

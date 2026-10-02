@@ -1,4 +1,5 @@
 """Export local et atomique du Markdown vers un PDF A4."""
+from .i18n import tr
 from html import escape
 import os
 from pathlib import Path
@@ -44,7 +45,7 @@ def markdown_html(markdown):
     renderer = MarkdownIt("commonmark", {"html": False}).enable(["table", "strikethrough"])
     renderer.renderer.rules["image"] = _image_as_text
     body = renderer.render(markdown)
-    title = next((line.strip().lstrip("#").strip() for line in markdown.splitlines() if line.strip()), "Note Nostr")
+    title = next((line.strip().lstrip("#").strip() for line in markdown.splitlines() if line.strip()), tr('Note Nostr'))
     return ("<!doctype html><html lang=\"fr\"><head><meta charset=\"utf-8\">"
             f"<title>{escape(title)}</title><style>{PDF_CSS}</style></head>"
             f"<body>{body}</body></html>")
@@ -53,10 +54,10 @@ def markdown_html(markdown):
 def export_markdown_pdf(markdown, path):
     """Crée le PDF à côté de sa destination puis le remplace atomiquement."""
     if not markdown.strip():
-        raise ValueError("La note est vide.")
+        raise ValueError(tr('La note est vide.'))
     destination = Path(path).expanduser().resolve()
     if not destination.parent.is_dir():
-        raise ValueError("Le dossier de destination n’existe pas.")
+        raise ValueError(tr('Le dossier de destination n’existe pas.'))
     temporary = None
     try:
         with tempfile.NamedTemporaryFile(prefix=f".{destination.stem}-", suffix=".pdf",
@@ -64,7 +65,7 @@ def export_markdown_pdf(markdown, path):
             temporary = Path(stream.name)
         HTML(string=markdown_html(markdown)).write_pdf(temporary)
         if temporary.read_bytes()[:5] != b"%PDF-" or temporary.stat().st_size < 500:
-            raise RuntimeError("Le fichier PDF généré est invalide.")
+            raise RuntimeError(tr('Le fichier PDF généré est invalide.'))
         os.chmod(temporary, 0o600)
         os.replace(temporary, destination)
         temporary = None

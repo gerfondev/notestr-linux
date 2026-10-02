@@ -11,8 +11,8 @@ Depuis la racine du projet :
 
 ```bash
 curl -fL https://github.com/AppImage/type2-runtime/releases/download/continuous/runtime-x86_64 -o /tmp/notestr-runtime-x86_64
-python3 packaging/build-appimage.py /tmp/notestr-runtime-x86_64
-./dist/Notestr-3.6-x86_64.AppImage --appimage-extract-and-run --check
+python3 packaging/build-appimage.py /tmp/notestr-runtime-x86_64 --webkit-install /tmp/notestr-webkit-build/webkit-install --webkit-runtime-root /tmp/ubuntu-build-root
+./dist/Notestr-3.7-x86_64.AppImage --appimage-extract-and-run --check
 ```
 
 Le runtime provient du projet officiel [AppImage/type2-runtime](https://github.com/AppImage/type2-runtime).
@@ -32,7 +32,7 @@ ni sauvegarde. Le bac à sable WebKit reste actif.
 Vérification graphique de l’image produite, dans une session Linux :
 
 ```bash
-python3 packaging/test-appimage.py dist/Notestr-3.6-x86_64.AppImage
+python3 packaging/test-appimage.py dist/Notestr-3.7-x86_64.AppImage
 ```
 
 Ce test extrait temporairement l’image et exécute le test GTK/WebKit avec son
@@ -56,14 +56,14 @@ Le fichier AppImage et son SHA-256 doivent correspondre à cette version.
 
 ## Reconstruction 3.5.2 et mises à jour natives
 
-Installer les versions Python validées avant la construction (pour 3.6 : `packaging/requirements-3.6.txt`) :
+Installer les versions Python validées avant la construction (pour 3.6 et 3.7 : `packaging/requirements-3.6.txt`) :
 
 ```bash
 .venv/bin/python -m pip install -r packaging/requirements-3.5.2.txt
 .venv/bin/python -m pip install -e '.[test]' build
 mkdir -p build/native-updates
 (cd build/native-updates && apt-get download libkrb5-3:amd64 libk5crypto3:amd64 libkrb5support0:amd64 libgssapi-krb5-2:amd64)
-python3 packaging/build-appimage.py /tmp/notestr-runtime-x86_64 --native-debs build/native-updates
+python3 packaging/build-appimage.py /tmp/notestr-runtime-x86_64 --native-debs build/native-updates --webkit-install /tmp/notestr-webkit-build/webkit-install --webkit-runtime-root /tmp/ubuntu-build-root
 .venv/bin/python packaging/build-python.py
 ```
 
@@ -84,3 +84,16 @@ Aucune mise à jour supplémentaire n’est disponible dans les dépôts consult
 ## Construction 3.6
 
 Les versions Python restent celles du verrou `requirements-3.6.txt`. En complément des quatre paquets Kerberos documentés ci-dessus, fournir à `--native-debs` les paquets Ubuntu officiels `libcurl3t64-gnutls=8.5.0-2ubuntu10.15` et `libexpat1=2.6.1-2ubuntu0.6`. Le constructeur retire uniquement les exemples nsec de documentation dans les métadonnées des dépendances et actualise leur RECORD ; leur code et leurs licences sont conservés.
+
+## WebKit corrigé pour 3.7
+
+Le moteur Ubuntu 2.52.6 est remplacé par WebKitGTK 2.54.0 compilé depuis l’archive officielle, dont l’empreinte est vérifiée par `build-webkit.py`. Les options correspondent à l’usage local de l’éditeur : GStreamer, vidéo, audio Web, WebGL et synthèse vocale désactivés. L’installation est écrite dans un répertoire DESTDIR, jamais dans le système hôte.
+
+```sh
+python3 packaging/build-webkit.py webkitgtk-2.54.0.tar.xz /tmp/notestr-webkit-build
+python3 packaging/build-appimage.py /tmp/runtime-x86_64 --webkit-install /tmp/notestr-webkit-build/webkit-install --webkit-runtime-root /tmp/ubuntu-build-root
+```
+
+Fournir aussi `--native-debs` avec les mises à jour Ubuntu vérifiées. Le fichier embarqué `webkit-source-build.json` identifie le remplacement source ; `native-versions.json` conserve l’inventaire de la base Ubuntu. Tester l’AppImage final avec `packaging/test-appimage.py` et vérifier toutes les dépendances ELF avant distribution.
+
+Le constructeur applique une garde `ENABLE(VIDEO)` manquante dans `JSHTMLMediaElementCustom.cpp`, cohérente avec son en-tête généré. Ce correctif de compilation exclut uniquement du code vidéo déjà désactivé. Les empreintes avant/après sont dans `webkit-build-patches.json` et dans le manifeste embarqué.

@@ -1,4 +1,5 @@
 """Verrouillage local de l'interface avec dérivation Argon2id."""
+from .i18n import tr
 import base64
 import hmac
 import secrets
@@ -24,7 +25,7 @@ class PasswordLock:
 
     def set_password(self, password):
         if len(password) < 8:
-            raise ValueError("Le mot de passe doit contenir au moins 8 caractères.")
+            raise ValueError(tr('Le mot de passe doit contenir au moins 8 caractères.'))
         salt = secrets.token_bytes(self.SALT_LEN)
         digest = self._derive(password, salt)
         self.storage.write("lock.json", {
@@ -58,12 +59,12 @@ class PasswordLock:
             if len(salt) != self.SALT_LEN or len(expected) != self.HASH_LEN:
                 raise ValueError
         except (KeyError, TypeError, ValueError):
-            raise ValueError("Configuration du verrouillage local invalide.") from None
+            raise ValueError(tr('Configuration du verrouillage local invalide.')) from None
         return hmac.compare_digest(self._derive(password, salt), expected)
 
     def change_password(self, current_password, new_password):
         if not self.verify(current_password):
-            raise ValueError("Le mot de passe actuel est incorrect.")
+            raise ValueError(tr('Le mot de passe actuel est incorrect.'))
         self.set_password(new_password)
 
     def _derive(self, password, salt):

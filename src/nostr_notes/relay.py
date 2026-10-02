@@ -1,4 +1,5 @@
 """Transport NIP-01 borné, avec EOSE et accusés OK ; aucun secret envoyé."""
+from .i18n import tr
 import asyncio
 import json
 import secrets
@@ -33,13 +34,13 @@ async def query_one(url, pubkey):
                                 page.append(e)
                                 events[e["id"]] = e
                             if len(page) > 10000:
-                                raise ValueError("Réponse du relais trop volumineuse.")
+                                raise ValueError(tr('Réponse du relais trop volumineuse.'))
                         elif msg[0] == "EOSE" and len(msg) >= 2 and msg[1] == sub:
                             break
                         elif msg[0] == "CLOSED" and len(msg) >= 2 and msg[1] == sub:
-                            raise ValueError("Abonnement refusé par le relais.")
+                            raise ValueError(tr('Abonnement refusé par le relais.'))
                         elif msg[0] == "AUTH":
-                            raise ValueError("Ce relais exige NIP-42, non pris en charge en V1.")
+                            raise ValueError(tr('Ce relais exige NIP-42, non pris en charge en V1.'))
                     await ws.send(json.dumps(["CLOSE", sub]))
                     if not page:
                         break
@@ -50,11 +51,11 @@ async def query_one(url, pubkey):
                         if all(e["created_at"] == oldest for e in page) and len(page) < PAGE_SIZE:
                             until = oldest - 1
                         else:
-                            raise ValueError("Pagination saturée sur une même seconde ; récupération incomplète.")
+                            raise ValueError(tr('Pagination saturée sur une même seconde ; récupération incomplète.'))
                     else:
                         until = oldest
                 else:
-                    raise ValueError("Limite de pagination atteinte ; récupération incomplète.")
+                    raise ValueError(tr('Limite de pagination atteinte ; récupération incomplète.'))
         return list(events.values())
     return await asyncio.wait_for(run(), TIMEOUT)
 
@@ -67,10 +68,10 @@ async def publish_one(url, event):
                 msg = json.loads(await ws.recv())
                 if isinstance(msg, list) and len(msg) >= 4 and msg[0] == "OK" and msg[1] == event["id"]:
                     if msg[2] is not True:
-                        raise ValueError("Publication refusée : " + str(msg[3])[:200])
+                        raise ValueError(tr('Publication refusée : ') + str(msg[3])[:200])
                     return True
                 if isinstance(msg, list) and msg and msg[0] == "AUTH":
-                    raise ValueError("Ce relais exige NIP-42, non pris en charge en V1.")
+                    raise ValueError(tr('Ce relais exige NIP-42, non pris en charge en V1.'))
     return await asyncio.wait_for(run(), TIMEOUT)
 
 
@@ -79,7 +80,7 @@ async def across(relays, operation, *args):
     good, errors = {}, []
     for url, result in zip(relays, results):
         if isinstance(result, BaseException):
-            reason = "Délai dépassé" if isinstance(result, TimeoutError) else str(result) or type(result).__name__
+            reason = tr('Délai dépassé') if isinstance(result, TimeoutError) else str(result) or type(result).__name__
             errors.append(f"{url} : {reason}")
         else:
             good[url] = result

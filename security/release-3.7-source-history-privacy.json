@@ -1,0 +1,91 @@
+{
+  "checkedAt": "2026-10-01T20:42:12.879342+00:00",
+  "sourceAndArchiveEntries": 1556,
+  "findings": [],
+  "images": [
+    {
+      "file": "notestr-android/app/src/main/res/drawable-nodpi/notestr_logo.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "notestr-android/app/src/main/res/mipmap-hdpi/ic_launcher.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "notestr-android/app/src/main/res/mipmap-hdpi/ic_launcher_foreground.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "notestr-android/app/src/main/res/mipmap-mdpi/ic_launcher.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "notestr-android/app/src/main/res/mipmap-mdpi/ic_launcher_foreground.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "notestr-android/app/src/main/res/mipmap-xhdpi/ic_launcher.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "notestr-android/app/src/main/res/mipmap-xhdpi/ic_launcher_foreground.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "notestr-android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "notestr-android/app/src/main/res/mipmap-xxhdpi/ic_launcher_foreground.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "notestr-android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "notestr-android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "notestr-android/artwork/notestr.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "notestr-linux/src/nostr_notes/assets/fr.decentralia.NostrNotes.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    }
+  ],
+  "history": [
+    {
+      "repository": "notestr-android",
+      "commits": 13,
+      "existingCommitsWithPersonalAuthorMetadata": 2,
+      "historicalBlobsInspected": 285,
+      "historicalBlobsWithOwnerPathMarkers": 0,
+      "rewritten": false
+    },
+    {
+      "repository": "notestr-linux",
+      "commits": 7,
+      "existingCommitsWithPersonalAuthorMetadata": 1,
+      "historicalBlobsInspected": 126,
+      "historicalBlobsWithOwnerPathMarkers": 0,
+      "rewritten": false
+    }
+  ],
+  "limits": "Targeted owner paths, credential patterns and image metadata, including nested AAR/JAR. Third-party licence attribution retained. Historical author metadata already public remains unchanged. Synthetic keys in tests are intentionally retained. Not exhaustive."
+}

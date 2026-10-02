@@ -1,3 +1,23 @@
+# Version 3.7 — contrôles des 1er et 2 octobre 2026
+
+Publication Android et Linux 3.7 explicitement demandée par l’utilisateur. Le présent contrôle est ciblé, non exhaustif.
+
+699 coordonnées Maven/Cargo/npm/PyPI vérifiées auprès d’OSV et des registres officiels : aucune alerte retournée et aucune erreur de récupération des métadonnées. Les réserves de compatibilité et de maintenance antérieures subsistent, notamment TOAST UI Editor 3.2.2 archivé. L’absence d’alerte ne garantit pas l’absence de vulnérabilité inconnue.
+
+Les index Ubuntu officiels renouvelés ne proposent aucune mise à jour supplémentaire pour les 181 paquets natifs de la base AppImage. Depuis 3.6, cette base inclut les correctifs gvfs/gvfs-libs 1.54.4-0ubuntu1~24.04.4, heif-gdk-pixbuf/libheif1 1.17.6-1ubuntu4.9, libgbm1 25.2.8-0ubuntu0.24.04.3 et libssl3t64 3.0.13-0ubuntu3.16.
+
+Exception WebKit : l’avis [WSA-2026-0006](https://webkitgtk.org/security/WSA-2026-0006.html) concerne le moteur 2.52.6 de cette base. WebKitGTK et JavaScriptCore 2.54.0 ont été compilés depuis l’archive officielle vérifiée et leur version chargée a été contrôlée. Une garde de compilation vidéo manquante est documentée avec ses empreintes avant/après. La réserve WSA-2026-0006 est traitée par ce remplacement. Pour les installations Python utilisant un ancien moteur système, le mode visuel est désactivé et le mode Markdown reste disponible.
+
+75 tests Python réussis. Tests graphiques avec le nouveau moteur réussis : éditeur, conservation des notes, chiffrement, langues et numéro de version. Le vrai clic droit a été activé avec interception du lancement du navigateur : URL correcte, curseur main et texte conservé. 376 fichiers ELF examinés sans dépendance manquante. Les contrôles des paquets définitifs sont consignés séparément.
+
+Les vérifications ciblées des sources et de l’historique n’ont pas détecté les marqueurs personnels recherchés dans les fichiers examinés. Un ancien commit Linux et deux anciens commits Android portent une identité d’auteur personnelle ; ils sont conservés sans réécriture d’historique. Les nouveaux commits et tags emploient l’identité neutre du projet.
+
+Précision concernant les anciens rapports : les cinq blocs PEM privés présents dans GnuTLS sont des clés de test publiées par la bibliothèque amont, vérifiées par comparaison de leurs empreintes avec les fixtures officielles. Ce ne sont ni des clés du propriétaire ni de simples chaînes de délimiteurs. Les mentions légales des dépendances sont conservées.
+
+Onze paquets Ubuntu supplémentaires fournissent les codecs du nouveau moteur ; 26 bibliothèques et leurs licences sont inventoriées. Aucun candidat APT plus récent disponible. Le contrôle OSV retourne cinq avis conservés comme exceptions d’exposition : encodage GIF/APNG/JPEG XL ou AVIF non utilisé par WebKit, et troncature `size_t` propre aux plateformes 32 bits, alors que l’AppImage est x86_64. Ces avis ne sont pas présentés comme corrigés. Voir `security/release-3.7-extra-native.json` pour chaque analyse ; recontrôler si les usages ou architectures changent.
+
+---
+
 # Version 3.6 — contrôle du 27 septembre 2026
 
 Publication GitHub des versions Android et Linux 3.6 explicitement autorisée par l’utilisateur. Android versionCode 22. Numéros publics alignés, historiques conservés.

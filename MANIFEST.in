@@ -1,8 +1,11 @@
 include README.md SECURITY.md VALIDATION.md lancer-notes.sh
-recursive-include packaging *.py *.md *.txt *.desktop AppRun
+recursive-include packaging *.py *.md *.txt *.json *.desktop AppRun
 recursive-include releases *.md *.json
 recursive-include tests *.py
 
 include PINNING.md RELEASE-NOTES-3.6.md
 recursive-include security release-3.6-*.json
 exclude security/release-3.6-python-packages.json
+
+include RELEASE-NOTES-3.7.md
+recursive-include security release-3.7-*.json

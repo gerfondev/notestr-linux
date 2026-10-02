@@ -1,0 +1,159 @@
+{
+  "date": "2026-10-02T08:25:33.129332+00:00",
+  "packages": {
+    "libjxl0.7": "0.7.0-10.2ubuntu6.1",
+    "libavif16": "1.0.4-1ubuntu3",
+    "libdav1d7": "1.4.1-1build1",
+    "libgav1-1": "0.18.0-1build3",
+    "librav1e0": "0.7.1-2",
+    "libsvtav1enc1d1": "1.7.0+dfsg-2build1",
+    "libaom3": "3.8.2-2ubuntu0.2",
+    "libyuv0": "0.0~git202401110.af6ac82-1",
+    "libabsl20220623t64": "20220623.1-3.1ubuntu3.2",
+    "libhwy1t64": "1.0.7-8.1build1",
+    "libbrotli1": "1.1.0-2build2"
+  },
+  "queries": [
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "jpeg-xl"
+      },
+      "version": "0.7.0-10.2ubuntu6.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libavif"
+      },
+      "version": "1.0.4-1ubuntu3"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "dav1d"
+      },
+      "version": "1.4.1-1build1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libgav1"
+      },
+      "version": "0.18.0-1build3"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "rust-rav1e"
+      },
+      "version": "0.7.1-2"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "svt-av1"
+      },
+      "version": "1.7.0+dfsg-2build1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "aom"
+      },
+      "version": "3.8.2-2ubuntu0.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libyuv"
+      },
+      "version": "0.0~git202401110.af6ac82-1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "abseil"
+      },
+      "version": "20220623.1-3.1ubuntu3.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "highway"
+      },
+      "version": "1.0.7-8.1build1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "brotli"
+      },
+      "version": "1.1.0-2build2"
+    }
+  ],
+  "results": {
+    "results": [
+      {
+        "vulns": [
+          {
+            "id": "UBUNTU-CVE-2021-36691",
+            "modified": "2026-04-22T12:57:45.379801Z"
+          },
+          {
+            "id": "UBUNTU-CVE-2026-52584",
+            "modified": "2026-07-29T10:18:35.806061Z"
+          },
+          {
+            "id": "UBUNTU-CVE-2026-82522",
+            "modified": "2026-09-16T11:43:09Z"
+          }
+        ]
+      },
+      {
+        "vulns": [
+          {
+            "id": "UBUNTU-CVE-2025-48174",
+            "modified": "2026-05-20T16:23:32.136489Z"
+          },
+          {
+            "id": "UBUNTU-CVE-2025-48175",
+            "modified": "2026-05-20T16:23:32.141611Z"
+          }
+        ]
+      },
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {}
+    ]
+  },
+  "source": "Ubuntu OSV source-package metadata; official signed APT Ubuntu build root",
+  "aptCandidates": {
+    "libjxl0.7": "0.7.0-10.2ubuntu6.1",
+    "libavif16": "1.0.4-1ubuntu3",
+    "libdav1d7": "1.4.1-1build1",
+    "libgav1-1": "0.18.0-1build3",
+    "librav1e0": "0.7.1-2",
+    "libsvtav1enc1d1": "1.7.0+dfsg-2build1",
+    "libaom3": "3.8.2-2ubuntu0.2",
+    "libyuv0": "0.0~git202401110.af6ac82-1",
+    "libabsl20220623t64": "20220623.1-3.1ubuntu3.2",
+    "libhwy1t64": "1.0.7-8.1build1",
+    "libbrotli1": "1.1.0-2build2"
+  },
+  "updates": [],
+  "exposureReview": {
+    "UBUNTU-CVE-2021-36691": "GIF encoding with cjxl; no cjxl tool distributed or called. WebKit uses JxlDecoder APIs only.",
+    "UBUNTU-CVE-2026-52584": "DecodeImageAPNG is in JPEG XL encoding/tool input support, not the JxlDecoder API used by WebKit. No JPEG XL tools distributed.",
+    "UBUNTU-CVE-2026-82522": "32-bit size_t truncation; this AppImage and its native libraries are x86_64 (64-bit).",
+    "UBUNTU-CVE-2025-48174": "AVIF writing stream makeRoom; WebKit AVIFImageReader uses decoder APIs and YUVToRGB, not encoding/writing.",
+    "UBUNTU-CVE-2025-48175": "AVIF RGBToYUV encoding conversion; WebKit calls YUVToRGB instead."
+  },
+  "limitation": "Five known advisories retained as documented exposure exceptions, not claimed fixed. No newer Ubuntu candidate available; ABI-compatible distribution versions retained. Reassess on codec use or architecture changes."
+}

@@ -8,7 +8,7 @@ from unittest.mock import patch
 
 from nostr_notes.app import Application, Window
 from nostr_notes.core import Identity
-from gi.repository import GLib, Gtk
+from gi.repository import GLib, Gtk, Adw, Gio
 
 
 def wait_for(condition, timeout=12):
@@ -37,9 +37,12 @@ def flush(editor):
     wait_for(lambda: done)
 
 
+Adw.init()
 with tempfile.TemporaryDirectory(prefix='notes-v2-test-') as data:
     os.environ['XDG_DATA_HOME'] = data
     app = Application()
+    app.set_application_id("fr.decentralia.NostrNotes.Test")
+    app.set_flags(Gio.ApplicationFlags.NON_UNIQUE)
     app.register(None)
     with patch.object(Window, 'initial_unlock', return_value=False), patch.object(Window, 'do_refresh'):
         win = Window(app)
@@ -225,6 +228,7 @@ with tempfile.TemporaryDirectory(prefix='notes-v2-test-') as data:
         backup = win.identity.backup(original, updated)
         current = win.identity.notes([updated])[0][0]
         win.events = {e['id']: e for e in (updated, backup)}
+        win.notes = [current]
         win.display(current)
         wait_for(lambda: not editor.pending_document)
         win.restore_previous()

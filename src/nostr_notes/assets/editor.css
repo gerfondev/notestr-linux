@@ -18,3 +18,9 @@ html, body { height: 100%; margin: 0; background: #fff; color: #202124; }
 .toastui-editor-ww-code-block .notes-copy-code:hover { background: #eee; }
 .toastui-editor-ww-code-block .notes-copy-code:focus-visible { outline: 2px solid #3584e4; }
 .toastui-editor-contents .toastui-editor-ww-code-block pre { padding-top: 42px; }
+
+/* A web link remains clickable inside the editable document, including nested formatting. */
+.toastui-editor-contents a[href^="http://" i],
+.toastui-editor-contents a[href^="https://" i],
+.toastui-editor-contents a[href^="http://" i] *,
+.toastui-editor-contents a[href^="https://" i] * { cursor: pointer; }

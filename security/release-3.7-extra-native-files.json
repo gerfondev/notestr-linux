@@ -1,0 +1,132 @@
+{
+  "libjxl.so.0.7": {
+    "package": "libjxl0.7",
+    "version": "0.7.0-10.2ubuntu6.1",
+    "sha256": "2f1258f33f060a53850b03ff9e4593e88a6cc8d1cc033b692a0dc11d9cbabb79"
+  },
+  "libavif.so.16": {
+    "package": "libavif16",
+    "version": "1.0.4-1ubuntu3",
+    "sha256": "c9196de5e0bb027bba04524c56b0a9a5e573d4777870fdea6db78b2624c89a2f"
+  },
+  "libdav1d.so.7": {
+    "package": "libdav1d7",
+    "version": "1.4.1-1build1",
+    "sha256": "314d53716c5f74d39dcfcfe29e341671ad25bf43022a218e54d019c35ce5222c"
+  },
+  "libgav1.so.1": {
+    "package": "libgav1-1",
+    "version": "0.18.0-1build3",
+    "sha256": "7540dbbf9dab0332723945ec95f509c53a981008ab0efdb74777e8bfb6bb32e6"
+  },
+  "librav1e.so.0": {
+    "package": "librav1e0",
+    "version": "0.7.1-2",
+    "sha256": "17a828222eaf81d649941b6085d78000f05aedf812d7a22f4c1ce515ed80c7ab"
+  },
+  "libSvtAv1Enc.so.1": {
+    "package": "libsvtav1enc1d1",
+    "version": "1.7.0+dfsg-2build1",
+    "sha256": "2e5a31a7e8abbf30367aae047ef8a0872e583868aba6461e57b967bd96ee2f01"
+  },
+  "libaom.so.3": {
+    "package": "libaom3",
+    "version": "3.8.2-2ubuntu0.2",
+    "sha256": "8237d4144def32f99903834d4a11892f8e133ae8592b6fe3325e541a917e1bbf"
+  },
+  "libyuv.so.0": {
+    "package": "libyuv0",
+    "version": "0.0~git202401110.af6ac82-1",
+    "sha256": "9e27032f74d784ba996281fd01368536c097a216a89da084f08e1c26f5b6fbd8"
+  },
+  "libabsl_synchronization.so.20220623": {
+    "package": "libabsl20220623t64",
+    "version": "20220623.1-3.1ubuntu3.2",
+    "sha256": "91d691623fd231670ca8f0b8d7c784f04e6e14a7a36284b508da9189a495d416"
+  },
+  "libabsl_graphcycles_internal.so.20220623": {
+    "package": "libabsl20220623t64",
+    "version": "20220623.1-3.1ubuntu3.2",
+    "sha256": "fbfb724d7b37cd3e459bbfede0cd1baa3b85a50449440512f7fba54b315d0cb1"
+  },
+  "libabsl_stacktrace.so.20220623": {
+    "package": "libabsl20220623t64",
+    "version": "20220623.1-3.1ubuntu3.2",
+    "sha256": "b61e56ed0db93a439cff450f3b558e8827d58bf41c84a4fea0172831b546b90b"
+  },
+  "libabsl_symbolize.so.20220623": {
+    "package": "libabsl20220623t64",
+    "version": "20220623.1-3.1ubuntu3.2",
+    "sha256": "9ddd86a02f02c1e9e73965e4cfd68444e5909d14432b7d1b2368a470538e122b"
+  },
+  "libabsl_time.so.20220623": {
+    "package": "libabsl20220623t64",
+    "version": "20220623.1-3.1ubuntu3.2",
+    "sha256": "32701d0d0b7ac7bc5b701f15ec38c40c4bea499cf910393f6b6fa90a43926d54"
+  },
+  "libabsl_malloc_internal.so.20220623": {
+    "package": "libabsl20220623t64",
+    "version": "20220623.1-3.1ubuntu3.2",
+    "sha256": "8fe5552915edab38e7879e836555b252d84aff8356d4c485a851948775a4b8d1"
+  },
+  "libabsl_base.so.20220623": {
+    "package": "libabsl20220623t64",
+    "version": "20220623.1-3.1ubuntu3.2",
+    "sha256": "3e8f0569820421d972053cb4930c8580cf693100826ac5829e7b55dc21e189e7"
+  },
+  "libabsl_spinlock_wait.so.20220623": {
+    "package": "libabsl20220623t64",
+    "version": "20220623.1-3.1ubuntu3.2",
+    "sha256": "40710162278d96975c7fe4829d56c6b5bddc2c4dee7636a348ecdf62e0353f5c"
+  },
+  "libabsl_raw_logging_internal.so.20220623": {
+    "package": "libabsl20220623t64",
+    "version": "20220623.1-3.1ubuntu3.2",
+    "sha256": "ba514da06b84f6a27765b91b2c4180b82d82eea2f4518c95e6f6ac556a9122d8"
+  },
+  "libabsl_strings.so.20220623": {
+    "package": "libabsl20220623t64",
+    "version": "20220623.1-3.1ubuntu3.2",
+    "sha256": "7c14e122c7bf05eaac2bd31c74cf1677c01898e6421e40c50767c33e9e9564b2"
+  },
+  "libabsl_time_zone.so.20220623": {
+    "package": "libabsl20220623t64",
+    "version": "20220623.1-3.1ubuntu3.2",
+    "sha256": "1f2c9c6bedd75a526d10243d5093fb8688cdeca987c02cfef8476fc64097d984"
+  },
+  "libabsl_int128.so.20220623": {
+    "package": "libabsl20220623t64",
+    "version": "20220623.1-3.1ubuntu3.2",
+    "sha256": "d1a033657b97b6467f6a1a1d5aceff6ea56d00608840db7966dcbc0fd3c91ffb"
+  },
+  "libabsl_strings_internal.so.20220623": {
+    "package": "libabsl20220623t64",
+    "version": "20220623.1-3.1ubuntu3.2",
+    "sha256": "f69b22ba9219d57b6dfeb86aee1591b93268b2cca86801af4ac6c8f057a738d8"
+  },
+  "libabsl_throw_delegate.so.20220623": {
+    "package": "libabsl20220623t64",
+    "version": "20220623.1-3.1ubuntu3.2",
+    "sha256": "336db4303a23bdbadedd27d41901bcef40aeaf81a63589a23aee9d76575d81b7"
+  },
+  "libabsl_debugging_internal.so.20220623": {
+    "package": "libabsl20220623t64",
+    "version": "20220623.1-3.1ubuntu3.2",
+    "sha256": "c87455d57d7b9c8b434fd3c251899acf98073f411bf6a3caf0dd73e836cf0706"
+  },
+  "libabsl_demangle_internal.so.20220623": {
+    "package": "libabsl20220623t64",
+    "version": "20220623.1-3.1ubuntu3.2",
+    "sha256": "7b5dedce477e918b7acb98cad7245c291bdc56e64bd77a1c43fd66203c9094e3"
+  },
+  "libhwy.so.1": {
+    "package": "libhwy1t64",
+    "version": "1.0.7-8.1build1",
+    "sha256": "18d2e318b1ca0b422c61f40ba71c8e4fc569ded626bc5641f1553115d8f2a349"
+  },
+  "libbrotlienc.so.1": {
+    "package": "libbrotli1",
+    "version": "1.1.0-2build2",
+    "sha256": "6e59301f6c3a05815ecc6cd8c56714280367da1f6737e9f077f5847d86c509f2"
+  }
+}

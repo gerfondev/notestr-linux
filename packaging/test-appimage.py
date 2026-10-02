@@ -15,8 +15,15 @@ with tempfile.TemporaryDirectory(prefix='notestr-image-test-') as work:
     env = dict(os.environ, APPDIR=str(app))
     subprocess.run([str(app / 'AppRun'), '--check'], env=env, check=True)
     launcher = (app / 'AppRun').read_text().replace('-m nostr_notes "$@"', '"$@"')
+    subprocess.run(['/bin/sh', '-c', launcher, 'AppRun-test', '-c',
+                    'from nostr_notes.editor import WebKit, supported_webkit; '
+                    'assert supported_webkit(); '
+                    'version = (WebKit.get_major_version(), WebKit.get_minor_version(), WebKit.get_micro_version()); '
+                    'assert version == (2, 54, 0), version; print("WebKitGTK embarqué :", version)'],
+                   env=env, check=True)
     subprocess.run(['/bin/sh', '-c', launcher, 'AppRun-test',
                     str(root / 'tests/gtk_editor_smoke.py')], env=env, check=True)
+    subprocess.run(['/bin/sh', '-c', launcher, 'AppRun-test', str(root / 'tests/gtk_language_smoke.py')], env=env, check=True)
     subprocess.run(['/bin/sh', '-c', launcher, 'AppRun-test', '-c',
                     "from nostr_notes.pdf_export import export_markdown_pdf; "
                     "from pathlib import Path; import sys; "

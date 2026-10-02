@@ -1,4 +1,5 @@
 """Configuration publique et cache d'événements chiffrés ; jamais de Markdown clair."""
+from .i18n import tr
 import json
 import os
 from pathlib import Path
@@ -11,15 +12,15 @@ DEFAULT_RELAY = "wss://relay.decentralia.fr"
 def relays_from_text(text):
     values = list(dict.fromkeys(text.replace(",", " ").split()))
     if not values:
-        raise ValueError("Indiquer au moins un relais wss://.")
+        raise ValueError(tr('Indiquer au moins un relais wss://.'))
     for value in values:
         url = urlsplit(value)
         if url.scheme != "wss" or not url.hostname or url.username or url.password or url.fragment:
-            raise ValueError("Chaque relais doit être une URL wss:// valide sans identifiants ni fragment.")
+            raise ValueError(tr('Chaque relais doit être une URL wss:// valide sans identifiants ni fragment.'))
         try:
             _ = url.port
         except ValueError:
-            raise ValueError("Port du relais invalide.") from None
+            raise ValueError(tr('Port du relais invalide.')) from None
     return values
 
 
@@ -36,7 +37,7 @@ class Storage:
         try:
             return json.loads(path.read_text())
         except (ValueError, OSError):
-            raise ValueError(f"Fichier local illisible : {path}. Le sauvegarder puis le retirer pour repartir.") from None
+            raise ValueError(tr('Fichier local illisible : {0}. Le sauvegarder puis le retirer pour repartir.', path)) from None
 
     def write(self, name, data):
         fd, path = tempfile.mkstemp(dir=self.root, prefix=".write-")
