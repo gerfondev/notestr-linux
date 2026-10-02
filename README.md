@@ -2,7 +2,7 @@
 
 Version du paquet Python : `3.7`.
 
-Application Python 3 + GTK4/libadwaita pour lire et éditer des notes Markdown privées compatible avec la version Notestr Android. Interface en français.
+Application Python 3 + GTK4/libadwaita pour lire et éditer des notes Markdown privées compatible avec la version Notestr Android. Langues disponibles : français, anglais.
 
 ## Nouveautés de la version 3.7
 
