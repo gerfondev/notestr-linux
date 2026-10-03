@@ -1,8 +1,15 @@
-# Notes privées Nostr — V3.7 Linux
+# Notes privées Nostr — V3.7.1 Linux
 
-Version du paquet Python : `3.7`.
+Version du paquet Python : `3.7.1`.
 
 Application Python 3 + GTK4/libadwaita pour lire et éditer des notes Markdown privées compatible avec la version Notestr Android. Langues disponibles : français, anglais.
+
+## Correction de la version 3.7.1
+
+- Copier-coller des URL et du texte dans la fenêtre « Insérer un lien » corrigé : la note n’est plus modifiée pendant la saisie du lien.
+- Bibliothèque graphique Linux actualisée et contrôles de sécurité renouvelés.
+
+[Notes de version 3.7.1](RELEASE-NOTES-3.7.1.md).
 
 ## Nouveautés de la version 3.7
 
@@ -50,11 +57,11 @@ ne garantit pas la compatibilité avec les distributions plus anciennes.
 Le trousseau Secret Service et la session graphique restent fournis par le système.
 
 ```bash
-chmod +x Notestr-3.7-x86_64.AppImage
-./Notestr-3.7-x86_64.AppImage
+chmod +x Notestr-3.7.1-x86_64.AppImage
+./Notestr-3.7.1-x86_64.AppImage
 ```
 
-Si FUSE est indisponible, utiliser `./Notestr-3.7-x86_64.AppImage --appimage-extract-and-run`.
+Si FUSE est indisponible, utiliser `./Notestr-3.7.1-x86_64.AppImage --appimage-extract-and-run`.
 Les notes et réglages existants sont réutilisés, comme avec le lancement Python.
 
 ## Nouveauté V3.4 : barre d’actions compacte

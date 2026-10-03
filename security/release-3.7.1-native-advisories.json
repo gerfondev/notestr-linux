@@ -1,0 +1,1804 @@
+{
+  "checkedAt": "2026-10-02T22:08:42.024290+00:00",
+  "queries": [
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "adwaita-icon-theme"
+      },
+      "version": "46.0-1+zorin1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "dconf"
+      },
+      "version": "0.40.0-4ubuntu0.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "fonts-dejavu"
+      },
+      "version": "2.37-8"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libadwaita-1"
+      },
+      "version": "1.5.0-1ubuntu2+zorin1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "gobject-introspection"
+      },
+      "version": "1.80.1-1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "gdk-pixbuf"
+      },
+      "version": "2.42.10+dfsg-3ubuntu3.3"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "gexiv2"
+      },
+      "version": "0.14.2-2build3"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "glib2.0"
+      },
+      "version": "2.80.0-6ubuntu3.9"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "graphene"
+      },
+      "version": "1.10.8-3build2"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "gtk4"
+      },
+      "version": "4.14.5+ds-0ubuntu0.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "harfbuzz"
+      },
+      "version": "8.3.0-2build2"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "webkit2gtk"
+      },
+      "version": "2.52.6-0ubuntu0.24.04.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "pango1.0"
+      },
+      "version": "1.52.1+ds-1build1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libsoup3"
+      },
+      "version": "3.4.4-5ubuntu0.8"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "xapp"
+      },
+      "version": "2.8.2-1build3"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "glib-networking"
+      },
+      "version": "2.80.0-1build1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "gvfs"
+      },
+      "version": "1.54.4-0ubuntu1~24.04.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libheif"
+      },
+      "version": "1.17.6-1ubuntu4.9"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "hicolor-icon-theme"
+      },
+      "version": "0.17-2"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "appstream"
+      },
+      "version": "1.0.2-1build6"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "gcc-14"
+      },
+      "version": "14.2.0-4ubuntu2~24.04.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "util-linux"
+      },
+      "version": "2.39.3-9ubuntu6.6"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "brotli"
+      },
+      "version": "1.1.0-2build2"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libbsd"
+      },
+      "version": "0.12.1-1build1.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "bzip2"
+      },
+      "version": "1.0.8-5.1ubuntu0.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "cairo"
+      },
+      "version": "1.18.0-3build1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libcap2"
+      },
+      "version": "1:2.66-5ubuntu2.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "e2fsprogs"
+      },
+      "version": "1.47.0-2.4~exp1ubuntu4.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libxcrypt"
+      },
+      "version": "1:4.4.36-4build1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "curl"
+      },
+      "version": "8.5.0-2ubuntu10.15"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libdatrie"
+      },
+      "version": "0.2.13-3build1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "db5.3"
+      },
+      "version": "5.3.28+dfsg2-7"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libdeflate"
+      },
+      "version": "1.19-1build1.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libdrm"
+      },
+      "version": "2.4.125-1ubuntu0.1~24.04.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "duktape"
+      },
+      "version": "2.7.0+tests-0ubuntu3"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "elfutils"
+      },
+      "version": "0.190-1.1ubuntu0.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libglvnd"
+      },
+      "version": "1.7.0-1build1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "enchant-2"
+      },
+      "version": "2.3.3-2build2"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libepoxy"
+      },
+      "version": "1.5.10-1build1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libevdev"
+      },
+      "version": "1.13.1+dfsg-1build1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "expat"
+      },
+      "version": "2.6.1-2ubuntu0.6"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libffi"
+      },
+      "version": "3.4.6-1build1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "fontconfig"
+      },
+      "version": "2.15.0-1.1ubuntu2"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "freetype"
+      },
+      "version": "2.13.2+dfsg-1ubuntu0.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "fribidi"
+      },
+      "version": "1.0.13-3build1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "mesa"
+      },
+      "version": "25.2.8-0ubuntu0.24.04.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libgcrypt20"
+      },
+      "version": "1.10.3-2ubuntu0.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "gdbm"
+      },
+      "version": "1.23-5.1build1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "gmp"
+      },
+      "version": "2:6.3.0+dfsg-2ubuntu6.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "gnutls28"
+      },
+      "version": "3.8.3-1.1ubuntu3.6"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libgpg-error"
+      },
+      "version": "1.47-3build2.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "graphite2"
+      },
+      "version": "1.3.14-2ubuntu0.24.04.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "krb5"
+      },
+      "version": "1.20.1-6ubuntu2.10"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "gst-plugins-base1.0"
+      },
+      "version": "1.24.2-1ubuntu0.5"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "gstreamer1.0"
+      },
+      "version": "1.24.2-1ubuntu0.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libgudev"
+      },
+      "version": "238-5ubuntu1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "nettle"
+      },
+      "version": "3.9.1-2.2build1.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "hyphen"
+      },
+      "version": "2.8.8-7build3"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "icu"
+      },
+      "version": "74.2-1ubuntu3.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libidn2"
+      },
+      "version": "2.3.7-2build1.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "jbigkit"
+      },
+      "version": "2.1-6.1ubuntu2"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libjpeg-turbo"
+      },
+      "version": "2.1.5-2ubuntu2"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "keyutils"
+      },
+      "version": "1.6.3-3build1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "lcms2"
+      },
+      "version": "2.14-2ubuntu0.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "openldap"
+      },
+      "version": "2.6.10+dfsg-0ubuntu0.24.04.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "lerc"
+      },
+      "version": "4.0.0+ds-4ubuntu2"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "lz4"
+      },
+      "version": "1.9.4-1build1.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "xz-utils"
+      },
+      "version": "5.6.1+really5.4.5-1ubuntu0.3"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "lzo2"
+      },
+      "version": "2.10-2build4"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libmanette"
+      },
+      "version": "0.2.7-1build2"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libmd"
+      },
+      "version": "1.1.0-2build1.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "ncurses"
+      },
+      "version": "6.4+20240113-1ubuntu2.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "nghttp2"
+      },
+      "version": "1.59.0-1ubuntu0.4"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "orc"
+      },
+      "version": "1:0.4.38-1ubuntu0.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "p11-kit"
+      },
+      "version": "0.25.3-4ubuntu2.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "pcre2"
+      },
+      "version": "10.42-4ubuntu2.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "pixman"
+      },
+      "version": "0.42.2-1build1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libpng1.6"
+      },
+      "version": "1.6.43-5ubuntu0.6"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libproxy"
+      },
+      "version": "0.5.4-4build1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libpsl"
+      },
+      "version": "0.21.2-1.1build1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "python3.12"
+      },
+      "version": "3.12.3-1ubuntu0.17"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "readline"
+      },
+      "version": "8.2-4build1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "librsvg"
+      },
+      "version": "2.58.0+dfsg-1build1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "rtmpdump"
+      },
+      "version": "2.4+20151223.gitfa8646d.1-2build7"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "cyrus-sasl2"
+      },
+      "version": "2.1.28+dfsg1-5ubuntu3.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libseccomp"
+      },
+      "version": "2.5.5-1ubuntu3.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libsecret"
+      },
+      "version": "0.21.4-1build3"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libselinux"
+      },
+      "version": "3.5-2ubuntu2.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libwebp"
+      },
+      "version": "1.3.2-0.4build3"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "sqlite3"
+      },
+      "version": "3.45.1-1ubuntu2.8"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libssh"
+      },
+      "version": "0.10.6-2ubuntu0.5"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "openssl"
+      },
+      "version": "3.0.13-0ubuntu3.16"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "snowball"
+      },
+      "version": "2.2.0-4build1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "systemd"
+      },
+      "version": "255.4-1ubuntu8.17"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libtasn1-6"
+      },
+      "version": "4.19.0-3ubuntu0.24.04.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libthai"
+      },
+      "version": "0.1.29-2build1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "tiff"
+      },
+      "version": "4.5.1+git230720-4ubuntu2.5"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libunistring"
+      },
+      "version": "1.1-2build1.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libunwind"
+      },
+      "version": "1.6.2-3build1.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "vulkan-loader"
+      },
+      "version": "1.3.275.0-1build1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "wayland"
+      },
+      "version": "1.22.0-2.1build1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libwmf"
+      },
+      "version": "0.2.13-1.1build3"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libx11"
+      },
+      "version": "2:1.8.7-1build1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libxau"
+      },
+      "version": "1:1.0.9-1build6"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libxcb"
+      },
+      "version": "1.15-1ubuntu2"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libxcursor"
+      },
+      "version": "1:1.2.1-1build1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libxdamage"
+      },
+      "version": "1:1.1.6-1build1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libxdmcp"
+      },
+      "version": "1:1.1.3-0ubuntu6"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libxext"
+      },
+      "version": "2:1.3.4-1build2"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libxfixes"
+      },
+      "version": "1:6.0.0-2build1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libxi"
+      },
+      "version": "2:1.8.1-1build1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libxinerama"
+      },
+      "version": "2:1.1.4-3build1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libxkbcommon"
+      },
+      "version": "1.6.0-1build1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libxml2"
+      },
+      "version": "2.9.14+dfsg-1.3ubuntu3.9"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libxmlb"
+      },
+      "version": "0.3.24-1~ubuntu0.24.04.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libxrandr"
+      },
+      "version": "2:1.5.2-2build1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libxrender"
+      },
+      "version": "1:0.9.10-1.1build1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libxslt"
+      },
+      "version": "1.1.39-0exp1ubuntu0.24.04.3"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libyaml"
+      },
+      "version": "0.2.5-1build1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libzstd"
+      },
+      "version": "1.5.5+dfsg2-2build1.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "pycairo"
+      },
+      "version": "1.25.1-2build2"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "python3-stdlib-extensions"
+      },
+      "version": "3.12.3-0ubuntu1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "pygobject"
+      },
+      "version": "3.48.2-1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "ibus"
+      },
+      "version": "1.5.29-2"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "mdurl"
+      },
+      "version": "0.1.2-1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "webp-pixbuf-loader"
+      },
+      "version": "0.2.4-2build2"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "zlib"
+      },
+      "version": "1:1.3.dfsg-3.1ubuntu2.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "jpeg-xl"
+      },
+      "version": "0.7.0-10.2ubuntu6.1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libavif"
+      },
+      "version": "1.0.4-1ubuntu3"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "dav1d"
+      },
+      "version": "1.4.1-1build1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libgav1"
+      },
+      "version": "0.18.0-1build3"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "rust-rav1e"
+      },
+      "version": "0.7.1-2"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "svt-av1"
+      },
+      "version": "1.7.0+dfsg-2build1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "aom"
+      },
+      "version": "3.8.2-2ubuntu0.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "libyuv"
+      },
+      "version": "0.0~git202401110.af6ac82-1"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "abseil"
+      },
+      "version": "20220623.1-3.1ubuntu3.2"
+    },
+    {
+      "package": {
+        "ecosystem": "Ubuntu:24.04:LTS",
+        "name": "highway"
+      },
+      "version": "1.0.7-8.1build1"
+    }
+  ],
+  "results": [
+    {},
+    {},
+    {},
+    {},
+    {},
+    {
+      "vulns": [
+        {
+          "id": "UBUNTU-CVE-2026-16768",
+          "modified": "2026-07-29T10:18:11.721235Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-18090",
+          "modified": "2026-09-16T14:01:36.549864Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-81893",
+          "modified": "2026-09-02T16:28:28Z"
+        }
+      ]
+    },
+    {},
+    {
+      "vulns": [
+        {
+          "id": "UBUNTU-CVE-2026-86469",
+          "modified": "2026-09-29T23:42:39.156348Z"
+        }
+      ]
+    },
+    {},
+    {},
+    {
+      "vulns": [
+        {
+          "id": "UBUNTU-CVE-2026-22693",
+          "modified": "2026-04-22T16:19:14.026738Z"
+        }
+      ]
+    },
+    {
+      "vulns": [
+        {
+          "id": "UBUNTU-CVE-2025-66286",
+          "modified": "2026-08-31T17:15:48.814214Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-78376",
+          "modified": "2026-09-02T19:36:47.343995Z"
+        }
+      ]
+    },
+    {},
+    {
+      "vulns": [
+        {
+          "id": "UBUNTU-CVE-2025-14523",
+          "modified": "2026-09-18T01:00:11.771827Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2025-32049",
+          "modified": "2026-09-18T01:00:11.801661Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2025-4035",
+          "modified": "2026-09-18T01:00:11.815245Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2025-9901",
+          "modified": "2026-09-18T01:00:11.859972Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-0716",
+          "modified": "2026-09-18T01:00:14.178271Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-0719",
+          "modified": "2026-09-18T01:00:14.188237Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-102555",
+          "modified": "2026-10-01T00:21:06.180583Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-102556",
+          "modified": "2026-10-01T00:21:06.071830Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-102557",
+          "modified": "2026-10-01T00:21:06.077919Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-102558",
+          "modified": "2026-10-01T00:21:05.767298Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-102559",
+          "modified": "2026-10-01T00:21:05.810987Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-102560",
+          "modified": "2026-10-01T00:21:06.094604Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-12478",
+          "modified": "2026-09-18T01:00:11.589091Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-12547",
+          "modified": "2026-09-18T01:00:13.723409Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-12548",
+          "modified": "2026-09-18T01:00:13.023213Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-12549",
+          "modified": "2026-09-18T01:00:14.026823Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-15709",
+          "modified": "2026-09-18T01:00:12.996201Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-15711",
+          "modified": "2026-09-18T01:00:13.816026Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-15712",
+          "modified": "2026-09-18T01:00:12.585320Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-15713",
+          "modified": "2026-09-18T01:00:10.593952Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-15714",
+          "modified": "2026-09-18T01:00:11.705406Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-1760",
+          "modified": "2026-09-18T01:00:12.929234Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-1761",
+          "modified": "2026-09-18T01:00:10.636259Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-2369",
+          "modified": "2026-09-18T01:00:14.985083Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-2436",
+          "modified": "2026-09-18T01:00:11.833299Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-2443",
+          "modified": "2026-09-18T01:00:14.163843Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-2708",
+          "modified": "2026-09-18T01:00:14.968973Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-3099",
+          "modified": "2026-09-18T01:00:10.591906Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-3632",
+          "modified": "2026-09-18T01:00:12.927177Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-3633",
+          "modified": "2026-09-18T01:00:10.641874Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-3634",
+          "modified": "2026-09-18T01:00:11.799313Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-4271",
+          "modified": "2026-10-01T00:21:13.264471Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-5119",
+          "modified": "2026-09-18T01:00:14.948649Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-6324",
+          "modified": "2026-10-02T00:30:07.354443Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-66337",
+          "modified": "2026-10-01T00:21:46.723264Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-66338",
+          "modified": "2026-10-01T00:21:46.464698Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-66339",
+          "modified": "2026-09-18T01:00:13.820570Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-77014",
+          "modified": "2026-09-18T01:00:14.094969Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-77680",
+          "modified": "2026-09-18T01:00:14.091513Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-85197",
+          "modified": "2026-09-22T03:22:32.345149Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-85534",
+          "modified": "2026-10-01T00:22:18.849239Z"
+        }
+      ]
+    },
+    {},
+    {
+      "vulns": [
+        {
+          "id": "UBUNTU-CVE-2026-10028",
+          "modified": "2026-06-03T11:20:11Z"
+        }
+      ]
+    },
+    {
+      "vulns": [
+        {
+          "id": "UBUNTU-CVE-2026-84267",
+          "modified": "2026-10-01T00:22:18.508961Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-84269",
+          "modified": "2026-10-01T00:22:18.511932Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-84270",
+          "modified": "2026-10-01T00:22:18.259560Z"
+        }
+      ]
+    },
+    {},
+    {},
+    {},
+    {},
+    {
+      "vulns": [
+        {
+          "id": "UBUNTU-CVE-2026-76642",
+          "modified": "2026-09-16T14:01:57.366424Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-78408",
+          "modified": "2026-09-16T11:41:46Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-78409",
+          "modified": "2026-09-16T11:41:46Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-78410",
+          "modified": "2026-09-16T11:41:46Z"
+        }
+      ]
+    },
+    {},
+    {},
+    {},
+    {
+      "vulns": [
+        {
+          "id": "UBUNTU-CVE-2017-7475",
+          "modified": "2026-05-20T16:03:22.545669Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2018-18064",
+          "modified": "2026-05-20T16:03:33.631278Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2025-50422",
+          "modified": "2026-05-20T16:23:33.815845Z"
+        }
+      ]
+    },
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {
+      "vulns": [
+        {
+          "id": "UBUNTU-CVE-2026-12216",
+          "modified": "2026-06-24T08:58:47Z"
+        }
+      ]
+    },
+    {
+      "vulns": [
+        {
+          "id": "UBUNTU-CVE-2025-1352",
+          "modified": "2026-05-20T16:20:22.741388Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2025-1376",
+          "modified": "2026-05-20T16:20:22.954555Z"
+        }
+      ]
+    },
+    {},
+    {},
+    {},
+    {},
+    {
+      "vulns": [
+        {
+          "id": "UBUNTU-CVE-2025-66382",
+          "modified": "2026-09-24T18:29:30.752761Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-102633",
+          "modified": "2026-10-01T00:21:06.287642Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-93990",
+          "modified": "2026-10-01T00:22:42.292219Z"
+        }
+      ]
+    },
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {
+      "vulns": [
+        {
+          "id": "UBUNTU-CVE-2026-85150",
+          "modified": "2026-09-22T03:22:32.389230Z"
+        }
+      ]
+    },
+    {},
+    {},
+    {},
+    {},
+    {
+      "vulns": [
+        {
+          "id": "UBUNTU-CVE-2025-5222",
+          "modified": "2026-05-20T16:23:33.798734Z"
+        }
+      ]
+    },
+    {},
+    {},
+    {
+      "vulns": [
+        {
+          "id": "UBUNTU-CVE-2018-10126",
+          "modified": "2026-05-20T16:03:22.413580Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-75466",
+          "modified": "2026-09-02T19:36:33.939333Z"
+        }
+      ]
+    },
+    {},
+    {},
+    {},
+    {},
+    {
+      "vulns": [
+        {
+          "id": "UBUNTU-CVE-2025-62813",
+          "modified": "2025-10-27T08:32:45.494712Z"
+        }
+      ]
+    },
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {
+      "vulns": [
+        {
+          "id": "UBUNTU-CVE-2026-103111",
+          "modified": "2026-10-01T00:21:06.066438Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-86145",
+          "modified": "2026-09-25T12:00:09.871164Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-89156",
+          "modified": "2026-09-18T12:30:21.791747Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-89157",
+          "modified": "2026-09-18T12:30:30.212592Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-89158",
+          "modified": "2026-09-18T12:30:21.772765Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-89160",
+          "modified": "2026-09-18T12:30:30.915843Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-89161",
+          "modified": "2026-09-25T12:00:09.182943Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-89162",
+          "modified": "2026-09-18T12:30:29.108574Z"
+        }
+      ]
+    },
+    {
+      "vulns": [
+        {
+          "id": "UBUNTU-CVE-2023-37769",
+          "modified": "2026-05-20T16:13:45.961071Z"
+        }
+      ]
+    },
+    {
+      "vulns": [
+        {
+          "id": "UBUNTU-CVE-2026-46675",
+          "modified": "2026-09-29T23:41:57.429073Z"
+        }
+      ]
+    },
+    {},
+    {},
+    {
+      "vulns": [
+        {
+          "id": "UBUNTU-CVE-2025-12781",
+          "modified": "2026-09-10T16:30:22.141234Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2025-15366",
+          "modified": "2026-09-10T16:30:21.532842Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2025-15367",
+          "modified": "2026-09-10T16:30:22.368941Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-0864",
+          "modified": "2026-09-10T16:30:22.215632Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-11940",
+          "modified": "2026-09-10T16:30:21.569845Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-11972",
+          "modified": "2026-09-10T16:30:22.211685Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-12345",
+          "modified": "2026-10-01T00:21:06.385169Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-15310",
+          "modified": "2026-09-10T16:30:21.979252Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-15806",
+          "modified": "2026-09-10T16:30:22.380056Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-17084",
+          "modified": "2026-09-10T16:30:22.380655Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-18503",
+          "modified": "2026-09-10T16:30:22.353388Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-19672",
+          "modified": "2026-09-10T16:30:19.862064Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-3446",
+          "modified": "2026-09-10T16:30:19.823723Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-57175",
+          "modified": "2026-10-01T00:21:35.673130Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-57176",
+          "modified": "2026-10-01T00:21:34.971369Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-57177",
+          "modified": "2026-10-01T00:21:35.067903Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-57178",
+          "modified": "2026-10-01T00:21:35.233704Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-57179",
+          "modified": "2026-10-01T00:21:35.201925Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-6879",
+          "modified": "2026-09-10T16:30:25.609908Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-7210",
+          "modified": "2026-09-10T16:30:26.331951Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-82049",
+          "modified": "2026-09-16T14:03:16.392424Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-84366",
+          "modified": "2026-09-16T14:03:44.552737Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-87910",
+          "modified": "2026-09-16T11:43:12Z"
+        }
+      ]
+    },
+    {},
+    {
+      "vulns": [
+        {
+          "id": "UBUNTU-CVE-2026-96889",
+          "modified": "2026-09-30T21:39:34Z"
+        }
+      ]
+    },
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {
+      "vulns": [
+        {
+          "id": "UBUNTU-CVE-2026-40228",
+          "modified": "2026-09-08T14:45:06.338344Z"
+        }
+      ]
+    },
+    {},
+    {},
+    {
+      "vulns": [
+        {
+          "id": "UBUNTU-CVE-2026-12912",
+          "modified": "2026-09-24T18:29:37.725326Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-18495",
+          "modified": "2026-09-24T18:29:40.093666Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-36849",
+          "modified": "2026-09-24T18:29:55.201114Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-4775",
+          "modified": "2026-09-24T18:30:08.105401Z"
+        }
+      ]
+    },
+    {},
+    {},
+    {},
+    {},
+    {},
+    {
+      "vulns": [
+        {
+          "id": "UBUNTU-CVE-2026-88806",
+          "modified": "2026-09-23T23:36:46Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-94283",
+          "modified": "2026-09-30T21:39:33Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-94284",
+          "modified": "2026-09-30T21:39:33Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-94285",
+          "modified": "2026-09-30T21:39:33Z"
+        }
+      ]
+    },
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {
+      "vulns": [
+        {
+          "id": "UBUNTU-CVE-2026-93541",
+          "modified": "2026-10-01T00:22:40.685557Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-93542",
+          "modified": "2026-10-01T00:22:40.770743Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-93543",
+          "modified": "2026-10-01T00:22:40.734861Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-93544",
+          "modified": "2026-10-01T00:22:40.594794Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-93545",
+          "modified": "2026-10-01T00:22:40.479826Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-94281",
+          "modified": "2026-10-01T00:22:42.787666Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-94282",
+          "modified": "2026-10-01T00:22:42.032591Z"
+        }
+      ]
+    },
+    {},
+    {},
+    {
+      "vulns": [
+        {
+          "id": "UBUNTU-CVE-2025-26434",
+          "modified": "2025-09-26T05:12:22Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-11979",
+          "modified": "2026-09-21T15:30:45.577730Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-76781",
+          "modified": "2026-09-24T02:00:46.279449Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-86137",
+          "modified": "2026-09-21T15:30:45.552240Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-86138",
+          "modified": "2026-09-21T15:30:45.595588Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-86139",
+          "modified": "2026-09-21T15:30:44.464997Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-86141",
+          "modified": "2026-09-21T15:30:44.455986Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-86142",
+          "modified": "2026-09-21T15:30:46.750728Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-86143",
+          "modified": "2026-09-21T15:30:43.075076Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-86144",
+          "modified": "2026-09-21T15:31:04.188394Z"
+        }
+      ]
+    },
+    {},
+    {},
+    {
+      "vulns": [
+        {
+          "id": "UBUNTU-CVE-2026-88807",
+          "modified": "2026-09-23T23:36:46Z"
+        }
+      ]
+    },
+    {
+      "vulns": [
+        {
+          "id": "UBUNTU-CVE-2025-10911",
+          "modified": "2026-05-20T16:20:18.943036Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2025-11731",
+          "modified": "2026-05-20T16:20:20.716039Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2025-7425",
+          "modified": "2026-05-20T16:24:01.822983Z"
+        }
+      ]
+    },
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {
+      "vulns": [
+        {
+          "id": "UBUNTU-CVE-2026-85091",
+          "modified": "2026-09-16T11:43:10Z"
+        }
+      ]
+    },
+    {
+      "vulns": [
+        {
+          "id": "UBUNTU-CVE-2021-36691",
+          "modified": "2026-04-22T12:57:45.379801Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-52584",
+          "modified": "2026-07-29T10:18:35.806061Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-82522",
+          "modified": "2026-09-16T11:43:09Z"
+        }
+      ]
+    },
+    {
+      "vulns": [
+        {
+          "id": "UBUNTU-CVE-2025-48174",
+          "modified": "2026-05-20T16:23:32.136489Z"
+        },
+        {
+          "id": "UBUNTU-CVE-2025-48175",
+          "modified": "2026-05-20T16:23:32.141611Z"
+        }
+      ]
+    },
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {}
+  ],
+  "unmappedDistributionPackages": [],
+  "webkitOfficial": [
+    {
+      "source": "https://webkitgtk.org/releases/",
+      "sha256": "0ac8c8df9f3641cbad3a1ad461be39bcba9ab1dfe1adaff646c55bee43009e8e",
+      "recentReferences": [
+        "webkitgtk-1.10.0.tar.xz",
+        "webkitgtk-1.10.0.tar.xz",
+        "webkitgtk-1.10.0.tar.xz",
+        "webkitgtk-1.10.0.tar.xz",
+        "webkitgtk-1.10.1.tar.xz",
+        "webkitgtk-1.10.1.tar.xz",
+        "webkitgtk-1.10.1.tar.xz",
+        "webkitgtk-1.10.1.tar.xz",
+        "webkitgtk-1.10.1.tar.xz",
+        "webkitgtk-1.10.1.tar.xz",
+        "webkitgtk-1.10.2.tar.xz",
+        "webkitgtk-1.10.2.tar.xz",
+        "webkitgtk-1.10.2.tar.xz",
+        "webkitgtk-1.10.2.tar.xz",
+        "webkitgtk-1.10.2.tar.xz",
+        "webkitgtk-1.10.2.tar.xz",
+        "webkitgtk-1.11.1.tar.xz",
+        "webkitgtk-1.11.1.tar.xz",
+        "webkitgtk-1.11.1.tar.xz",
+        "webkitgtk-1.11.1.tar.xz"
+      ]
+    },
+    {
+      "source": "https://webkitgtk.org/security/",
+      "sha256": "6a9956c02a94773f7dee452f0f1eb7bd1b9372025643d558e52a8551226af771",
+      "recentReferences": [
+        "WSA-2026-0001",
+        "WSA-2026-0001",
+        "WSA-2026-0002",
+        "WSA-2026-0002",
+        "WSA-2026-0003",
+        "WSA-2026-0003",
+        "WSA-2026-0004",
+        "WSA-2026-0004",
+        "WSA-2026-0005",
+        "WSA-2026-0005",
+        "WSA-2026-0006",
+        "WSA-2026-0006"
+      ]
+    }
+  ],
+  "limits": "WebKit/JavaScriptCore are source-built 2.54.0, not obsolete distribution binaries. Unmapped distribution variants are listed; no false clean claim."
+}

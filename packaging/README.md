@@ -12,7 +12,7 @@ Depuis la racine du projet :
 ```bash
 curl -fL https://github.com/AppImage/type2-runtime/releases/download/continuous/runtime-x86_64 -o /tmp/notestr-runtime-x86_64
 python3 packaging/build-appimage.py /tmp/notestr-runtime-x86_64 --webkit-install /tmp/notestr-webkit-build/webkit-install --webkit-runtime-root /tmp/ubuntu-build-root
-./dist/Notestr-3.7-x86_64.AppImage --appimage-extract-and-run --check
+./dist/Notestr-3.7.1-x86_64.AppImage --appimage-extract-and-run --check
 ```
 
 Le runtime provient du projet officiel [AppImage/type2-runtime](https://github.com/AppImage/type2-runtime).
@@ -32,7 +32,7 @@ ni sauvegarde. Le bac à sable WebKit reste actif.
 Vérification graphique de l’image produite, dans une session Linux :
 
 ```bash
-python3 packaging/test-appimage.py dist/Notestr-3.7-x86_64.AppImage
+python3 packaging/test-appimage.py dist/Notestr-3.7.1-x86_64.AppImage
 ```
 
 Ce test extrait temporairement l’image et exécute le test GTK/WebKit avec son
@@ -97,3 +97,7 @@ python3 packaging/build-appimage.py /tmp/runtime-x86_64 --webkit-install /tmp/no
 Fournir aussi `--native-debs` avec les mises à jour Ubuntu vérifiées. Le fichier embarqué `webkit-source-build.json` identifie le remplacement source ; `native-versions.json` conserve l’inventaire de la base Ubuntu. Tester l’AppImage final avec `packaging/test-appimage.py` et vérifier toutes les dépendances ELF avant distribution.
 
 Le constructeur applique une garde `ENABLE(VIDEO)` manquante dans `JSHTMLMediaElementCustom.cpp`, cohérente avec son en-tête généré. Ce correctif de compilation exclut uniquement du code vidéo déjà désactivé. Les empreintes avant/après sont dans `webkit-build-patches.json` et dans le manifeste embarqué.
+
+## Construction 3.7.1
+
+Conserver WebKitGTK/JavaScriptCore 2.54.0 et les dépendances Python qualifiées de 3.7. Ajouter au jeu de paquets natifs Ubuntu `libgbm1=25.2.8-0ubuntu0.24.04.4`. Voir SECURITY-REVIEW.md et les rapports 3.7.1 pour les avis natifs non corrigés et leur analyse d’exposition.

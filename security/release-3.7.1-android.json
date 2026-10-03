@@ -1,0 +1,14 @@
+{
+  "checkedAt": "2026-10-02T22:08:40.981805+00:00",
+  "versionName": "3.7.1",
+  "versionCode": 28,
+  "signatureV2": true,
+  "certificateUnchanged": true,
+  "debuggable": false,
+  "aligned16KB": true,
+  "nativeLibrariesMatchReviewedAARs": true,
+  "editorMatchesPublishedSource": true,
+  "unitTests": 14,
+  "instrumentedTests": 29,
+  "sha256": "aab4594e504d8c65d7d652ac8f63c3f82ce50616885f378c32bf198c7e4e68a2"
+}

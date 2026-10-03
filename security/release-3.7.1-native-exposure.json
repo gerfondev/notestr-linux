@@ -1,0 +1,823 @@
+{
+  "checkedAt": "2026-10-02T22:13:02.655232+00:00",
+  "sourceQueries": 137,
+  "advisoryCount": 140,
+  "packages": [
+    {
+      "package": "gdk-pixbuf",
+      "version": "2.42.10+dfsg-3ubuntu3.3",
+      "advisories": [
+        {
+          "id": "UBUNTU-CVE-2026-16768",
+          "source": "https://ubuntu.com/security/CVE-2026-16768"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-18090",
+          "source": "https://ubuntu.com/security/CVE-2026-18090"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-81893",
+          "source": "https://ubuntu.com/security/CVE-2026-81893"
+        }
+      ],
+      "assessment": "ICO/JPEG parsers: note images are removed by DOMPurify and PDF renderer. Bundled logo is trusted. Native file-picker previews may reach host image handling; no blanket claim of non-exposure.",
+      "status": "documented-residual-exception-not-fixed"
+    },
+    {
+      "package": "glib2.0",
+      "version": "2.80.0-6ubuntu3.9",
+      "advisories": [
+        {
+          "id": "UBUNTU-CVE-2026-86469",
+          "source": "https://ubuntu.com/security/CVE-2026-86469"
+        }
+      ],
+      "assessment": "Local g_file_replace race requires attacker write access to destination directory. App storage uses Python atomic writes and private directory permissions. GTK internals remain a residual surface.",
+      "status": "documented-residual-exception-not-fixed"
+    },
+    {
+      "package": "harfbuzz",
+      "version": "8.3.0-2build2",
+      "advisories": [
+        {
+          "id": "UBUNTU-CVE-2026-22693",
+          "source": "https://ubuntu.com/security/CVE-2026-22693"
+        }
+      ],
+      "assessment": "Allocation-failure null dereference: system/bundled fonts are used, remote fonts disabled. Low-memory denial of service remains possible; not fixed.",
+      "status": "documented-residual-exception-not-fixed"
+    },
+    {
+      "package": "webkit2gtk",
+      "version": "2.52.6-0ubuntu0.24.04.1",
+      "advisories": [
+        {
+          "id": "UBUNTU-CVE-2025-66286",
+          "source": "https://ubuntu.com/security/CVE-2025-66286"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-78376",
+          "source": "https://ubuntu.com/security/CVE-2026-78376"
+        }
+      ],
+      "assessment": "Distribution GIR metadata still names 2.52.6, but both actual WebKitGTK/JavaScriptCore libraries and typelibs were replaced by source-built 2.54.0 in 3.7; this stale inventory hit does not describe the shipped engine.",
+      "status": "superseded-native-engine"
+    },
+    {
+      "package": "libsoup3",
+      "version": "3.4.4-5ubuntu0.8",
+      "advisories": [
+        {
+          "id": "UBUNTU-CVE-2025-14523",
+          "source": "https://ubuntu.com/security/CVE-2025-14523"
+        },
+        {
+          "id": "UBUNTU-CVE-2025-32049",
+          "source": "https://ubuntu.com/security/CVE-2025-32049"
+        },
+        {
+          "id": "UBUNTU-CVE-2025-4035",
+          "source": "https://ubuntu.com/security/CVE-2025-4035"
+        },
+        {
+          "id": "UBUNTU-CVE-2025-9901",
+          "source": "https://ubuntu.com/security/CVE-2025-9901"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-0716",
+          "source": "https://ubuntu.com/security/CVE-2026-0716"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-0719",
+          "source": "https://ubuntu.com/security/CVE-2026-0719"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-102555",
+          "source": "https://ubuntu.com/security/CVE-2026-102555"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-102556",
+          "source": "https://ubuntu.com/security/CVE-2026-102556"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-102557",
+          "source": "https://ubuntu.com/security/CVE-2026-102557"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-102558",
+          "source": "https://ubuntu.com/security/CVE-2026-102558"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-102559",
+          "source": "https://ubuntu.com/security/CVE-2026-102559"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-102560",
+          "source": "https://ubuntu.com/security/CVE-2026-102560"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-12478",
+          "source": "https://ubuntu.com/security/CVE-2026-12478"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-12547",
+          "source": "https://ubuntu.com/security/CVE-2026-12547"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-12548",
+          "source": "https://ubuntu.com/security/CVE-2026-12548"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-12549",
+          "source": "https://ubuntu.com/security/CVE-2026-12549"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-15709",
+          "source": "https://ubuntu.com/security/CVE-2026-15709"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-15711",
+          "source": "https://ubuntu.com/security/CVE-2026-15711"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-15712",
+          "source": "https://ubuntu.com/security/CVE-2026-15712"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-15713",
+          "source": "https://ubuntu.com/security/CVE-2026-15713"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-15714",
+          "source": "https://ubuntu.com/security/CVE-2026-15714"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-1760",
+          "source": "https://ubuntu.com/security/CVE-2026-1760"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-1761",
+          "source": "https://ubuntu.com/security/CVE-2026-1761"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-2369",
+          "source": "https://ubuntu.com/security/CVE-2026-2369"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-2436",
+          "source": "https://ubuntu.com/security/CVE-2026-2436"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-2443",
+          "source": "https://ubuntu.com/security/CVE-2026-2443"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-2708",
+          "source": "https://ubuntu.com/security/CVE-2026-2708"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-3099",
+          "source": "https://ubuntu.com/security/CVE-2026-3099"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-3632",
+          "source": "https://ubuntu.com/security/CVE-2026-3632"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-3633",
+          "source": "https://ubuntu.com/security/CVE-2026-3633"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-3634",
+          "source": "https://ubuntu.com/security/CVE-2026-3634"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-4271",
+          "source": "https://ubuntu.com/security/CVE-2026-4271"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-5119",
+          "source": "https://ubuntu.com/security/CVE-2026-5119"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-6324",
+          "source": "https://ubuntu.com/security/CVE-2026-6324"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-66337",
+          "source": "https://ubuntu.com/security/CVE-2026-66337"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-66338",
+          "source": "https://ubuntu.com/security/CVE-2026-66338"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-66339",
+          "source": "https://ubuntu.com/security/CVE-2026-66339"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-77014",
+          "source": "https://ubuntu.com/security/CVE-2026-77014"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-77680",
+          "source": "https://ubuntu.com/security/CVE-2026-77680"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-85197",
+          "source": "https://ubuntu.com/security/CVE-2026-85197"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-85534",
+          "source": "https://ubuntu.com/security/CVE-2026-85534"
+        }
+      ],
+      "assessment": "Embedded editor has connect-src none, navigation policy, no remote images/media and no untrusted scripts. Nostr network uses Python websockets, not Soup. No Soup server/proxy or HTTP upload feature. Data-URI and indirect GTK network paths are not proven unreachable; retained residual risk, not fixed.",
+      "status": "documented-residual-exception-not-fixed"
+    },
+    {
+      "package": "glib-networking",
+      "version": "2.80.0-1build1",
+      "advisories": [
+        {
+          "id": "UBUNTU-CVE-2026-10028",
+          "source": "https://ubuntu.com/security/CVE-2026-10028"
+        }
+      ],
+      "assessment": "TLS certificate loop: editor cannot perform normal remote content fetches. Relay TLS uses Python ssl. Indirect GTK paths remain a limitation.",
+      "status": "documented-residual-exception-not-fixed"
+    },
+    {
+      "package": "gvfs",
+      "version": "1.54.4-0ubuntu1~24.04.4",
+      "advisories": [
+        {
+          "id": "UBUNTU-CVE-2026-84267",
+          "source": "https://ubuntu.com/security/CVE-2026-84267"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-84269",
+          "source": "https://ubuntu.com/security/CVE-2026-84269"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-84270",
+          "source": "https://ubuntu.com/security/CVE-2026-84270"
+        }
+      ],
+      "assessment": "SFTP/AFP/MTP backend advisories: application does not implement remote filesystem mounts; GTK file chooser can interact with host services. Host backend security remains external to this AppImage.",
+      "status": "documented-residual-exception-not-fixed"
+    },
+    {
+      "package": "util-linux",
+      "version": "2.39.3-9ubuntu6.6",
+      "advisories": [
+        {
+          "id": "UBUNTU-CVE-2026-76642",
+          "source": "https://ubuntu.com/security/CVE-2026-76642"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-78408",
+          "source": "https://ubuntu.com/security/CVE-2026-78408"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-78409",
+          "source": "https://ubuntu.com/security/CVE-2026-78409"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-78410",
+          "source": "https://ubuntu.com/security/CVE-2026-78410"
+        }
+      ],
+      "assessment": "mount/nsenter privileged utilities are not application functionality. No SUID bits or privilege escalation helpers introduced; bundled support libraries do not imply distribution of vulnerable command workflows.",
+      "status": "documented-residual-exception-not-fixed"
+    },
+    {
+      "package": "cairo",
+      "version": "1.18.0-3build1",
+      "advisories": [
+        {
+          "id": "UBUNTU-CVE-2017-7475",
+          "source": "https://ubuntu.com/security/CVE-2017-7475"
+        },
+        {
+          "id": "UBUNTU-CVE-2018-18064",
+          "source": "https://ubuntu.com/security/CVE-2018-18064"
+        },
+        {
+          "id": "UBUNTU-CVE-2025-50422",
+          "source": "https://ubuntu.com/security/CVE-2025-50422"
+        }
+      ],
+      "assessment": "Font/rendering crashes and scan-conversion memory issue: trusted fonts, no arbitrary HTML/SVG/images from notes. Markdown rendering still reaches Cairo; exploitability not ruled out.",
+      "status": "documented-residual-exception-not-fixed"
+    },
+    {
+      "package": "duktape",
+      "version": "2.7.0+tests-0ubuntu3",
+      "advisories": [
+        {
+          "id": "UBUNTU-CVE-2026-12216",
+          "source": "https://ubuntu.com/security/CVE-2026-12216"
+        }
+      ],
+      "assessment": "Untrusted bytecode loading not used by application. Editor uses JavaScriptCore; Duktape may be a transitive system-proxy dependency.",
+      "status": "documented-residual-exception-not-fixed"
+    },
+    {
+      "package": "elfutils",
+      "version": "0.190-1.1ubuntu0.1",
+      "advisories": [
+        {
+          "id": "UBUNTU-CVE-2025-1352",
+          "source": "https://ubuntu.com/security/CVE-2025-1352"
+        },
+        {
+          "id": "UBUNTU-CVE-2025-1376",
+          "source": "https://ubuntu.com/security/CVE-2025-1376"
+        }
+      ],
+      "assessment": "No parsing of user-supplied ELF or eu-readelf/eu-strip workflow. Application executes its reviewed native libraries only.",
+      "status": "documented-residual-exception-not-fixed"
+    },
+    {
+      "package": "expat",
+      "version": "2.6.1-2ubuntu0.6",
+      "advisories": [
+        {
+          "id": "UBUNTU-CVE-2025-66382",
+          "source": "https://ubuntu.com/security/CVE-2025-66382"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-102633",
+          "source": "https://ubuntu.com/security/CVE-2026-102633"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-93990",
+          "source": "https://ubuntu.com/security/CVE-2026-93990"
+        }
+      ],
+      "assessment": "No note XML import; PDF HTML input is generated with raw HTML disabled. 32-bit overflow does not target x86_64; malformed XML/DoS residuals in indirect uses not claimed fixed.",
+      "status": "documented-residual-exception-not-fixed"
+    },
+    {
+      "package": "gst-plugins-base1.0",
+      "version": "1.24.2-1ubuntu0.5",
+      "advisories": [
+        {
+          "id": "UBUNTU-CVE-2026-85150",
+          "source": "https://ubuntu.com/security/CVE-2026-85150"
+        }
+      ],
+      "assessment": "RTSP and media disabled in WebKit; no RTSP client/server application feature.",
+      "status": "documented-residual-exception-not-fixed"
+    },
+    {
+      "package": "icu",
+      "version": "74.2-1ubuntu3.1",
+      "advisories": [
+        {
+          "id": "UBUNTU-CVE-2025-5222",
+          "source": "https://ubuntu.com/security/CVE-2025-5222"
+        }
+      ],
+      "assessment": "genrb build utility vulnerability; no runtime resource compilation from notes.",
+      "status": "documented-residual-exception-not-fixed"
+    },
+    {
+      "package": "libjpeg-turbo",
+      "version": "2.1.5-2ubuntu2",
+      "advisories": [
+        {
+          "id": "UBUNTU-CVE-2018-10126",
+          "source": "https://ubuntu.com/security/CVE-2018-10126"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-75466",
+          "source": "https://ubuntu.com/security/CVE-2026-75466"
+        }
+      ],
+      "assessment": "Note images disabled. 3.2 PNG loader and JPEG encoder paths not application features. No claim that every transitive image use is absent.",
+      "status": "documented-residual-exception-not-fixed"
+    },
+    {
+      "package": "lz4",
+      "version": "1.9.4-1build1.1",
+      "advisories": [
+        {
+          "id": "UBUNTU-CVE-2025-62813",
+          "source": "https://ubuntu.com/security/CVE-2025-62813"
+        }
+      ],
+      "assessment": "No untrusted LZ4 frame import or dictionary creation feature; indirect native uses not exhaustively traced.",
+      "status": "documented-residual-exception-not-fixed"
+    },
+    {
+      "package": "pcre2",
+      "version": "10.42-4ubuntu2.1",
+      "advisories": [
+        {
+          "id": "UBUNTU-CVE-2026-103111",
+          "source": "https://ubuntu.com/security/CVE-2026-103111"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-86145",
+          "source": "https://ubuntu.com/security/CVE-2026-86145"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-89156",
+          "source": "https://ubuntu.com/security/CVE-2026-89156"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-89157",
+          "source": "https://ubuntu.com/security/CVE-2026-89157"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-89158",
+          "source": "https://ubuntu.com/security/CVE-2026-89158"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-89160",
+          "source": "https://ubuntu.com/security/CVE-2026-89160"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-89161",
+          "source": "https://ubuntu.com/security/CVE-2026-89161"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-89162",
+          "source": "https://ubuntu.com/security/CVE-2026-89162"
+        }
+      ],
+      "assessment": "Application patterns are fixed; Python re and JS engines handle note processing, not user-supplied PCRE JIT/DFA/serialization. 32-bit issues excluded on x86_64; native GTK transitive use remains a residual.",
+      "status": "documented-residual-exception-not-fixed"
+    },
+    {
+      "package": "pixman",
+      "version": "0.42.2-1build1",
+      "advisories": [
+        {
+          "id": "UBUNTU-CVE-2023-37769",
+          "source": "https://ubuntu.com/security/CVE-2023-37769"
+        }
+      ],
+      "assessment": "No stress-test tool or user drawing programs. Rendering libraries are exercised by GTK; malformed rendering cases not formally excluded.",
+      "status": "documented-residual-exception-not-fixed"
+    },
+    {
+      "package": "libpng1.6",
+      "version": "1.6.43-5ubuntu0.6",
+      "advisories": [
+        {
+          "id": "UBUNTU-CVE-2026-46675",
+          "source": "https://ubuntu.com/security/CVE-2026-46675"
+        }
+      ],
+      "assessment": "No note-image decoding; fixed trusted bundled PNG assets. GTK file-picker/host image paths are a remaining surface.",
+      "status": "documented-residual-exception-not-fixed"
+    },
+    {
+      "package": "python3.12",
+      "version": "3.12.3-1ubuntu0.17",
+      "advisories": [
+        {
+          "id": "UBUNTU-CVE-2025-12781",
+          "source": "https://ubuntu.com/security/CVE-2025-12781"
+        },
+        {
+          "id": "UBUNTU-CVE-2025-15366",
+          "source": "https://ubuntu.com/security/CVE-2025-15366"
+        },
+        {
+          "id": "UBUNTU-CVE-2025-15367",
+          "source": "https://ubuntu.com/security/CVE-2025-15367"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-0864",
+          "source": "https://ubuntu.com/security/CVE-2026-0864"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-11940",
+          "source": "https://ubuntu.com/security/CVE-2026-11940"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-11972",
+          "source": "https://ubuntu.com/security/CVE-2026-11972"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-12345",
+          "source": "https://ubuntu.com/security/CVE-2026-12345"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-15310",
+          "source": "https://ubuntu.com/security/CVE-2026-15310"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-15806",
+          "source": "https://ubuntu.com/security/CVE-2026-15806"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-17084",
+          "source": "https://ubuntu.com/security/CVE-2026-17084"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-18503",
+          "source": "https://ubuntu.com/security/CVE-2026-18503"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-19672",
+          "source": "https://ubuntu.com/security/CVE-2026-19672"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-3446",
+          "source": "https://ubuntu.com/security/CVE-2026-3446"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-57175",
+          "source": "https://ubuntu.com/security/CVE-2026-57175"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-57176",
+          "source": "https://ubuntu.com/security/CVE-2026-57176"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-57177",
+          "source": "https://ubuntu.com/security/CVE-2026-57177"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-57178",
+          "source": "https://ubuntu.com/security/CVE-2026-57178"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-57179",
+          "source": "https://ubuntu.com/security/CVE-2026-57179"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-6879",
+          "source": "https://ubuntu.com/security/CVE-2026-6879"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-7210",
+          "source": "https://ubuntu.com/security/CVE-2026-7210"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-82049",
+          "source": "https://ubuntu.com/security/CVE-2026-82049"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-84366",
+          "source": "https://ubuntu.com/security/CVE-2026-84366"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-87910",
+          "source": "https://ubuntu.com/security/CVE-2026-87910"
+        }
+      ],
+      "assessment": "No tar/zip/CSV/XML document import, POP/IMAP, HTTPPasswordMgr or configparser writing of note text. Application base64 lock fields use standard alphabet and validate=True. Social-auth/Scrapy advisories are mismapped to Python in source metadata; these packages are not shipped. IDNA via dependencies and cleanup races remain residual review items; no general clean claim.",
+      "status": "documented-residual-exception-not-fixed"
+    },
+    {
+      "package": "librsvg",
+      "version": "2.58.0+dfsg-1build1",
+      "advisories": [
+        {
+          "id": "UBUNTU-CVE-2026-96889",
+          "source": "https://ubuntu.com/security/CVE-2026-96889"
+        }
+      ],
+      "assessment": "Untrusted SVG in notes is blocked; application SVG icons are fixed reviewed assets. Native theme/file-picker surfaces remain external or residual.",
+      "status": "documented-residual-exception-not-fixed"
+    },
+    {
+      "package": "systemd",
+      "version": "255.4-1ubuntu8.17",
+      "advisories": [
+        {
+          "id": "UBUNTU-CVE-2026-40228",
+          "source": "https://ubuntu.com/security/CVE-2026-40228"
+        }
+      ],
+      "assessment": "Application is not a service manager. Transitive system libraries retained; host service configuration/security is outside package scope.",
+      "status": "documented-residual-exception-not-fixed"
+    },
+    {
+      "package": "tiff",
+      "version": "4.5.1+git230720-4ubuntu2.5",
+      "advisories": [
+        {
+          "id": "UBUNTU-CVE-2026-12912",
+          "source": "https://ubuntu.com/security/CVE-2026-12912"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-18495",
+          "source": "https://ubuntu.com/security/CVE-2026-18495"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-36849",
+          "source": "https://ubuntu.com/security/CVE-2026-36849"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-4775",
+          "source": "https://ubuntu.com/security/CVE-2026-4775"
+        }
+      ],
+      "assessment": "Note TIFF decoding and tiff2pdf utility not used; native file-preview/host image handling remains a limit.",
+      "status": "documented-residual-exception-not-fixed"
+    },
+    {
+      "package": "libx11",
+      "version": "2:1.8.7-1build1",
+      "advisories": [
+        {
+          "id": "UBUNTU-CVE-2026-88806",
+          "source": "https://ubuntu.com/security/CVE-2026-88806"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-94283",
+          "source": "https://ubuntu.com/security/CVE-2026-94283"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-94284",
+          "source": "https://ubuntu.com/security/CVE-2026-94284"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-94285",
+          "source": "https://ubuntu.com/security/CVE-2026-94285"
+        }
+      ],
+      "assessment": "Requires malicious X server. Local display server is trusted by this GUI application; use with an untrusted X server is not covered.",
+      "status": "documented-residual-exception-not-fixed"
+    },
+    {
+      "package": "libxi",
+      "version": "2:1.8.1-1build1",
+      "advisories": [
+        {
+          "id": "UBUNTU-CVE-2026-93541",
+          "source": "https://ubuntu.com/security/CVE-2026-93541"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-93542",
+          "source": "https://ubuntu.com/security/CVE-2026-93542"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-93543",
+          "source": "https://ubuntu.com/security/CVE-2026-93543"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-93544",
+          "source": "https://ubuntu.com/security/CVE-2026-93544"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-93545",
+          "source": "https://ubuntu.com/security/CVE-2026-93545"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-94281",
+          "source": "https://ubuntu.com/security/CVE-2026-94281"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-94282",
+          "source": "https://ubuntu.com/security/CVE-2026-94282"
+        }
+      ],
+      "assessment": "Requires malicious X server. Local display trust boundary retained; not patched.",
+      "status": "documented-residual-exception-not-fixed"
+    },
+    {
+      "package": "libxml2",
+      "version": "2.9.14+dfsg-1.3ubuntu3.9",
+      "advisories": [
+        {
+          "id": "UBUNTU-CVE-2025-26434",
+          "source": "https://ubuntu.com/security/CVE-2025-26434"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-11979",
+          "source": "https://ubuntu.com/security/CVE-2026-11979"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-76781",
+          "source": "https://ubuntu.com/security/CVE-2026-76781"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-86137",
+          "source": "https://ubuntu.com/security/CVE-2026-86137"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-86138",
+          "source": "https://ubuntu.com/security/CVE-2026-86138"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-86139",
+          "source": "https://ubuntu.com/security/CVE-2026-86139"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-86141",
+          "source": "https://ubuntu.com/security/CVE-2026-86141"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-86142",
+          "source": "https://ubuntu.com/security/CVE-2026-86142"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-86143",
+          "source": "https://ubuntu.com/security/CVE-2026-86143"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-86144",
+          "source": "https://ubuntu.com/security/CVE-2026-86144"
+        }
+      ],
+      "assessment": "No arbitrary XML/catalog/XInclude import or XSLT. Raw note HTML disabled/sanitized, SVG/image content excluded. libxml2 remains transitive; not all code paths proven unreachable.",
+      "status": "documented-residual-exception-not-fixed"
+    },
+    {
+      "package": "libxrender",
+      "version": "1:0.9.10-1.1build1",
+      "advisories": [
+        {
+          "id": "UBUNTU-CVE-2026-88807",
+          "source": "https://ubuntu.com/security/CVE-2026-88807"
+        }
+      ],
+      "assessment": "Requires malicious X server. Local display trust boundary retained; not patched.",
+      "status": "documented-residual-exception-not-fixed"
+    },
+    {
+      "package": "libxslt",
+      "version": "1.1.39-0exp1ubuntu0.24.04.3",
+      "advisories": [
+        {
+          "id": "UBUNTU-CVE-2025-10911",
+          "source": "https://ubuntu.com/security/CVE-2025-10911"
+        },
+        {
+          "id": "UBUNTU-CVE-2025-11731",
+          "source": "https://ubuntu.com/security/CVE-2025-11731"
+        },
+        {
+          "id": "UBUNTU-CVE-2025-7425",
+          "source": "https://ubuntu.com/security/CVE-2025-7425"
+        }
+      ],
+      "assessment": "No user XSLT transformations; HTML editor does not load arbitrary XML stylesheets. Library retained for WebKit ABI.",
+      "status": "documented-residual-exception-not-fixed"
+    },
+    {
+      "package": "zlib",
+      "version": "1:1.3.dfsg-3.1ubuntu2.2",
+      "advisories": [
+        {
+          "id": "UBUNTU-CVE-2026-85091",
+          "source": "https://ubuntu.com/security/CVE-2026-85091"
+        }
+      ],
+      "assessment": "Nonblocking gzwrite/gzprintf scenario not used by note application. Compression dependencies remain; no claim of a native fix.",
+      "status": "documented-residual-exception-not-fixed"
+    },
+    {
+      "package": "jpeg-xl",
+      "version": "0.7.0-10.2ubuntu6.1",
+      "advisories": [
+        {
+          "id": "UBUNTU-CVE-2021-36691",
+          "source": "https://ubuntu.com/security/CVE-2021-36691"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-52584",
+          "source": "https://ubuntu.com/security/CVE-2026-52584"
+        },
+        {
+          "id": "UBUNTU-CVE-2026-82522",
+          "source": "https://ubuntu.com/security/CVE-2026-82522"
+        }
+      ],
+      "assessment": "Existing 3.7 exposure review: cjxl/APNG encoding tools not used, box truncation specific to 32-bit; x86_64 package and note-image exclusion retained.",
+      "status": "documented-residual-exception-not-fixed"
+    },
+    {
+      "package": "libavif",
+      "version": "1.0.4-1ubuntu3",
+      "advisories": [
+        {
+          "id": "UBUNTU-CVE-2025-48174",
+          "source": "https://ubuntu.com/security/CVE-2025-48174"
+        },
+        {
+          "id": "UBUNTU-CVE-2025-48175",
+          "source": "https://ubuntu.com/security/CVE-2025-48175"
+        }
+      ],
+      "assessment": "Existing 3.7 exposure review: encoding/writing RGBToYUV paths not used; WebKit decoder and note-image exclusion retained.",
+      "status": "documented-residual-exception-not-fixed"
+    }
+  ],
+  "decision": "Apply all available stable Ubuntu candidate updates (libgbm1 updated). Retain supported-distribution ABI baseline and document unresolved advisories and limited exposure; this is not a vulnerability-free certification. Reassess when Ubuntu publishes fixes, or before enabling note images/media/XML/remote editor content. Upstream major library replacements require separate compatibility qualification.",
+  "priorityFollowup": [
+    "Native Cairo/HarfBuzz/rendering paths",
+    "Python IDNA and dependency use",
+    "libsoup data URI and indirect network paths",
+    "GTK file chooser image previews",
+    "TOAST UI archived: migration required"
+  ]
+}

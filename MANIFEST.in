@@ -9,3 +9,6 @@ exclude security/release-3.6-python-packages.json
 
 include RELEASE-NOTES-3.7.md
 recursive-include security release-3.7-*.json
+
+include RELEASE-NOTES-3.7.1.md SECURITY-REVIEW.md
+recursive-include security release-3.7.1-*.json

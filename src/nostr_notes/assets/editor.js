@@ -58,6 +58,9 @@
   document.addEventListener('dragover', (event) => event.preventDefault(), true);
   // Le collage ne peut introduire de fichiers ni de HTML actif.
   document.addEventListener('paste', (event) => {
+    // Dialog fields (URL, link text, etc.) use native plain-text pasting.
+    // Sending these pastes to insertText would modify the underlying note.
+    if (event.target instanceof Element && event.target.closest('input, textarea')) return;
     event.preventDefault(); event.stopImmediatePropagation();
     const text = event.clipboardData?.getData('text/plain');
     if (text) editor.insertText(text);
