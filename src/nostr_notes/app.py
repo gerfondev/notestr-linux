@@ -11,6 +11,7 @@ gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 from gi.repository import Adw, Gio, GLib, Gtk
 
+from .offline import Outbox
 from .core import Identity, Note, valid_event, compact_backups
 from .editor import MarkdownEditor
 from .lock import PasswordLock
@@ -50,9 +51,15 @@ class Window(Adw.ApplicationWindow):
         Gtk.IconTheme.get_for_display(self.get_display()).add_search_path(str(ASSETS))
         self.set_icon_name(APP_ICON_NAME)
         self.pool = ThreadPoolExecutor(max_workers=1)
+        self.sync_pool = ThreadPoolExecutor(max_workers=1)
+        self.syncing = False
+        self.sync_loop = None
+        self.sync_async_task = None
+        self.outbox = None
         self.identity = None
         self.events = {}
         self.notes = []
+        self.showing_trash = False
         self.current = None
         self.draft_d = None
         self.dirty = False
@@ -93,6 +100,12 @@ class Window(Adw.ApplicationWindow):
         sidebar = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8, width_request=220)
         self.search = Gtk.SearchEntry(placeholder_text=tr('Rechercher dans les notes'))
         self.search.connect("search-changed", lambda _: self.render_list())
+        self.trash_button = Gtk.ToggleButton(label=tr("Corbeille"))
+        self.trash_button.connect("clicked", lambda _: self.toggle_trash_view())
+        self.trash_toolbar = Gtk.Box(spacing=8, margin_start=12, margin_end=12,
+                                     margin_top=6, margin_bottom=6)
+        self.trash_toolbar.append(self.trash_button)
+        sidebar.append(self.trash_toolbar)
         sidebar.append(self.search)
         self.listbox = Gtk.ListBox(selection_mode=Gtk.SelectionMode.NONE)
         self.listbox.connect("row-activated", self.select_row)
@@ -102,13 +115,31 @@ class Window(Adw.ApplicationWindow):
         paned.set_start_child(sidebar)
         self.editor = MarkdownEditor(self.changed)
         self.editor.set_sensitive(False)
-        paned.set_end_child(self.editor)
+        editor_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self.pending_label = Gtk.Label(wrap=True, xalign=0, margin_start=8, margin_end=8)
+        self.pending_actions = Gtk.Box(spacing=8)
+        self.copy_button = button(tr('Publier comme nouvelle note'), lambda: self.editor.flush(lambda: self.publish_synced(as_copy=True)))
+        self.discard_button = button(tr('Abandonner les modifications locales'), self.discard_pending)
+        self.pending_actions.append(self.copy_button)
+        self.pending_actions.append(self.discard_button)
+        # Keep navigation aligned even when a pending-sync notice is shown.
+        self.navigation_size_group = Gtk.SizeGroup(mode=Gtk.SizeGroupMode.VERTICAL)
+        self.navigation_size_group.add_widget(self.trash_toolbar)
+        self.navigation_size_group.add_widget(self.editor.toolbar)
+        self.editor.insert_child_after(self.pending_label, self.editor.toolbar)
+        self.editor.insert_child_after(self.pending_actions, self.pending_label)
+        editor_box.append(self.editor)
+        self.editor.set_vexpand(True)
+        paned.set_end_child(editor_box)
         self.status = Gtk.Label(label=tr('Importer une clé privée pour commencer.'), xalign=0,
                                 wrap=True, selectable=True, margin_start=12, margin_end=12,
                                 margin_top=8, margin_bottom=8)
         root.append(self.status)
         self.connect("close-request", self.close_requested)
         GLib.idle_add(self.initial_unlock)
+        self.retry_source = GLib.timeout_add_seconds(30, self.retry_pending)
+        self.network_monitor = Gio.NetworkMonitor.get_default()
+        self.network_handler = self.network_monitor.connect("network-changed", lambda _m, available: self.retry_pending() if available else None)
 
     def initial_unlock(self):
         if self.password_lock.exists():
@@ -263,10 +294,11 @@ class Window(Adw.ApplicationWindow):
         if self.busy:
             return
         self.busy = True
-        self.controls.set_sensitive(False)
+        self.controls.set_sensitive(readable)
         self.settings_button.set_sensitive(False)
         self.refreshing = readable
         self.editor.set_sensitive(readable)
+        self.update_trash_controls()
         self.listbox.set_sensitive(readable)
         self.status.set_text(tr('Notes en cache disponibles · synchronisation des relais…') if readable else tr('Opération en cours…'))
         future = self.pool.submit(operation)
@@ -281,6 +313,7 @@ class Window(Adw.ApplicationWindow):
                 success(future.result())
             except Exception as exc:
                 self.status.set_text(str(exc) or type(exc).__name__)
+            self.update_trash_controls()
             return False
         future.add_done_callback(lambda _: GLib.idle_add(finish))
 
@@ -301,6 +334,7 @@ class Window(Adw.ApplicationWindow):
         self.loading = False
         self.dirty = False
         self.set_title(tr('Notes privées Nostr'))
+        self.update_trash_controls()
 
     def confirm(self, text, action, label=None):
         dialog = Gtk.MessageDialog(transient_for=self, modal=True, text=text,
@@ -327,7 +361,11 @@ class Window(Adw.ApplicationWindow):
 
     def close_requested(self, _):
         if getattr(self, "closing_clean", False):
+            self.stop_sync()
+            GLib.source_remove(self.retry_source)
+            self.network_monitor.disconnect(self.network_handler)
             self.pool.shutdown(wait=False)
+            self.sync_pool.shutdown(wait=False)
             return False
         if self.busy:
             self.status.set_text(tr('Attendre la fin de l’opération avant de fermer.'))
@@ -346,7 +384,60 @@ class Window(Adw.ApplicationWindow):
         self.close()
 
     def new_note(self):
-        self.guard(lambda: self.display())
+        def create():
+            self.showing_trash = False
+            self.trash_button.set_active(False)
+            self.render_list()
+            self.display()
+        self.guard(create, allow_read=True)
+
+    def toggle_trash_view(self):
+        # Restore button state until draft confirmation has been accepted.
+        self.trash_button.set_active(self.showing_trash)
+        def change():
+            self.showing_trash = not self.showing_trash
+            self.trash_button.set_active(self.showing_trash)
+            self.display()
+            self.render_list()
+        self.guard(change, allow_read=True)
+
+    def update_trash_controls(self):
+        trashed = bool(self.current and self.current.trashed)
+        self.editor.set_sensitive(self.identity is not None and not trashed and (not self.busy or self.refreshing))
+        pending = bool(self.current and self.current.pending)
+        self.pending_label.set_visible(pending)
+        self.pending_actions.set_visible(pending)
+        self.pending_actions.set_sensitive(not self.busy and not self.syncing)
+        self.copy_button.set_visible(bool(pending and self.current.conflicted))
+        self.pending_label.set_text(tr('Conflit — la version distante est conservée dans la liste.' if pending and self.current.conflicted else 'Modifications enregistrées localement, en attente de synchronisation.'))
+        self.publish_button.set_sensitive(not trashed)
+        self.delete_button.set_sensitive(not pending and not self.syncing and not self.busy)
+        self.restore_button.set_sensitive(not pending and not self.syncing and not self.busy)
+        self.pin_button.set_sensitive(self.current is not None and not trashed and not pending and not self.syncing and not self.busy)
+        label = tr('Restaurer la note') if trashed else tr('Version précédente')
+        self.restore_button.set_tooltip_text(label)
+        self.restore_button.update_property([Gtk.AccessibleProperty.LABEL], [label])
+        label = tr('Supprimer définitivement') if trashed else tr('Supprimer')
+        self.delete_button.set_tooltip_text(label)
+        self.delete_button.update_property([Gtk.AccessibleProperty.LABEL], [label])
+
+    def set_trashed(self, note, trashed):
+        def operation():
+            event = self.identity.set_trashed(note, trashed, self.events.values())
+            good, errors = asyncio.run(across(self.config['relays'], publish_update, event, None))
+            events = compact_backups([*self.events.values(), event])
+            try:
+                self.store.save_events(self.identity.pubkey, list(events.values()))
+            except Exception:
+                errors.append(tr('Corbeille synchronisée, mais écriture du cache local impossible. Actualisez avant de fermer.'))
+            return events, self.identity.notes(events.values())[0], errors
+        def success(result):
+            self.events, self.notes, errors = result
+            self.notes = self.outbox.overlay(self.events.values())
+            self.display()
+            self.render_list()
+            self.status.set_text(tr('Note déplacée dans la corbeille.' if trashed else 'Note restaurée.') + '\n'.join(errors))
+        self.work(operation, success)
 
     def select_row(self, _, row):
         self.guard(lambda: self.display(row.note), allow_read=True)
@@ -359,19 +450,22 @@ class Window(Adw.ApplicationWindow):
             child = following
         query = self.search.get_text().casefold()
         for note in self.notes:
-            if query not in note.markdown.casefold():
+            if note.trashed != self.showing_trash or query not in note.markdown.casefold():
                 continue
             row = Gtk.ListBoxRow()
             row.note = note
-            row.set_child(Gtk.Label(label=("📌 " if note.pinned else "") + note.title, xalign=0, ellipsize=3,
+            row.set_child(Gtk.Label(label=((tr("Conflit — version locale") + " · ") if note.conflicted else (tr("En attente de synchronisation") + " · ") if note.pending else "") + ("📌 " if note.pinned else "") + note.title, xalign=0, ellipsize=3,
                                     margin_start=12, margin_end=12, margin_top=10, margin_bottom=10))
             self.listbox.append(row)
 
     def login(self, identity):
+        self.stop_sync()
         self.identity = identity
+        self.outbox = Outbox(identity, self.store)
         self.events = {e["id"]: e for e in self.store.events(identity.pubkey)
                        if valid_event(e, identity.pubkey)}
         self.notes, unreadable = identity.notes(self.events.values())
+        self.notes = self.outbox.overlay(self.events.values())
         self.display()
         self.render_list()
         self.controls.set_sensitive(True)
@@ -382,6 +476,8 @@ class Window(Adw.ApplicationWindow):
         self.do_refresh()
 
     def refresh(self):
+        if self.syncing:
+            return
         self.guard(self.do_refresh)
 
     def do_refresh(self):
@@ -396,15 +492,17 @@ class Window(Adw.ApplicationWindow):
             return events, notes, unreadable, errors
         def success(result):
             events, notes, unreadable, errors = result
-            self.events, self.notes = events, notes
+            self.events = events
+            self.notes = self.outbox.overlay(events.values())
             # Never replace an editor draft while a background refresh finishes.
             # Keep the opened version so publish can detect a conflicting update.
             self.render_list()
             self.status.set_text(tr('{0} note(s) · {1} indéchiffrable(s). ', len(notes), unreadable) + "\n".join(errors))
-        self.work(operation, success, readable=bool(self.notes))
+            GLib.idle_add(lambda: (self.retry_pending(), False)[1])
+        self.work(operation, success, readable=True)
 
     def publish(self):
-        if not self.identity or self.busy:
+        if not self.identity or (self.busy and not self.refreshing):
             return
         self.editor.flush(self.publish_synced)
 
@@ -448,23 +546,91 @@ class Window(Adw.ApplicationWindow):
 
         chooser.save(self, None, selected)
 
-    def publish_synced(self):
+    def publish_synced(self, as_copy=False):
         try:
-            if self.current:
-                latest = next((note for note in self.notes if note.d == self.current.d), None)
-                if latest is None or latest.event["id"] != self.current.event["id"]:
-                    raise ValueError(tr('La note a changé sur les relais. Copiez vos modifications puis ouvrez sa dernière version avant de publier.'))
-            event = self.identity.save(self.text(), self.current, self.draft_d)
-            # Conserver le même identifiant après un échec de publication.
-            if self.current is None:
-                self.draft_d = event["tags"][0][1]
+            note = self.outbox.save(self.text(), self.current, as_copy)
+            self.notes = self.outbox.overlay(self.events.values())
+            self.display(next(n for n in self.notes if n.pending and n.d == note.d))
+            self.render_list()
+            self.status.set_text(tr('Modifications enregistrées sur cet appareil, en attente de synchronisation.'))
+            GLib.idle_add(lambda: (self.retry_pending(), False)[1])
         except Exception as exc:
             self.status.set_text(str(exc))
+
+    def discard_pending(self):
+        note = self.current
+        if not note or not note.pending:
             return
-        backup = self.identity.backup(self.current, event) if self.current else None
-        self.send(event, deleting=False, backup=backup)
+        def discard():
+            self.outbox.remove(note.d, note.event['id'])
+            self.notes = self.outbox.overlay(self.events.values())
+            self.display()
+            self.render_list()
+        self.confirm(tr('La version des relais sera conservée. Le texte local en attente sera supprimé de cet appareil.'), discard, tr('Abandonner'))
+
+    def stop_sync(self):
+        if self.sync_loop and self.sync_async_task:
+            try:
+                self.sync_loop.call_soon_threadsafe(self.sync_async_task.cancel)
+            except RuntimeError:
+                pass
+
+    def retry_pending(self):
+        if getattr(self, 'closing_clean', False):
+            return False
+        if self.identity is None or self.busy or self.syncing or not self.outbox or not any(n.pending and not n.conflicted for n in self.notes):
+            return True
+        if not self.network_monitor.get_network_available():
+            return True
+        self.syncing = True
+        identity, outbox, events, relays = self.identity, self.outbox, dict(self.events), list(self.config['relays'])
+        self.update_trash_controls()
+        self.status.set_text(tr('Synchronisation des modifications en attente…'))
+        def operation():
+            async def run():
+                self.sync_loop = asyncio.get_running_loop()
+                self.sync_async_task = asyncio.current_task()
+                try:
+                    return await outbox.synchronize(events, relays, query_one, publish_update)
+                finally:
+                    self.sync_loop = self.sync_async_task = None
+            return asyncio.run(run())
+        future = self.sync_pool.submit(operation)
+        def finish():
+            self.syncing = False
+            if self.identity is not identity or getattr(self, 'closing_clean', False):
+                return False
+            try:
+                received, errors = future.result()
+                self.events = compact_backups([*self.events.values(), *received.values()])
+                self.store.save_events(identity.pubkey, list(self.events.values()))
+                self.status.set_text(tr('Modifications synchronisées.') if not outbox.snapshot() else tr('En attente de synchronisation'))
+            except BaseException as exc:
+                if isinstance(exc, (KeyboardInterrupt, SystemExit)):
+                    raise
+                self.status.set_text(tr('Modifications enregistrées localement, en attente de synchronisation.'))
+                # A relay may have acknowledged before a later relay or disk failure.
+                self.events = compact_backups([*self.events.values(), *self.store.events(identity.pubkey)])
+            self.notes = outbox.overlay(self.events.values())
+            self.render_list()
+            # Refresh status for a saved note, never replace unsaved editor text.
+            if self.current and not self.dirty:
+                current = next((n for n in self.notes if n.d == self.current.d and n.pending == self.current.pending), None)
+                if current is None:
+                    current = next((n for n in self.notes if n.d == self.current.d), None)
+                if current:
+                    self.current = current
+            self.update_trash_controls()
+            return False
+        future.add_done_callback(lambda _: GLib.idle_add(finish))
+        return True
 
     def restore_previous(self):
+        if self.current and self.current.pending or self.syncing:
+            return
+        if self.current and self.current.trashed:
+            self.set_trashed(self.current, False)
+            return
         def restore():
             if not self.current:
                 self.status.set_text(tr('Sélectionner une note publiée.'))
@@ -488,7 +654,7 @@ class Window(Adw.ApplicationWindow):
         self.pin_button.set_sensitive(self.current is not None)
 
     def toggle_pin(self):
-        if not self.current or self.busy:
+        if not self.current or self.current.trashed or self.current.pending or self.busy or self.syncing:
             return
         # Preserve the current editor and any unpublished changes.
         note = self.current
@@ -504,6 +670,7 @@ class Window(Adw.ApplicationWindow):
             return events, notes, errors
         def success(result):
             self.events, self.notes, errors = result
+            self.notes = self.outbox.overlay(self.events.values())
             self.current = next(n for n in self.notes if n.d == note.d)
             self.update_pin_button()
             self.render_list()
@@ -511,12 +678,15 @@ class Window(Adw.ApplicationWindow):
         self.work(operation, success)
 
     def delete(self):
-        if not self.current:
-            self.status.set_text(tr('Sélectionner une note publiée à supprimer.'))
+        note = self.current
+        if not note or note.pending or self.busy or self.syncing:
             return
-        self.confirm(tr('Demander la suppression de cette note sur les relais ? Les éventuelles modifications seront abandonnées. Nostr ne garantit pas l’effacement de toutes les copies.'),
-                     lambda: self.send(self.identity.delete(self.current), deleting=True),
-                     tr('Supprimer'))
+        if not note.trashed:
+            self.confirm(tr('La note publiée sera conservée dans la corbeille commune. Les modifications non publiées seront abandonnées.'),
+                         lambda: self.set_trashed(note, True), tr('Déplacer'))
+        else:
+            self.confirm(tr('Une demande de suppression définitive sera envoyée aux relais. L’effacement de toutes les copies n’est pas garanti.'),
+                         lambda: self.send(self.identity.delete(note), deleting=True), tr('Supprimer définitivement'))
 
     def send(self, event, deleting, backup=None):
         def operation():
@@ -535,6 +705,7 @@ class Window(Adw.ApplicationWindow):
             return events, notes, len(good), errors
         def success(result):
             self.events, self.notes, count, errors = result
+            self.notes = self.outbox.overlay(self.events.values())
             self.display(None if deleting else next(n for n in self.notes if n.event["id"] == event["id"]))
             self.render_list()
             self.status.set_text(tr('{0} acceptée par {1}/{2} relais. ', tr('Suppression') if deleting else tr('Publication'), count, len(self.config['relays']))

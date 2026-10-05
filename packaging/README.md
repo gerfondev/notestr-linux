@@ -12,7 +12,7 @@ Depuis la racine du projet :
 ```bash
 curl -fL https://github.com/AppImage/type2-runtime/releases/download/continuous/runtime-x86_64 -o /tmp/notestr-runtime-x86_64
 python3 packaging/build-appimage.py /tmp/notestr-runtime-x86_64 --webkit-install /tmp/notestr-webkit-build/webkit-install --webkit-runtime-root /tmp/ubuntu-build-root
-./dist/Notestr-3.7.1-x86_64.AppImage --appimage-extract-and-run --check
+./dist/Notestr-3.8-x86_64.AppImage --appimage-extract-and-run --check
 ```
 
 Le runtime provient du projet officiel [AppImage/type2-runtime](https://github.com/AppImage/type2-runtime).
@@ -32,7 +32,7 @@ ni sauvegarde. Le bac à sable WebKit reste actif.
 Vérification graphique de l’image produite, dans une session Linux :
 
 ```bash
-python3 packaging/test-appimage.py dist/Notestr-3.7.1-x86_64.AppImage
+python3 packaging/test-appimage.py dist/Notestr-3.8-x86_64.AppImage
 ```
 
 Ce test extrait temporairement l’image et exécute le test GTK/WebKit avec son
@@ -56,7 +56,7 @@ Le fichier AppImage et son SHA-256 doivent correspondre à cette version.
 
 ## Reconstruction 3.5.2 et mises à jour natives
 
-Installer les versions Python validées avant la construction (pour 3.6 et 3.7 : `packaging/requirements-3.6.txt`) :
+Installer les versions Python validées avant la construction (pour 3.6 et 3.7 : `packaging/requirements-3.8.txt`) :
 
 ```bash
 .venv/bin/python -m pip install -r packaging/requirements-3.5.2.txt
@@ -83,7 +83,7 @@ Aucune mise à jour supplémentaire n’est disponible dans les dépôts consult
 
 ## Construction 3.6
 
-Les versions Python restent celles du verrou `requirements-3.6.txt`. En complément des quatre paquets Kerberos documentés ci-dessus, fournir à `--native-debs` les paquets Ubuntu officiels `libcurl3t64-gnutls=8.5.0-2ubuntu10.15` et `libexpat1=2.6.1-2ubuntu0.6`. Le constructeur retire uniquement les exemples nsec de documentation dans les métadonnées des dépendances et actualise leur RECORD ; leur code et leurs licences sont conservés.
+Les versions Python restent celles du verrou `requirements-3.8.txt`. En complément des quatre paquets Kerberos documentés ci-dessus, fournir à `--native-debs` les paquets Ubuntu officiels `libcurl3t64-gnutls=8.5.0-2ubuntu10.15` et `libexpat1=2.6.1-2ubuntu0.6`. Le constructeur retire uniquement les exemples nsec de documentation dans les métadonnées des dépendances et actualise leur RECORD ; leur code et leurs licences sont conservés.
 
 ## WebKit corrigé pour 3.7
 

@@ -1,8 +1,12 @@
-# Notes privées Nostr — V3.7.1 Linux
+# Notes privées Nostr — V3.8 Linux
 
-Version du paquet Python : `3.7.1`.
+Version du paquet Python : `3.8`.
 
 Application Python 3 + GTK4/libadwaita pour lire et éditer des notes Markdown privées compatible avec la version Notestr Android. Langues disponibles : français, anglais.
+
+## Nouveautés de la version 3.8
+
+Corbeille commune avec Android, modifications chiffrées hors connexion et gestion des conflits. Bouton Corbeille aligné avec Visuel et Markdown. Mettre à jour les deux applications. [Notes de version 3.8](RELEASE-NOTES-3.8.md).
 
 ## Correction de la version 3.7.1
 
@@ -57,11 +61,11 @@ ne garantit pas la compatibilité avec les distributions plus anciennes.
 Le trousseau Secret Service et la session graphique restent fournis par le système.
 
 ```bash
-chmod +x Notestr-3.7.1-x86_64.AppImage
-./Notestr-3.7.1-x86_64.AppImage
+chmod +x Notestr-3.8-x86_64.AppImage
+./Notestr-3.8-x86_64.AppImage
 ```
 
-Si FUSE est indisponible, utiliser `./Notestr-3.7.1-x86_64.AppImage --appimage-extract-and-run`.
+Si FUSE est indisponible, utiliser `./Notestr-3.8-x86_64.AppImage --appimage-extract-and-run`.
 Les notes et réglages existants sont réutilisés, comme avec le lancement Python.
 
 ## Nouveauté V3.4 : barre d’actions compacte
@@ -489,3 +493,7 @@ la suppression de son backup. Les anciens clients ne mettent pas ce backup à jo
 ### Moteur visuel et sécurité
 
 Les installations depuis le wheel ou les sources nécessitent WebKitGTK 2.54.0 ou ultérieur pour le mode Visuel. Un moteur plus ancien conserve uniquement le mode Markdown. Utiliser l’AppImage pour bénéficier du moteur corrigé embarqué.
+
+## Modifications hors connexion
+
+Le bouton Publier enregistre une modification chiffrée sur cet appareil avant de tenter sa synchronisation. Les modifications en attente persistent au redémarrage. La reprise nécessite une application ouverte et déverrouillée ; les conflits conservent les deux versions. Voir [OFFLINE.md](OFFLINE.md) pour le fonctionnement, les limites et le protocole de test.

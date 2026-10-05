@@ -1,0 +1,16 @@
+{
+  "checkedAt": "2026-10-05T21:26:31.207414+00:00",
+  "androidVersion": "3.8",
+  "versionCode": 35,
+  "linuxVersion": "3.8",
+  "jvm": 14,
+  "androidMainSuite": "45 tests reported; offline relay case skipped unless enabled; one keyboard bounds failure in combined suite",
+  "androidLocalRelaySuite": "8 tests passed including isolated keyboard retry, backup/trash relay and all offline cases",
+  "androidBiometrics": "2 tests passed: real emulator fingerprint flow, 300 cached notes and vault authentication",
+  "androidDistinctCasesExercised": 48,
+  "androidLimits": "API30 emulator; physical Android17 not tested. Keyboard bounds test has an intermittent combined-suite failure, isolated retry passes; retained as a test limitation. Timeout boundary tested with injected monotonic timestamps.",
+  "linuxPython": "92 passed, pip check passed with aiohttp3.14.4/cachetools7.2.1",
+  "linuxGTK": "Offline save/recovery/conflict/copy and manual trash/restore/delete, alignment with/without pending notice passed in bundled runtime",
+  "syntheticOnly": true,
+  "linuxFinalAppImage": "Final extracted AppImage: startup, WebKit 2.54.0, editor exact source and visual editing, encrypted local publication stub, CSP/revisions, English/French/settings/version and PDF export passed."
+}

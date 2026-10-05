@@ -24,9 +24,10 @@ def test_login_refreshes_even_while_visual_document_is_loading(visual_ready):
     editor.flush = lambda callback: MarkdownEditor.flush(editor, callback)
     identity = SimpleNamespace(pubkey="test-account", notes=Mock(return_value=([], 0)))
     window = SimpleNamespace(
-        store=SimpleNamespace(events=Mock(return_value=[])),
+        store=SimpleNamespace(events=Mock(return_value=[]), read=Mock(return_value=[])),
+        stop_sync=Mock(), syncing=False,
         editor=editor, controls=Mock(), status=Mock(), set_title=Mock(),
-        update_pin_button=Mock(), render_list=Mock(), do_refresh=Mock(), busy=False, confirm=Mock(),
+        update_pin_button=Mock(), update_trash_controls=Mock(), render_list=Mock(), do_refresh=Mock(), busy=False, confirm=Mock(),
     )
     window.display = lambda: Window.display(window)
     window.guard = lambda action: Window.guard(window, action)
@@ -42,7 +43,7 @@ def test_login_refreshes_even_while_visual_document_is_loading(visual_ready):
 
 def test_manual_refresh_still_protects_unpublished_changes():
     window = SimpleNamespace(
-        busy=False, dirty=True, do_refresh=Mock(), confirm=Mock(),
+        syncing=False, busy=False, dirty=True, do_refresh=Mock(), confirm=Mock(),
         editor=SimpleNamespace(flush=lambda callback: callback()),
     )
     window.guard = lambda action: Window.guard(window, action)

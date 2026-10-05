@@ -10,14 +10,14 @@ from nostr_notes.editor import MarkdownEditor
 
 def test_cache_accessible_during_delayed_refresh():
     future=Future()
-    window=SimpleNamespace(busy=False,refreshing=False,identity=object(),controls=Mock(),settings_button=Mock(),editor=Mock(),listbox=Mock(),status=Mock(),pool=SimpleNamespace(submit=lambda _:future))
+    window=SimpleNamespace(update_trash_controls=Mock(),busy=False,refreshing=False,identity=object(),controls=Mock(),settings_button=Mock(),editor=Mock(),listbox=Mock(),status=Mock(),pool=SimpleNamespace(submit=lambda _:future))
     success=Mock()
     with patch('nostr_notes.app.GLib.idle_add',side_effect=lambda f:f()):
         Window.work(window,lambda:None,success,readable=True)
         assert window.busy and window.refreshing
         window.editor.set_sensitive.assert_called_with(True)
         window.listbox.set_sensitive.assert_called_with(True)
-        window.controls.set_sensitive.assert_called_with(False)
+        window.controls.set_sensitive.assert_called_with(True)
         assert not success.called
         future.set_result('updated')
     assert not window.busy and not window.refreshing
@@ -26,7 +26,7 @@ def test_cache_accessible_during_delayed_refresh():
 
 def test_refresh_preserves_open_draft():
     original=object()
-    window=SimpleNamespace(current=original,dirty=True,notes=[original],display=Mock(),render_list=Mock(),status=Mock())
+    window=SimpleNamespace(outbox=SimpleNamespace(overlay=Mock(return_value=["updated"])),retry_pending=Mock(),current=original,dirty=True,notes=[original],display=Mock(),render_list=Mock(),status=Mock())
     def work(operation,success,readable=False):
         assert readable
         success(({'new':'event'},['updated'],0,[]))
@@ -53,7 +53,7 @@ def test_unsafe_links_never_launch(uri):
 
 def test_failed_refresh_preserves_cache():
     future=Future()
-    window=SimpleNamespace(busy=False,refreshing=False,identity=object(),notes=['cached'],controls=Mock(),settings_button=Mock(),editor=Mock(),listbox=Mock(),status=Mock(),pool=SimpleNamespace(submit=lambda _:future))
+    window=SimpleNamespace(update_trash_controls=Mock(),busy=False,refreshing=False,identity=object(),notes=['cached'],controls=Mock(),settings_button=Mock(),editor=Mock(),listbox=Mock(),status=Mock(),pool=SimpleNamespace(submit=lambda _:future))
     with patch('nostr_notes.app.GLib.idle_add',side_effect=lambda f:f()):
         Window.work(window,lambda:None,Mock(),readable=True)
         future.set_exception(ConnectionError('Relais indisponible'))

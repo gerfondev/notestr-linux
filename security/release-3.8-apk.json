@@ -1,0 +1,13 @@
+{
+  "checkedAt": "2026-10-05T21:26:48.915652+00:00",
+  "entriesScanned": 490,
+  "findings": [],
+  "apkSignatureV2": true,
+  "apkCertificateUnchanged": true,
+  "apkDebuggable": false,
+  "nativeAndroidLibrariesMatchReviewedAars": true,
+  "limits": "Targeted decompressed APK scan for known owner paths, identities and secret patterns. Not exhaustive. Synthetic tests only. Linux examined separately; prior security exceptions remain documented.",
+  "sha256": {
+    "Notestr-Android.apk": "2667b638b9d55251cfedcd2be1f784733ee4691d3658c915dfa39cca8d16e691"
+  }
+}

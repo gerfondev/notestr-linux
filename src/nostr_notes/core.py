@@ -15,6 +15,12 @@ from .markdown import explicit_line_breaks
 KIND = 33457
 BACKUP_KIND = 30078
 BACKUP_PREFIX = "notestr/previous/"
+TRASH_PREFIX = "notestr/trash/"
+
+def trash_address(d):
+    return TRASH_PREFIX + hashlib.sha256(d.encode()).hexdigest()
+
+
 PIN_PREFIX = "notestr/pin/"
 
 def pin_address(d):
@@ -27,13 +33,19 @@ def backup_address(d):
 
 def compact_backups(events):
     """Keep just the current encrypted backup per address in the local cache."""
+    events = list(events)
+    tombstones = {(e["pubkey"], a) for e in events if e["kind"] == 5
+                  and valid_event(e, e["pubkey"]) for a in tag_values(e, "a")}
     result, latest = {}, {}
     for event in events:
+        ds = tag_values(event, "d")
+        if event["kind"] != 5 and ds and (event["pubkey"], f"{event['kind']}:{event['pubkey']}:{ds[0]}") in tombstones:
+            continue
         if event["kind"] != BACKUP_KIND:
             result[event["id"]] = event
             continue
         ds = tag_values(event, "d")
-        if not ds or not ds[0].startswith((BACKUP_PREFIX, PIN_PREFIX)):
+        if not ds or not ds[0].startswith((BACKUP_PREFIX, PIN_PREFIX, TRASH_PREFIX)):
             continue
         old = latest.get(ds[0])
         if old is None or (-event["created_at"], event["id"]) < (-old["created_at"], old["id"]):
@@ -85,6 +97,9 @@ class Note:
     markdown: str
     event: dict
     pinned: bool = False
+    trashed: bool = False
+    pending: bool = False
+    conflicted: bool = False
 
     @property
     def title(self):
@@ -105,6 +120,8 @@ class Identity:
         return event.data()
 
     def save(self, markdown: str, previous: Note | None = None, d: str | None = None):
+        if previous and previous.trashed:
+            raise ValueError(tr("Restaurez la note depuis la corbeille avant de la modifier."))
         markdown = explicit_line_breaks(markdown)
         size = len(markdown.encode("utf-8"))
         if not 1 <= size <= 65535:
@@ -133,14 +150,31 @@ class Identity:
         return self.signed(BACKUP_KIND, [["d", address]],
                            self.cipher.encrypt("true" if pinned else "false", self.pubkey), now)
 
+    def set_trashed(self, note, trashed, events):
+        events = list(events)
+        current = next((n for n in self.notes(events)[0] if n.d == note.d), None)
+        if current is None or current.event["id"] != note.event["id"] or current.trashed != note.trashed:
+            raise ValueError(tr("La note a changé. Actualisez et ouvrez sa dernière version."))
+        metadata, _ = self.notes(events, kind=BACKUP_KIND)
+        old = next((n for n in metadata if n.d == trash_address(note.d)), None)
+        now = int(time.time())
+        if old and old.event["created_at"] >= now:
+            raise ValueError(tr("Attendre la seconde suivante avant de modifier la corbeille."))
+        return self.signed(BACKUP_KIND, [["d", trash_address(note.d)]],
+                           self.cipher.encrypt("true" if trashed else "false", self.pubkey), now)
+
     def previous(self, note, events):
         backups, _ = self.notes(events, kind=BACKUP_KIND)
         return next((backup for backup in backups if backup.d == backup_address(note.d)), None)
 
     def delete(self, note: Note):
+        if not note.trashed:
+            raise ValueError(tr("Déplacez d’abord la note dans la corbeille."))
         return self.signed(5, [["e", note.event["id"]],
                                ["a", f"{KIND}:{self.pubkey}:{note.d}"], ["k", str(KIND)],
                                ["a", f"{BACKUP_KIND}:{self.pubkey}:{backup_address(note.d)}"],
+                               ["a", f"{BACKUP_KIND}:{self.pubkey}:{pin_address(note.d)}"],
+                               ["a", f"{BACKUP_KIND}:{self.pubkey}:{trash_address(note.d)}"],
                                ["k", str(BACKUP_KIND)]],
                            "", max(int(time.time()), note.event["created_at"]))
 
@@ -173,6 +207,16 @@ class Identity:
         if kind == KIND:
             metadata, failed = self.notes(events, kind=BACKUP_KIND)
             pins = {n.d for n in metadata if n.d.startswith(PIN_PREFIX) and n.markdown == "true"}
-            notes = [replace(n, pinned=pin_address(n.d) in pins) for n in notes]
+            trash = {n.d: n.markdown for n in metadata if n.d.startswith(TRASH_PREFIX)}
+            # An address deletion is terminal for this identifier on new clients.
+            destroyed = {a for e in valid if e["kind"] == 5 for a in tag_values(e, "a")}
+            trash_addresses = {tag_values(e, "d")[0] for e in events
+                               if valid_event(e, self.pubkey) and e["kind"] == BACKUP_KIND
+                               and tag_values(e, "d") and tag_values(e, "d")[0].startswith(TRASH_PREFIX)}
+            notes = [replace(n, pinned=pin_address(n.d) in pins,
+                             trashed=trash.get(trash_address(n.d)) == "true") for n in notes
+                     if f"{KIND}:{self.pubkey}:{n.d}" not in destroyed
+                     and (trash_address(n.d) not in trash_addresses or
+                          trash.get(trash_address(n.d)) in ("true", "false"))]
             unreadable += failed
         return sorted(notes, key=lambda n: (not n.pinned, -n.event["created_at"], n.d)), unreadable

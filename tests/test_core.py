@@ -1,3 +1,4 @@
+from dataclasses import replace
 import copy
 import re
 from unittest.mock import patch
@@ -50,13 +51,13 @@ def test_deletion_and_future_version(identity):
     with patch('nostr_notes.core.time.time', return_value=100):
         e = identity.save('old')
         note = Note(e['tags'][0][1], 'old', e)
-        deletion = identity.delete(note)
+        deletion = identity.delete(replace(note, trashed=True))
     assert ['k', '33457'] in deletion['tags']
     assert ['a', f'33457:{identity.pubkey}:{note.d}'] in deletion['tags']
     assert identity.notes([e, deletion])[0] == []
     with patch('nostr_notes.core.time.time', return_value=101):
         newer = identity.save('recreated', note)
-    assert identity.notes([deletion, newer, e])[0][0].markdown == 'recreated'
+    assert identity.notes([deletion, newer, e])[0] == []  # Permanent deletion is terminal.
 
 
 def test_tamper_foreign_author_and_unreadable(identity):

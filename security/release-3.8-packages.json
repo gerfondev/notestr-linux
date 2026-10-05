@@ -1,0 +1,15 @@
+{
+  "checkedAt": "2026-10-05T21:27:20.246175+00:00",
+  "entriesScanned": 4468,
+  "findings": [],
+  "knownPublicGnuTlsSelfTestKeys": 5,
+  "linuxPayloadComparedAfterExtraction": true,
+  "sourceArchiveOwnerMetadataAnonymized": true,
+  "sha256": {
+    "Notestr-Android.apk": "2667b638b9d55251cfedcd2be1f784733ee4691d3658c915dfa39cca8d16e691",
+    "Notestr-3.8-x86_64.AppImage": "22b2cf4e5f8787d5d83d05f0a667ab8d72145b6b46c612a5e47b24a468e3a41f",
+    "nostr_private_notes-3.8-py3-none-any.whl": "58e5a872bacc07099e92980cdccffec42e6a9fa1357ae899cba0001a0f52ee55",
+    "nostr-private-notes-3.8.tar.gz": "2f160d4c56fd7be59d212cc3fd9f0f375fe5f74a267dc1e8f8ec00da5a5a0b02"
+  },
+  "scope": "Targeted owner paths, known owner emails, tokens and PEM keys; not exhaustive. No user account or private note used. Upstream public self-test fixtures are distinguished from owner credentials."
+}

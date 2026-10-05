@@ -1,3 +1,4 @@
+from dataclasses import replace
 import asyncio
 from unittest.mock import AsyncMock, patch
 import pytest
@@ -32,7 +33,7 @@ def test_rotation_restore_delete():
     current = identity.notes([restored])[0][0]
     assert current.markdown == 'version two'
     assert identity.previous(current, [backup3]).markdown == 'version three'
-    deletion = identity.delete(current)
+    deletion = identity.delete(replace(current, trashed=True))
     assert identity.notes([restored, deletion])[0] == []
     assert identity.previous(current, [backup3, deletion]) is None
 

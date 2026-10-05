@@ -1,0 +1,91 @@
+{
+  "checkedAt": "2026-10-05T21:27:39.551171+00:00",
+  "sourceAndArchiveEntries": 1617,
+  "findings": [],
+  "images": [
+    {
+      "file": "notestr-android/app/src/main/res/drawable-nodpi/notestr_logo.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "notestr-android/app/src/main/res/mipmap-hdpi/ic_launcher.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "notestr-android/app/src/main/res/mipmap-hdpi/ic_launcher_foreground.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "notestr-android/app/src/main/res/mipmap-mdpi/ic_launcher.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "notestr-android/app/src/main/res/mipmap-mdpi/ic_launcher_foreground.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "notestr-android/app/src/main/res/mipmap-xhdpi/ic_launcher.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "notestr-android/app/src/main/res/mipmap-xhdpi/ic_launcher_foreground.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "notestr-android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "notestr-android/app/src/main/res/mipmap-xxhdpi/ic_launcher_foreground.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "notestr-android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "notestr-android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "notestr-android/artwork/notestr.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    },
+    {
+      "file": "notestr-linux/src/nostr_notes/assets/fr.decentralia.NostrNotes.png",
+      "metadataKeys": [],
+      "exifEntries": 0
+    }
+  ],
+  "history": [
+    {
+      "repository": "notestr-android",
+      "commits": 15,
+      "existingCommitsWithPersonalAuthorMetadata": 3,
+      "historicalBlobsInspected": 299,
+      "historicalBlobsWithOwnerPathMarkers": 0,
+      "rewritten": false
+    },
+    {
+      "repository": "notestr-linux",
+      "commits": 10,
+      "existingCommitsWithPersonalAuthorMetadata": 2,
+      "historicalBlobsInspected": 177,
+      "historicalBlobsWithOwnerPathMarkers": 0,
+      "rewritten": false
+    }
+  ],
+  "limits": "Working sources corresponding to tracked release files, plus new regression tests. Local build logs and private staging are not distribution inputs. Targeted owner paths, credential patterns and image metadata, including nested AAR/JAR. Third-party licence attribution retained. Historical author metadata already public remains unchanged. Synthetic keys in tests are intentionally retained. Not exhaustive."
+}

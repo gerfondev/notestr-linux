@@ -44,7 +44,7 @@ with tempfile.TemporaryDirectory(prefix='notes-v2-test-') as data:
     app.set_application_id("fr.decentralia.NostrNotes.Test")
     app.set_flags(Gio.ApplicationFlags.NON_UNIQUE)
     app.register(None)
-    with patch.object(Window, 'initial_unlock', return_value=False), patch.object(Window, 'do_refresh'):
+    with patch.object(Window, 'initial_unlock', return_value=False), patch.object(Window, 'do_refresh'), patch.object(Window, 'retry_pending', return_value=False):
         win = Window(app)
         win.present()
         assert win.header.get_title_widget() is not None
@@ -149,10 +149,10 @@ with tempfile.TemporaryDirectory(prefix='notes-v2-test-') as data:
         })()''')
         wait_for(lambda: evaluate(editor, 'JSON.stringify(window.blockedFetch)'))
         assert editor.web.get_network_session().is_ephemeral()
-        captured = []
-        with patch.object(win, 'send', side_effect=lambda event, deleting, backup=None: captured.append(event)):
+        with patch.object(win.outbox, 'save', wraps=win.outbox.save) as saved:
             win.publish()
-            wait_for(lambda: captured)
+            wait_for(lambda: saved.called)
+        captured = [win.current.event]
         notes, failures = win.identity.notes(captured)
         assert failures == 0 and 'Dernière frappe ☕' in notes[0].markdown
         # Un message JS tardif d'une autre note ne peut pas remplacer la note courante.
@@ -202,10 +202,10 @@ with tempfile.TemporaryDirectory(prefix='notes-v2-test-') as data:
         editor.switch_mode(False)
         wait_for(lambda: not editor.visual_active)
         editor.buffer.set_text('Je suis content\nje suis pas content')
-        captured = []
-        with patch.object(win, 'send', side_effect=lambda event, deleting, backup=None: captured.append(event)):
+        with patch.object(win.outbox, 'save', wraps=win.outbox.save) as saved:
             win.publish()
-            wait_for(lambda: captured)
+            wait_for(lambda: saved.called)
+        captured = [win.current.event]
         notes, failures = win.identity.notes(captured)
         from markdown_it import MarkdownIt
         assert 'Je suis content<br' in MarkdownIt().render(notes[0].markdown)
@@ -236,16 +236,20 @@ with tempfile.TemporaryDirectory(prefix='notes-v2-test-') as data:
         flush(editor)
         assert editor.get_text() == 'Ancienne version'
         assert win.current == current
-        captured = []
-        with patch.object(win, 'send', side_effect=lambda event, deleting, backup=None: captured.append((event, backup))):
+        with patch.object(win.outbox, 'save', wraps=win.outbox.save) as saved:
             win.publish()
-            wait_for(lambda: captured)
-        restored, replaced_backup = captured[0]
+            wait_for(lambda: saved.called)
+        row = next(r for r in win.outbox.snapshot() if r['update']['id'] == win.current.event['id'])
+        restored, replaced_backup = row['update'], row['backup']
         assert win.identity.notes([restored])[0][0].markdown == 'Ancienne version'
         assert win.identity.previous(current, [replaced_backup]).markdown == 'Version actuelle'
         # Pinning changes the list, but preserves a dirty editor and note timestamp.
         from unittest.mock import AsyncMock
+        win.store.write(win.outbox.name, [])
+        win.current = current
         win.notes = [current]
+        win.changed(None)
+        win.update_trash_controls()
         original_text = editor.get_text()
         original_date = current.event['created_at']
         with patch('nostr_notes.app.across', AsyncMock(return_value=({'synthetic': True}, []))):

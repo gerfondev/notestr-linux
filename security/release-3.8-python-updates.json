@@ -1,0 +1,25 @@
+{
+  "checkedAt": "2026-10-05T21:23:18.914404+00:00",
+  "updates": [
+    {
+      "name": "aiohttp",
+      "version": "3.14.4",
+      "wheel": "aiohttp-3.14.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl",
+      "sha256": "c5e93ab6e6330dce40f5b43996f1fc5f2543296d263a5e4b59ff09e73870b7d8",
+      "source": "https://pypi.org/pypi/aiohttp/3.14.4/json"
+    },
+    {
+      "name": "cachetools",
+      "version": "7.2.1",
+      "wheel": "cachetools-7.2.1-py3-none-any.whl",
+      "sha256": "63aa53dfe7473c10cccdd5a01dedf76ef2c4b73a58840d9396e7d0752cbdac3b",
+      "source": "https://pypi.org/pypi/cachetools/7.2.1/json"
+    }
+  ],
+  "osv": {
+    "results": [
+      {},
+      {}
+    ]
+  }
+}

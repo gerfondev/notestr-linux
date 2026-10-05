@@ -1,3 +1,4 @@
+from dataclasses import replace
 """Only synthetic public scalars 1/2; no user account or public relay."""
 from unittest.mock import patch, Mock
 from types import SimpleNamespace
@@ -40,7 +41,7 @@ def test_pin_unpin_edit_restart_and_backup_isolation():
     events = compact_backups([*events.values(), unpin, pin])
     assert not i.notes(events.values())[0][0].pinned
     assert len([e for e in events.values() if e['kind'] == BACKUP_KIND]) == 2
-    assert i.notes([*events.values(), i.delete(current)])[0][0].d == 'recent'
+    assert i.notes([*events.values(), i.delete(replace(current, trashed=True))])[0][0].d == 'recent'
 
 def test_same_second_conflicts_author_signature_and_malformed():
     i, a, b = make()
@@ -64,7 +65,7 @@ def test_pin_failure_preserves_editor_and_state():
     from nostr_notes.app import Window
     i, a, b = make()
     n = i.notes([a])[0][0]
-    w = SimpleNamespace(current=n, busy=False, identity=i, events={a['id']:a}, config={'relays':['ws://synthetic']},
+    w = SimpleNamespace(syncing=False, current=n, busy=False, identity=i, events={a['id']:a}, config={'relays':['ws://synthetic']},
         store=Mock(), editor=Mock(), dirty=True, render_list=Mock(), update_pin_button=Mock(), status=Mock())
     def work(operation, success):
         with pytest.raises(ConnectionError): operation()
