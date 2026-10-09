@@ -1,45 +1,8 @@
 # Ressources tierces embarquées
 
-Téléchargées le 12 septembre 2026. Aucun téléchargement n’a lieu à l’exécution.
+- TOAST UI Editor 3.2.2, NHN Cloud, licence MIT. Le dépôt amont est archivé. Le bundle distribué a été reconstruit depuis le tag `editor@3.2.2` avec les dépendances ProseMirror actualisées documentées dans `NOTESTR-PATCHES.md`.
+- ToastMark (sources du workspace amont correspondant à TOAST UI Editor 3.2.2), MIT ; sa sortie CommonJS est reconstruite pour conserver l’API `Renderer` attendue par l’éditeur.
+- DOMPurify 3.4.16, Cure53 et contributeurs, licences Apache-2.0 ou MPL-2.0 (`LICENSE-dompurify.txt`), chargé séparément et externalisé depuis le bundle.
+- Les mentions de licence amont sont conservées. Notestr est distribué sous GPLv3 ; les composants tiers gardent leurs licences respectives.
 
-- TOAST UI Editor 3.2.2, NHN Cloud, licence MIT (`LICENSE-toastui.txt`).
-  JavaScript autonome : https://uicdn.toast.com/editor/3.2.2/toastui-editor-all.min.js
-  CSS et français : https://registry.npmjs.org/@toast-ui/editor/-/editor-3.2.2.tgz
-  Source : https://github.com/nhn/tui.editor
-  Le bundle inclut notamment ProseMirror. Son ancien module DOMPurify est remplacé
-  par la version externe actuelle, également utilisée par customHTMLSanitizer.
-  Les mentions de licence intégrées au bundle ont été conservées.
-- DOMPurify 3.4.16, Cure53 et contributeurs, licences Apache-2.0 ou MPL-2.0
-  (`LICENSE-dompurify.txt`).
-  https://registry.npmjs.org/dompurify/-/dompurify-3.4.16.tgz
-  Source : https://github.com/cure53/DOMPurify
-
-`SHA256SUMS` permet de contrôler les fichiers tiers distribués avec cette version.
-
-## Correctif local : sauts de ligne (12 septembre 2026)
-
-Le sérialiseur de paragraphes TOAST UI 3.2.2 est ajusté pour produire deux
-espaces avant le retour à la ligne entre deux paragraphes visuels adjacents,
-conformément aux sauts de ligne explicites CommonMark. Le traitement des blocs
-de code, listes et tableaux reste celui de TOAST UI. Le bundle est donc modifié
-localement ; SHA256SUMS correspond à cette version corrigée.
-
-## Correctif local 0.2.2 (13 septembre 2026)
-
-Le convertisseur Markdown vers visuel traitait `softbreak` mais ignorait
-`linebreak`. Il traite maintenant les sauts explicites dans les paragraphes
-comme des séparations visuelles, y compris dans les citations et listes.
-Le test graphique contrôle les positions des textes à l’écran après rechargement.
-
-## Adaptation locale de TOAST UI Editor
-
-Le NodeView des blocs de code crée un bouton « Copier » hors du contenu éditable.
-Il émet un événement DOM `notes-copy-code` traité par le pont GTK de l’application.
-Les mutations du bouton sont ignorées par le NodeView ; les modifications du code
-restent observées. Le sélecteur de langage est masqué par `editor.css` ; les
-langages des blocs existants restent conservés dans le Markdown.
-`SHA256SUMS` reflète cette adaptation locale du fichier JavaScript.
-
-## Correctif de sécurité local du 26 septembre 2026
-
-Le module DOMPurify 2.3.3 embarqué a été retiré ; les deux chemins de filtrage utilisent DOMPurify 3.4.16, chargé avant l’éditeur. Les autres adaptations Linux sont conservées. Bundle avant patch : `56a28ecda01f5d7313313c36f380a502b0dd06864dd11acfbd18b2acea6af472`.
+Le convertisseur ToastMark inclut un correctif de compatibilité pour les nœuds `linebreak` du renderer amont. Les ressources sont embarquées ; aucun téléchargement n’a lieu à l’exécution. `SHA256SUMS` contrôle les fichiers de cet éditeur.

@@ -16,7 +16,8 @@ from .core import Identity, Note, valid_event, compact_backups
 from .editor import MarkdownEditor
 from .lock import PasswordLock
 from .pdf_export import export_markdown_pdf
-from .relay import across, publish_update, query_one
+from .relay import across, publish_update, query_one, query_server_profile
+from .image_attachments import upload_encrypted_image, load_image_for_display
 from .storage import Storage, load_secret, save_secret, relays_from_text
 
 
@@ -52,6 +53,8 @@ class Window(Adw.ApplicationWindow):
         self.set_icon_name(APP_ICON_NAME)
         self.pool = ThreadPoolExecutor(max_workers=1)
         self.sync_pool = ThreadPoolExecutor(max_workers=1)
+        self.image_pool = ThreadPoolExecutor(max_workers=2)
+        self.pending_image_loads = set()
         self.syncing = False
         self.sync_loop = None
         self.sync_async_task = None
@@ -113,7 +116,7 @@ class Window(Adw.ApplicationWindow):
         scroll.set_child(self.listbox)
         sidebar.append(scroll)
         paned.set_start_child(sidebar)
-        self.editor = MarkdownEditor(self.changed)
+        self.editor = MarkdownEditor(self.changed, self.insert_image, self.load_image)
         self.editor.set_sensitive(False)
         editor_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.pending_label = Gtk.Label(wrap=True, xalign=0, margin_start=8, margin_end=8)
@@ -501,6 +504,68 @@ class Window(Adw.ApplicationWindow):
             GLib.idle_add(lambda: (self.retry_pending(), False)[1])
         self.work(operation, success, readable=True)
 
+    def load_image(self, reference, epoch):
+        if reference in self.pending_image_loads or self.identity is None:
+            return
+        self.pending_image_loads.add(reference)
+        identity = self.identity
+        relays = list(self.config['relays'])
+        def operation():
+            return load_image_for_display(reference, self.store.root, relays,
+                                          identity.pubkey, query_server_profile)
+        future = self.image_pool.submit(operation)
+        def finish():
+            self.pending_image_loads.discard(reference)
+            if self.identity is None or epoch != self.editor.epoch:
+                return False
+            try:
+                import base64
+                payload = base64.b64encode(future.result()).decode('ascii')
+                self.editor.image_result(reference, payload)
+            except Exception as exc:
+                self.status.set_text(tr('Image indisponible : ') + str(exc))
+                self.editor.image_error(str(exc))
+            return False
+        future.add_done_callback(lambda _future: GLib.idle_add(finish))
+
+    def insert_image(self):
+        if self.identity is None or self.busy or (self.current and self.current.trashed):
+            return
+        def choose():
+            chooser = Gtk.FileDialog(title=tr('Insérer une image'))
+            filters = Gio.ListStore.new(Gtk.FileFilter)
+            images = Gtk.FileFilter(name=tr('Images'))
+            for mime in ('image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/heic'):
+                images.add_mime_type(mime)
+            filters.append(images)
+            chooser.set_filters(filters)
+            def selected(dialog, result):
+                try:
+                    file = dialog.open_finish(result)
+                except GLib.Error as exc:
+                    if exc.matches(Gtk.dialog_error_quark(), Gtk.DialogError.CANCELLED):
+                        return
+                    self.status.set_text(tr('Sélection de l’image impossible : ') + exc.message)
+                    return
+                path = file.get_path()
+                if not path:
+                    self.status.set_text(tr('Choisir une image locale.'))
+                    return
+                identity = self.identity
+                relays = list(self.config['relays'])
+                def operation():
+                    data = Path(path).read_bytes()
+                    return asyncio.run(upload_encrypted_image(data, identity, relays, query_server_profile,
+                                                              cache_dir=self.store.root))
+                def success(reference):
+                    self.editor.insert_image_reference(reference)
+                    self.status.set_text(tr('Image chiffrée et ajoutée à la note.'))
+                self.work(operation, success)
+            chooser.open(self, None, selected)
+        # The editor toolbar waits for its caret capture before calling us.
+        # A flush here adds another WebKit round trip after focus has changed.
+        choose()
+
     def publish(self):
         if not self.identity or (self.busy and not self.refreshing):
             return
@@ -712,6 +777,24 @@ class Window(Adw.ApplicationWindow):
                                  + "\n".join(errors))
         self.work(operation, success)
 
+    def show_license(self):
+        dialog = Gtk.Window(title=tr("Licence GPLv3"), transient_for=self, modal=True,
+                            default_width=720, default_height=640)
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12,
+                      margin_start=16, margin_end=16, margin_top=16, margin_bottom=16)
+        intro = Gtk.Label(label=tr("La licence GPLv3 garantit que les versions modifiées distribuées restent sous GPLv3. Aucune garantie n’est fournie."), wrap=True, xalign=0)
+        box.append(intro)
+        scroll = Gtk.ScrolledWindow(vexpand=True)
+        license_label = Gtk.Label(label=(ASSETS / "GPL-3.0.txt").read_text(encoding="utf-8"),
+                                   selectable=True, xalign=0, yalign=0, wrap=True, wrap_mode=Gtk.WrapMode.WORD_CHAR)
+        scroll.set_child(license_label)
+        box.append(scroll)
+        close = Gtk.Button(label=tr("Fermer"), halign=Gtk.Align.END)
+        close.connect("clicked", lambda *_: dialog.close())
+        box.append(close)
+        dialog.set_child(box)
+        dialog.present()
+
     def settings(self):
         self.guard(self.show_settings)
 
@@ -723,6 +806,7 @@ class Window(Adw.ApplicationWindow):
         scroll.set_child(box)
         dialog.set_child(scroll)
         box.append(Gtk.Label(label=tr("Version de l’application") + " : " + __version__, selectable=True))
+        box.append(button(tr("Licence GPLv3"), self.show_license))
         box.append(Gtk.Label(label=tr("Langue"), xalign=0))
         language = Gtk.DropDown.new_from_strings(["Français", "English"])
         saved_language = self.store.read("preferences.json", {}).get("language", "fr")
@@ -750,8 +834,23 @@ class Window(Adw.ApplicationWindow):
         box.append(Gtk.Label(label=tr('Relais wss://, un par ligne')))
         relays = Gtk.TextView(wrap_mode=Gtk.WrapMode.WORD_CHAR, height_request=100)
         relays.get_buffer().set_text("\n".join(self.config["relays"]))
-        box.append(relays)
+        relay_scroll = Gtk.ScrolledWindow(min_content_height=100, max_content_height=160,
+                                          propagate_natural_height=True)
+        relay_scroll.set_child(relays)
+        box.append(relay_scroll)
         info = Gtk.Label(wrap=True)
+        def save_relays():
+            try:
+                buf = relays.get_buffer()
+                urls = relays_from_text(buf.get_text(buf.get_start_iter(), buf.get_end_iter(), True))
+                config = dict(self.config)
+                config["relays"] = urls
+                self.store.write("config.json", config)
+                self.config = config
+                info.set_text(tr("Relais enregistrés. Ils seront utilisés lors des prochaines synchronisations."))
+            except (OSError, ValueError) as exc:
+                info.set_text(tr("Impossible d’enregistrer les relais : ") + str(exc))
+        box.append(button(tr("Enregistrer les relais"), save_relays))
         box.append(info)
         box.append(button(tr('Modifier le mot de passe'), lambda: self.show_change_password(dialog, info)))
         def apply():

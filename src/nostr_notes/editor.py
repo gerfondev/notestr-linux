@@ -33,9 +33,11 @@ def supported_webkit():
 
 
 class MarkdownEditor(Gtk.Box):
-    def __init__(self, on_change):
+    def __init__(self, on_change, on_insert_image=None, on_load_image=None):
         super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=0)
         self.on_change = on_change
+        self.on_insert_image = on_insert_image
+        self.on_load_image = on_load_image
         self.markdown = ""
         self.epoch = 0
         self.ready = False
@@ -44,6 +46,7 @@ class MarkdownEditor(Gtk.Box):
         self.visual_active = False
         self.failed = False
         self.pending_document = False
+        self.image_error_message = None
         self.toolbar = Gtk.Box(spacing=8, margin_start=12, margin_top=6, margin_bottom=6)
         self.visual_button = Gtk.ToggleButton(label=tr('Visuel'))
         self.source_button = Gtk.ToggleButton(label="Markdown")
@@ -52,6 +55,12 @@ class MarkdownEditor(Gtk.Box):
         self.source_button.connect("clicked", lambda _: self.switch_mode(False))
         self.toolbar.append(self.visual_button)
         self.toolbar.append(self.source_button)
+        if on_insert_image:
+            self.image_button = Gtk.Button(icon_name='insert-image-symbolic')
+            self.image_button.set_tooltip_text(tr('Insérer une image'))
+            self.image_button.update_property([Gtk.AccessibleProperty.LABEL], [tr('Insérer une image')])
+            self.image_button.connect("clicked", self._begin_image_insertion)
+            self.toolbar.append(self.image_button)
         self.append(self.toolbar)
         self.notice = Gtk.Label(wrap=True, xalign=0, margin_start=12, margin_end=12,
                                 margin_bottom=6)
@@ -61,6 +70,8 @@ class MarkdownEditor(Gtk.Box):
         self.source = Gtk.TextView(wrap_mode=Gtk.WrapMode.WORD_CHAR, monospace=True,
                                   left_margin=20, right_margin=20, top_margin=16, bottom_margin=16)
         self.buffer = self.source.get_buffer()
+        self.image_insert_start = None
+        self.image_insert_end = None
         self.buffer.connect("changed", self._source_changed)
         scroll = Gtk.ScrolledWindow()
         scroll.set_child(self.source)
@@ -190,6 +201,14 @@ class MarkdownEditor(Gtk.Box):
                   and not self.pending_document and message.get("epoch") == self.epoch):
                 self._accept(message)
                 self._open_link(message.get("url"))
+            elif (message.get("type") == "loadImage" and self.visual_active
+                  and not self.pending_document and message.get("epoch") == self.epoch
+                  and isinstance(message.get("reference"), str) and self.on_load_image):
+                self.on_load_image(message["reference"], self.epoch)
+            elif (message.get("type") == "imageError" and self.visual_active
+                  and not self.pending_document and message.get("epoch") == self.epoch
+                  and isinstance(message.get("message"), str)):
+                self.notice.set_text(tr('Image indisponible : ') + message["message"])
             elif message.get("type") == "change" and self.visual_active and not self.pending_document:
                 self._accept(message)
         except (ValueError, TypeError, AttributeError):
@@ -226,11 +245,28 @@ class MarkdownEditor(Gtk.Box):
         Gio.AppInfo.launch_default_for_uri_async(uri, context, None, finished, None)
 
     def _accept(self, message):
+        if isinstance(message, str):
+            try:
+                message = json.loads(message)
+            except (ValueError, TypeError):
+                return
         if message.get("epoch") == self.epoch and isinstance(message.get("markdown"), str):
             text = message["markdown"]
             if text != self.markdown:
                 self.markdown = text
                 self.on_change(self)
+
+    def image_result(self, reference, data):
+        if self.ready and self.visual_active and not self.pending_document:
+            def received(result):
+                if result is not True and self.visual_active:
+                    self.image_error(tr('L’image a été chargée, mais l’éditeur n’a pas pu la placer dans la note.'))
+            self._evaluate("window.notesEditor.imageResult(" + json.dumps(reference) + "," + json.dumps(data) + ")", received)
+
+    def image_error(self, message):
+        if self.visual_active:
+            self.image_error_message = tr('Image indisponible : ') + str(message)
+            self.notice.set_text(self.image_error_message)
 
     def _evaluate(self, script, callback):
         def finished(view, result, _):
@@ -257,8 +293,51 @@ class MarkdownEditor(Gtk.Box):
     def get_text(self):
         return self.markdown
 
+    def _begin_image_insertion(self, _button):
+        if self.visual_active and self.ready and not self.pending_document:
+            def ready_to_choose(result):
+                # The native file chooser steals focus. Open it only after the
+                # WebKit editor has captured the actual ProseMirror selection.
+                if result is True and self.on_insert_image:
+                    self.on_insert_image()
+                elif result is not True:
+                    self.notice.set_text(tr('Impossible de mémoriser la position du curseur. Réessayez.'))
+            self._evaluate("window.notesEditor.rememberInsertionPoint()", ready_to_choose)
+            return
+        else:
+            bounds = self.buffer.get_selection_bounds()
+            start, end = bounds if bounds else (self.buffer.get_iter_at_mark(self.buffer.get_insert()),) * 2
+            self.image_insert_start = self.buffer.create_mark(None, start, True)
+            self.image_insert_end = self.buffer.create_mark(None, end, False)
+        if self.on_insert_image:
+            self.on_insert_image()
+
+    def insert_image_reference(self, reference):
+        if self.visual_active and self.ready and not self.pending_document:
+            def inserted(result):
+                if result is not True:
+                    self.notice.set_text(tr('Impossible d’insérer l’image à la position choisie.'))
+                    return
+                # Update the native Markdown copy immediately so switching
+                # modes cannot race a queued JavaScript change notification.
+                self._evaluate("window.notesEditor.snapshot()", self._accept)
+            self._evaluate("window.notesEditor.insertImageReference(" + json.dumps(reference) + ")", inserted)
+            return
+        buffer = self.buffer
+        if self.image_insert_start and self.image_insert_end:
+            start = buffer.get_iter_at_mark(self.image_insert_start)
+            end = buffer.get_iter_at_mark(self.image_insert_end)
+            buffer.delete(start, end)
+            buffer.delete_mark(self.image_insert_start)
+            buffer.delete_mark(self.image_insert_end)
+            self.image_insert_start = self.image_insert_end = None
+        else:
+            start = buffer.get_iter_at_mark(buffer.get_insert())
+        buffer.insert(start, reference)
+
     def set_text(self, markdown):
         self.epoch += 1
+        self.image_error_message = None
         self.markdown = markdown
         self._update_source()
         if self.ready and self.visual_active:
@@ -274,7 +353,16 @@ class MarkdownEditor(Gtk.Box):
             self.pending_document = False
             self.web.set_sensitive(True)
             if result is not None and self.visual_active:
-                self.notice.set_text(tr(VISUAL_NOTICE))
+                # The initial JS notification can arrive while the native bridge
+                # still considers this document pending. Retry after that state
+                # transition has reached WebKit's main loop.
+                def resolve_images():
+                    if revision == self.epoch and self.visual_active and self.ready:
+                        self._evaluate("window.notesEditor.resolveImages(true)", lambda _result: None)
+                    return False
+                GLib.timeout_add(50, resolve_images)
+            if result is not None and self.visual_active:
+                self.notice.set_text(self.image_error_message or tr(VISUAL_NOTICE))
             if result is not None and callback:
                 callback()
         self._evaluate("window.notesEditor.setDocument(" + json.dumps(self.markdown) + "," + str(revision) + "," + json.dumps(get_language()) + ")", loaded)

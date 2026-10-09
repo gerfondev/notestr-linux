@@ -74,7 +74,7 @@ def tag_values(event, name):
 def valid_event(data: dict, pubkey: str) -> bool:
     """monstr vérifie la signature de l'id, donc vérifier aussi son lien au contenu."""
     try:
-        if data["pubkey"] != pubkey or data["kind"] not in (KIND, BACKUP_KIND, 5):
+        if data["pubkey"] != pubkey or data["kind"] not in (KIND, BACKUP_KIND, 5, 10063):
             return False
         if type(data["created_at"]) is not int or data["created_at"] < 0:
             return False

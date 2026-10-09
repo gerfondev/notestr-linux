@@ -1,5 +1,6 @@
 """Test graphique réel. Exécuter dans une session GTK (ou via gtk4-broadwayd)."""
 import json
+import io
 import os
 from pathlib import Path
 import tempfile
@@ -9,6 +10,7 @@ from unittest.mock import patch
 from nostr_notes.app import Application, Window
 from nostr_notes.core import Identity
 from gi.repository import GLib, Gtk, Adw, Gio
+from PIL import Image
 
 
 def wait_for(condition, timeout=12):
@@ -37,6 +39,10 @@ def flush(editor):
     wait_for(lambda: done)
 
 
+def visible_image_loaded(editor, width):
+    return evaluate(editor, "JSON.stringify([...document.querySelectorAll('.toastui-editor-ww-container img')].some(i=>{const r=i.getBoundingClientRect();return i.naturalWidth===" + str(width) + "&&r.width>0&&r.height>0&&getComputedStyle(i).display!=='none'}))") is True
+
+
 Adw.init()
 with tempfile.TemporaryDirectory(prefix='notes-v2-test-') as data:
     os.environ['XDG_DATA_HOME'] = data
@@ -62,10 +68,88 @@ with tempfile.TemporaryDirectory(prefix='notes-v2-test-') as data:
             assert action.get_tooltip_text() == tooltip
         win.login(Identity('0' * 63 + '1'))
         editor = win.editor
+        assert editor.image_button.get_icon_name() == 'insert-image-symbolic'
+        assert editor.image_button.get_tooltip_text() == 'Insérer une image'
         wait_for(lambda: editor.ready or editor.failed)
         assert editor.ready, editor.notice.get_text()
         wait_for(lambda: not editor.pending_document)
         assert editor.visual_active
+        # Encrypted attachment references stay in Markdown while WebKit displays
+        # only the host-provided, decrypted in-memory image bytes.
+        jpeg = io.BytesIO()
+        Image.new('RGB', (3, 2), 'navy').save(jpeg, format='JPEG')
+        image_ref = 'notestr-image://' + 'a' * 64 + '?server=https%3A%2F%2Fblossom.yakihonne.com&key=' + 'A' * 43 + '&nonce=' + 'A' * 16 + '&mime=image%2Fjpeg'
+        image_markdown = '![Image](' + image_ref + ')'
+        image_note = (
+            '# 🧑‍💻 Evolution Notestr\n\n'
+            '~~\\- ancienne ligne~~  \n'
+            '- insertion d\'image\n'
+            + image_markdown + '\n'
+        )
+        with patch('nostr_notes.app.load_image_for_display', return_value=jpeg.getvalue()):
+            editor.set_text(image_note)
+            wait_for(lambda: not editor.pending_document)
+            wait_for(lambda: visible_image_loaded(editor, 3))
+            flush(editor)
+            assert editor.get_text() == image_note
+            snapshot_before_view = editor.get_text()
+            evaluate(editor, "JSON.stringify((() => { const image=[...document.querySelectorAll('.toastui-editor-ww-container img')].find(i=>i.naturalWidth===3); image.click(); return !!document.querySelector('.notes-image-lightbox img'); })())")
+            wait_for(lambda: evaluate(editor, "JSON.stringify(!!document.querySelector('.notes-image-lightbox img'))"))
+            assert evaluate(editor, "JSON.stringify(document.querySelector('.notes-image-lightbox')?.getAttribute('aria-modal')==='true')")
+            evaluate(editor, "JSON.stringify(document.querySelector('.notes-image-lightbox-zoom-in').click() ?? true)")
+            wait_for(lambda: evaluate(editor, "JSON.stringify(document.querySelector('.notes-image-lightbox-zoom-level')?.textContent==='150%')"))
+            evaluate(editor, """JSON.stringify((() => {
+              const overlay=document.querySelector('.notes-image-lightbox'), image=overlay.querySelector('img'), r=image.getBoundingClientRect();
+              const common={pointerType:'mouse',bubbles:true,cancelable:true};
+              image.dispatchEvent(new PointerEvent('pointerdown',{...common,pointerId:71,clientX:r.left+r.width/2,clientY:r.top+r.height/2}));
+              overlay.dispatchEvent(new PointerEvent('pointermove',{...common,pointerId:71,clientX:r.left+r.width/2+50,clientY:r.top+r.height/2}));
+              overlay.dispatchEvent(new PointerEvent('pointerup',{...common,pointerId:71,clientX:r.left+r.width/2+50,clientY:r.top+r.height/2}));
+              return image.style.transform;
+            })())""")
+            assert evaluate(editor, "JSON.stringify(/translate3d\\((?!0(?:px)?[, ])[-\\d.]+px/.test(document.querySelector('.notes-image-lightbox img').style.transform))")
+            evaluate(editor, "document.querySelector('.notes-image-lightbox-zoom-reset').click(); true")
+            wait_for(lambda: evaluate(editor, "JSON.stringify(document.querySelector('.notes-image-lightbox-zoom-level')?.textContent==='100%')"))
+            assert editor.get_text() == snapshot_before_view
+            evaluate(editor, "JSON.stringify(document.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true,cancelable:true})))")
+            wait_for(lambda: not evaluate(editor, "JSON.stringify(!!document.querySelector('.notes-image-lightbox'))"))
+            evaluate(editor, "JSON.stringify((() => { const image=[...document.querySelectorAll('.toastui-editor-ww-container img')].find(i=>i.naturalWidth===3); image.click(); document.querySelector('.notes-image-lightbox').click(); return !document.querySelector('.notes-image-lightbox'); })())")
+            assert editor.get_text() == snapshot_before_view
+            # A correctly padded base64url key must not be silently dropped
+            # by the visual parser before the native decoder can validate it.
+            padded_ref = image_ref.replace('&key=' + 'A' * 43 + '&nonce=', '&key=' + 'A' * 43 + '%3D&nonce=')
+            padded_markdown = '![Image](' + padded_ref + ')'
+            editor.set_text(padded_markdown)
+            wait_for(lambda: not editor.pending_document)
+            wait_for(lambda: visible_image_loaded(editor, 3))
+            flush(editor)
+            assert editor.get_text() == padded_markdown
+            # Une image choisie au curseur doit être insérée à cet endroit,
+            # et rester visible dans le même document visuel.
+            editor.set_text('# Placement\n\navant\n\naprès')
+            wait_for(lambda: not editor.pending_document)
+            assert evaluate(editor, 'JSON.stringify(window.notesEditor.rememberInsertionPoint(20,20))') is True
+            inserted = evaluate(editor, "JSON.stringify(window.notesEditor.insertImageReference(" + json.dumps(image_markdown) + "))")
+            assert inserted is True, inserted
+            wait_for(lambda: visible_image_loaded(editor, 3))
+            flush(editor)
+            assert editor.get_text().index(image_markdown) < editor.get_text().index('après'), repr(editor.get_text())
+            editor.switch_mode(False)
+            wait_for(lambda: not editor.visual_active)
+            assert image_ref in editor.get_text()
+            editor.switch_mode(True)
+            wait_for(lambda: not editor.pending_document)
+            wait_for(lambda: visible_image_loaded(editor, 3))
+        editor.switch_mode(False)
+        wait_for(lambda: not editor.visual_active)
+        editor.buffer.set_text('avant\naprès')
+        start = editor.buffer.get_iter_at_offset(len('avant\n'))
+        editor.image_insert_start = editor.buffer.create_mark(None, start, True)
+        editor.image_insert_end = editor.buffer.create_mark(None, start, False)
+        editor.insert_image_reference(image_markdown)
+        assert editor.get_text().index(image_markdown) < editor.get_text().index('après'), repr(editor.get_text())
+        editor.set_text('')
+        editor.switch_mode(True)
+        wait_for(lambda: not editor.pending_document)
         # Un clic pendant le chargement affiche un avertissement temporaire,
         # qui doit disparaître dès que le document visuel est prêt.
         editor.set_text('# Synchronisation temporaire')
@@ -92,7 +176,8 @@ with tempfile.TemporaryDirectory(prefix='notes-v2-test-') as data:
         sample = '```python\nprint("Café ☕")\n  # espaces\n```\n\n```\nsecond bloc\n```\n'
         editor.set_text(sample)
         wait_for(lambda: not editor.pending_document)
-        assert evaluate(editor, "JSON.stringify(document.querySelectorAll('.notes-copy-code').length)") == 2
+        button_count = evaluate(editor, "JSON.stringify(document.querySelectorAll('.notes-copy-code').length)")
+        assert button_count == 2
         assert evaluate(editor, "JSON.stringify(document.querySelector('.notes-copy-code').textContent)") == 'Copier'
         for index, expected in enumerate(('print("Café ☕")\n  # espaces', 'second bloc')):
             evaluate(editor, f"JSON.stringify(document.querySelectorAll('.notes-copy-code')[{index}].click() ?? true)")
@@ -197,6 +282,7 @@ with tempfile.TemporaryDirectory(prefix='notes-v2-test-') as data:
           ['strong', 's, del', 'em'].map(tag =>
             document.querySelector('.toastui-editor-ww-container').querySelector(tag).getBoundingClientRect().y)
         )''')
+        if not positions[0] < positions[1] < positions[2]: print('Break render diagnostic:', evaluate(editor, "JSON.stringify({html:document.querySelector('.toastui-editor-ww-container .ProseMirror')?.innerHTML,markdown:window.notesEditor.snapshot()})"), flush=True)
         assert positions[0] < positions[1] < positions[2], positions
         # Publication directement depuis le mode Markdown, sans ligne vide.
         editor.switch_mode(False)

@@ -12,7 +12,18 @@ def tr(message, *values):
     text = ENGLISH.get(message, message) if _language == "en" else message
     return text.format(*values) if values else text
 
-ENGLISH = {' Mode Markdown rétabli avec le dernier texte reçu ; vérifier les dernières frappes.': ' Markdown mode '
+ENGLISH = {
+ 'Licence GPLv3': 'GPLv3 License',
+ 'La licence GPLv3 garantit que les versions modifiées distribuées restent sous GPLv3. Aucune garantie n’est fournie.': 'GPLv3 requires distributed modified versions to remain under GPLv3. The software comes with no warranty.',
+ 'Fermer': 'Close',
+ 'Image indisponible : ': 'Image unavailable: ',
+ 'L’image a été chargée, mais l’éditeur n’a pas pu la placer dans la note.': 'The image loaded, but the editor could not place it in the note.',
+ 'Insérer une image': 'Insert image',
+ 'Images': 'Images',
+ 'Image chiffrée et ajoutée à la note.': 'Encrypted image added to the note.',
+ 'Serveur d’image absent de la liste Blossom de ce compte.': 'Image server is not in this account’s Blossom list.',
+ 'Relais enregistrés. Ils seront utilisés lors des prochaines synchronisations.': 'Relays saved. They will be used for subsequent synchronizations.',
+ 'Impossible d’enregistrer les relais : ': 'Unable to save relays: ',' Mode Markdown rétabli avec le dernier texte reçu ; vérifier les dernières frappes.': ' Markdown mode '
                                                                                         'restored with the '
                                                                                         'last received text; '
                                                                                         'check your latest '

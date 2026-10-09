@@ -94,3 +94,27 @@ async def publish_update(url, event, backup=None):
     if backup is not None:
         await publish_one(url, backup)
     return await publish_one(url, event)
+
+
+async def query_server_profile(url, pubkey):
+    """Fetch and verify the replaceable Blossom server-list event, without caching it as a note."""
+    async def run():
+        events = []
+        async with connect(url, open_timeout=10, close_timeout=2, max_size=2**20) as ws:
+            sub = secrets.token_hex(8)
+            await ws.send(json.dumps(["REQ", sub, {"kinds": [10063], "authors": [pubkey], "limit": 10}]))
+            while True:
+                msg = json.loads(await ws.recv())
+                if not isinstance(msg, list) or not msg:
+                    continue
+                if msg[0] == "EVENT" and len(msg) == 3 and msg[1] == sub:
+                    event = msg[2]
+                    if event.get("kind") == 10063 and valid_event(event, pubkey):
+                        events.append(event)
+                elif msg[0] == "EOSE" and len(msg) >= 2 and msg[1] == sub:
+                    break
+                elif msg[0] == "CLOSED" and len(msg) >= 2 and msg[1] == sub:
+                    raise ValueError(tr('Lecture du profil refusée par le relais.'))
+            await ws.send(json.dumps(["CLOSE", sub]))
+        return events
+    return await asyncio.wait_for(run(), 12)

@@ -1,3 +1,4 @@
+include LICENSE RELEASE-NOTES-3.9.md
 include README.md SECURITY.md VALIDATION.md lancer-notes.sh
 recursive-include packaging *.py *.md *.txt *.json *.desktop AppRun
 recursive-include releases *.md *.json
@@ -15,3 +16,6 @@ recursive-include security release-3.7.1-*.json
 
 include RELEASE-NOTES-3.8.md TRASH.md OFFLINE.md
 recursive-include security release-3.8-*.json
+
+include RELEASE-NOTES-3.9.md
+recursive-include security release-3.9-*.json

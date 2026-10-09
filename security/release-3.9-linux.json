@@ -1,0 +1,13 @@
+{
+  "checkedAt": "2026-10-09T13:02:00Z",
+  "version": "3.9",
+  "artifacts": ["Notestr-3.9-x86_64.AppImage", "nostr_private_notes-3.9-py3-none-any.whl", "nostr-private-notes-3.9.tar.gz"],
+  "ubuntuPackageCoordinatesCompared": 191,
+  "nativeUpdatesIncluded": 7,
+  "webkitgtk": "2.54.0 (WSA-2026-0006 security fixes present)",
+  "prosemirrorView": "1.42.6",
+  "pythonTests": "103 passed",
+  "appimageGtkWebkitSmoke": "passed; editor, encrypted image insertion/view/zoom/pan, relay settings, language, PDF",
+  "privacyScan": {"scope": "source and unpacked final packages; known owner paths/name, complete nsec, private PEM and GitHub token patterns", "ownerPath": 0, "ownerName": 0, "completeNsec": 0, "githubToken": 0, "pemMarkerFiles": 3, "exhaustive": false},
+  "limitations": ["PEM markers occur in upstream system libraries and cryptographic serialization code; source attribution e-mail addresses belong to third-party licenses.", "Historical public Git author identities are preserved.", "Previous native exposure exceptions remain documented; no claim of vulnerability-free runtime.", "178 npm development/test audit alerts remain in the archived upstream workspace and are not shipped."]
+}

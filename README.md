@@ -1,12 +1,12 @@
-# Notes privées Nostr — V3.8 Linux
+# Notes privées Nostr — V3.9 Linux
 
-Version du paquet Python : `3.8`.
+Version du paquet Python : `3.9`.
 
 Application Python 3 + GTK4/libadwaita pour lire et éditer des notes Markdown privées compatible avec la version Notestr Android. Langues disponibles : français, anglais.
 
-## Nouveautés de la version 3.8
+## Nouveautés de la version 3.9
 
-Corbeille commune avec Android, modifications chiffrées hors connexion et gestion des conflits. Bouton Corbeille aligné avec Visuel et Markdown. Mettre à jour les deux applications. [Notes de version 3.8](RELEASE-NOTES-3.8.md).
+Insertion d’images avec zoom et déplacement sur Android/Linux ; correction Linux du bouton Enregistrer les relais dans les paramètres ; licence GPLv3. Mettre à jour les deux applications. [Notes de version 3.9](RELEASE-NOTES-3.9.md). Les notes précédentes sont dans [RELEASE-NOTES-3.8.md](RELEASE-NOTES-3.8.md).
 
 ## Correction de la version 3.7.1
 
@@ -61,11 +61,11 @@ ne garantit pas la compatibilité avec les distributions plus anciennes.
 Le trousseau Secret Service et la session graphique restent fournis par le système.
 
 ```bash
-chmod +x Notestr-3.8-x86_64.AppImage
-./Notestr-3.8-x86_64.AppImage
+chmod +x Notestr-3.9-x86_64.AppImage
+./Notestr-3.9-x86_64.AppImage
 ```
 
-Si FUSE est indisponible, utiliser `./Notestr-3.8-x86_64.AppImage --appimage-extract-and-run`.
+Si FUSE est indisponible, utiliser `./Notestr-3.9-x86_64.AppImage --appimage-extract-and-run`.
 Les notes et réglages existants sont réutilisés, comme avec le lancement Python.
 
 ## Nouveauté V3.4 : barre d’actions compacte
@@ -497,3 +497,5 @@ Les installations depuis le wheel ou les sources nécessitent WebKitGTK 2.54.0 o
 ## Modifications hors connexion
 
 Le bouton Publier enregistre une modification chiffrée sur cet appareil avant de tenter sa synchronisation. Les modifications en attente persistent au redémarrage. La reprise nécessite une application ouverte et déverrouillée ; les conflits conservent les deux versions. Voir [OFFLINE.md](OFFLINE.md) pour le fonctionnement, les limites et le protocole de test.
+
+> **Version 3.9** — Insertion d’images avec zoom et déplacement, correction du bouton d’enregistrement des relais sous Linux. Licence GPLv3 : voir [LICENSE](LICENSE) et [notes de version](RELEASE-NOTES-3.9.md).

@@ -12,6 +12,9 @@ with tempfile.TemporaryDirectory(prefix='notestr-image-test-') as work:
     subprocess.run([str(image), '--appimage-extract'], cwd=work,
                    stdout=subprocess.DEVNULL, check=True)
     app = Path(work) / 'squashfs-root'
+    license_file = app / 'usr/lib/python3.12/site-packages/nostr_notes/assets/GPL-3.0.txt'
+    assert license_file.is_file()
+    assert license_file.read_text(encoding='utf-8').lstrip().startswith('GNU GENERAL PUBLIC LICENSE')
     env = dict(os.environ, APPDIR=str(app))
     subprocess.run([str(app / 'AppRun'), '--check'], env=env, check=True)
     launcher = (app / 'AppRun').read_text().replace('-m nostr_notes "$@"', '"$@"')

@@ -6,17 +6,49 @@ html, body { height: 100%; margin: 0; background: #fff; color: #202124; }
 .toastui-editor-toolbar { padding: 0 8px; }
 /* Les images dans les notes ne sont pas chargées. Les icônes sont des fonds data: locaux. */
 .toastui-editor-contents img { display: none; }
+.toastui-editor-contents img { cursor: zoom-in; }
+.notes-image-lightbox {
+  position: fixed; inset: 0; z-index: 2147483647; display: flex;
+  align-items: center; justify-content: center; overflow: hidden; box-sizing: border-box;
+  padding: 24px; background: rgba(0,0,0,.94); cursor: zoom-out;
+  overscroll-behavior: contain; touch-action: none;
+}
+.notes-image-lightbox img {
+  display: block; width: min(100%, 1200px); max-width: 100%; max-height: 100%;
+  height: auto; object-fit: contain; cursor: grab; user-select: none; -webkit-user-drag: none;
+  touch-action: none; will-change: transform;
+}
+.notes-image-lightbox img:active { cursor: grabbing; }
+.notes-image-lightbox-controls {
+  position: absolute; bottom: 18px; left: 50%; z-index: 1; display: flex;
+  align-items: center; gap: 8px; transform: translateX(-50%); padding: 6px;
+  border: 1px solid rgba(255,255,255,.4); border-radius: 14px; background: rgba(0,0,0,.62); color: #fff;
+}
+.notes-image-lightbox-controls button {
+  width: 48px; height: 48px; border: 0; border-radius: 10px;
+  background: rgba(255,255,255,.16); color: #fff; font: 28px/1 sans-serif; cursor: pointer;
+}
+.notes-image-lightbox-controls button:disabled { opacity: .45; }
+.notes-image-lightbox-controls button:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+.notes-image-lightbox-zoom-level { min-width: 56px; text-align: center; font: 15px sans-serif; }
+.notes-image-lightbox-close {
+  position: absolute; top: 12px; right: 12px; width: 48px; height: 48px;
+  border: 1px solid rgba(255,255,255,.75); border-radius: 50%;
+  background: rgba(0,0,0,.55); color: #fff; font: 32px/1 sans-serif; cursor: pointer;
+}
+.notes-image-lightbox-close:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
 
 /* Remplace le pseudo-bouton de langage fourni par TOAST UI. */
 .toastui-editor-ww-code-block::after { display: none !important; }
-.toastui-editor-ww-code-block { position: relative; }
-.toastui-editor-ww-code-block .notes-copy-code {
-  position: absolute; top: 8px; right: 8px;
-  padding: 4px 10px; border: 1px solid #bbb; border-radius: 5px;
-  background: #fff; color: #202124; cursor: pointer; font: 13px system-ui;
+.notes-code-actions { position: fixed; inset: 0; z-index: 1000; pointer-events: none; }
+.notes-copy-code {
+  position: fixed; width: 76px; min-height: 40px; padding: 4px 8px;
+  border: 1px solid #bbb; border-radius: 5px; background: #fff;
+  color: #202124; cursor: pointer; font: 13px system-ui; pointer-events: auto;
 }
-.toastui-editor-ww-code-block .notes-copy-code:hover { background: #eee; }
-.toastui-editor-ww-code-block .notes-copy-code:focus-visible { outline: 2px solid #3584e4; }
+.notes-copy-code[hidden] { display: none; }
+.notes-copy-code:hover { background: #eee; }
+.notes-copy-code:focus-visible { outline: 2px solid #3584e4; }
 .toastui-editor-contents .toastui-editor-ww-code-block pre { padding-top: 42px; }
 
 /* A web link remains clickable inside the editable document, including nested formatting. */

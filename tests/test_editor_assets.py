@@ -15,6 +15,10 @@ def test_assets_shipped_and_offline_policy():
     js = (ASSETS / 'editor.js').read_text()
     assert 'usageStatistics: false' in js
     assert 'DOMPurify.sanitize' in js
+    assert 'imageReferenceCandidate' in js
+    assert r'notestr-image\.invalid' in js
+    assert 'data.keepAttr = custom || inline || localPreview' in js
+    assert 'Older notes may have been produced by clients that percent-encode' in js
 
 
 def test_application_logo_is_packaged_png():
@@ -32,5 +36,15 @@ def test_both_sanitizers_use_maintained_external_dompurify():
     assert html.index('purify.min.js') < html.index('toastui-editor.js')
     bundle = (ASSETS / 'toastui-editor.js').read_text()
     assert 'DOMPurify 2.3.3' not in bundle
-    assert 'e.exports=self.DOMPurify' in bundle
+    assert 't(e.DOMPurify)' in bundle
+    assert 'require(\"dompurify\")' in bundle
+    assert 'DOMPurify 2.3.3' not in bundle
     assert '3.4.16' in (ASSETS / 'purify.min.js').read_text()[:300]
+
+
+def test_gplv3_license_is_available_in_source_and_asset():
+    license_text = (ASSETS.parents[2] / 'LICENSE').read_text()
+    bundled = (ASSETS / 'GPL-3.0.txt').read_text()
+    assert license_text.lstrip().startswith('GNU GENERAL PUBLIC LICENSE')
+    assert bundled.lstrip() == license_text.lstrip()
+    assert 'Version 3, 29 June 2007' in license_text

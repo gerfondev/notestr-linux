@@ -1,0 +1,57 @@
+{
+  "checkedAt": "2026-10-09T12:09:20.314434+00:00",
+  "source": "Ubuntu Noble official archive, noble-updates and noble-security; fresh isolated apt indexes",
+  "packages": [
+    {
+      "package": "gir1.2-soup-3.0",
+      "version": "3.4.4-5ubuntu0.9",
+      "architecture": "amd64",
+      "file": "gir1.2-soup-3.0_3.4.4-5ubuntu0.9_amd64.deb",
+      "sha256": "56c886ea35b327b63420eb8c9a09f7c66c6e830ecd9ce59eee520d5e7fe8aade"
+    },
+    {
+      "package": "libfreetype6",
+      "version": "2.13.2+dfsg-1ubuntu0.2",
+      "architecture": "amd64",
+      "file": "libfreetype6_2.13.2+dfsg-1ubuntu0.2_amd64.deb",
+      "sha256": "8c6d3bac5a6197fa2f48b2d56f04f3ffecaa7082eeab91b0939f97a40adc88a6"
+    },
+    {
+      "package": "libpng16-16t64",
+      "version": "1.6.43-5ubuntu0.7",
+      "architecture": "amd64",
+      "file": "libpng16-16t64_1.6.43-5ubuntu0.7_amd64.deb",
+      "sha256": "863d6abb089b2820ceba98e6b18f06eaacc55f9b05827001e7b4021a9a7b246c"
+    },
+    {
+      "package": "librsvg2-2",
+      "version": "2.58.0+dfsg-1ubuntu0.1",
+      "architecture": "amd64",
+      "file": "librsvg2-2_2.58.0+dfsg-1ubuntu0.1_amd64.deb",
+      "sha256": "47aa51a12ecc102b6dc867fe34319fcf6fa590c44bd8a3e22a2c473f3b8dd875"
+    },
+    {
+      "package": "librsvg2-common",
+      "version": "2.58.0+dfsg-1ubuntu0.1",
+      "architecture": "amd64",
+      "file": "librsvg2-common_2.58.0+dfsg-1ubuntu0.1_amd64.deb",
+      "sha256": "e9d3f20d5113d4b4cbeb2834d15d2bdc4b5bacb0767b743380e7afcd91ec7415"
+    },
+    {
+      "package": "libsoup-3.0-0",
+      "version": "3.4.4-5ubuntu0.9",
+      "architecture": "amd64",
+      "file": "libsoup-3.0-0_3.4.4-5ubuntu0.9_amd64.deb",
+      "sha256": "cd6bab2b426b0c81b0f7856df11f3633df118df33517378049545ff440751fcc"
+    },
+    {
+      "package": "libxml2",
+      "version": "2.9.14+dfsg-1.3ubuntu3.10",
+      "architecture": "amd64",
+      "file": "libxml2_2.9.14+dfsg-1.3ubuntu3.10_amd64.deb",
+      "sha256": "c5a065f85c1e6f605741e365e40cad71c3ceb0e85e2791400bd35b8896e12ad1"
+    }
+  ],
+  "aptIndexRefresh": "2026-10-09; 191 Ubuntu package coordinates compared against the 3.8 AppImage inventory; seven newer candidates selected and packaged.",
+  "limits": "Stable distro updates integrated only where newer than bundled; native advisories and remaining exceptions are documented separately. WebKitGTK 2.54.0 is retained because it contains the latest published security fixes; upstream 2.54.1 release notes list bug fixes and no new security advisory as of 2026-10-09."
+}
