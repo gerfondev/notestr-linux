@@ -46,7 +46,9 @@ class MarkdownEditor(Gtk.Box):
         self.visual_active = False
         self.failed = False
         self.pending_document = False
+        self.pending_image_results = {}
         self.image_error_message = None
+        self.read_only = False
         self.toolbar = Gtk.Box(spacing=8, margin_start=12, margin_top=6, margin_bottom=6)
         self.visual_button = Gtk.ToggleButton(label=tr('Visuel'))
         self.source_button = Gtk.ToggleButton(label="Markdown")
@@ -60,6 +62,7 @@ class MarkdownEditor(Gtk.Box):
             self.image_button.set_tooltip_text(tr('Insérer une image'))
             self.image_button.update_property([Gtk.AccessibleProperty.LABEL], [tr('Insérer une image')])
             self.image_button.connect("clicked", self._begin_image_insertion)
+            self.image_button.set_visible(False)  # En mode visuel, l’icône est dans la barre WebKit près du tableau.
             self.toolbar.append(self.image_button)
         self.append(self.toolbar)
         self.notice = Gtk.Label(wrap=True, xalign=0, margin_start=12, margin_end=12,
@@ -201,6 +204,10 @@ class MarkdownEditor(Gtk.Box):
                   and not self.pending_document and message.get("epoch") == self.epoch):
                 self._accept(message)
                 self._open_link(message.get("url"))
+            elif (message.get("type") == "pickImage" and self.visual_active
+                  and not self.pending_document and message.get("epoch") == self.epoch
+                  and self.on_insert_image):
+                self._begin_image_insertion(None)
             elif (message.get("type") == "loadImage" and self.visual_active
                   and not self.pending_document and message.get("epoch") == self.epoch
                   and isinstance(message.get("reference"), str) and self.on_load_image):
@@ -257,11 +264,19 @@ class MarkdownEditor(Gtk.Box):
                 self.on_change(self)
 
     def image_result(self, reference, data):
-        if self.ready and self.visual_active and not self.pending_document:
-            def received(result):
-                if result is not True and self.visual_active:
-                    self.image_error(tr('L’image a été chargée, mais l’éditeur n’a pas pu la placer dans la note.'))
-            self._evaluate("window.notesEditor.imageResult(" + json.dumps(reference) + "," + json.dumps(data) + ")", received)
+        if not self.ready or not self.visual_active:
+            return
+        if self.pending_document:
+            # A note can be re-rendered as read-only while its encrypted image
+            # is loading. Keep decrypted bytes only in memory until the new
+            # document is ready, then let its own image map decide whether the
+            # reference is still present.
+            self.pending_image_results[reference] = data
+            return
+        def received(result):
+            if result is not True and self.visual_active:
+                self.image_error(tr('L’image a été chargée, mais l’éditeur n’a pas pu la placer dans la note.'))
+        self._evaluate("window.notesEditor.imageResult(" + json.dumps(reference) + "," + json.dumps(data) + ")", received)
 
     def image_error(self, message):
         if self.visual_active:
@@ -281,7 +296,7 @@ class MarkdownEditor(Gtk.Box):
         self.web.evaluate_javascript(script, -1, None, None, None, finished, None)
 
     def _source_changed(self, _):
-        if not self.loading_source:
+        if not self.loading_source and not self.read_only:
             self.markdown = self.buffer.get_text(self.buffer.get_start_iter(), self.buffer.get_end_iter(), True)
             self.on_change(self)
 
@@ -294,6 +309,8 @@ class MarkdownEditor(Gtk.Box):
         return self.markdown
 
     def _begin_image_insertion(self, _button):
+        if self.read_only:
+            return
         if self.visual_active and self.ready and not self.pending_document:
             def ready_to_choose(result):
                 # The native file chooser steals focus. Open it only after the
@@ -313,6 +330,8 @@ class MarkdownEditor(Gtk.Box):
             self.on_insert_image()
 
     def insert_image_reference(self, reference):
+        if self.read_only:
+            return False
         if self.visual_active and self.ready and not self.pending_document:
             def inserted(result):
                 if result is not True:
@@ -335,10 +354,16 @@ class MarkdownEditor(Gtk.Box):
             start = buffer.get_iter_at_mark(buffer.get_insert())
         buffer.insert(start, reference)
 
-    def set_text(self, markdown):
+    def set_text(self, markdown, read_only=False):
         self.epoch += 1
+        self.read_only = bool(read_only)
+        self.toolbar.set_visible(not self.read_only)
         self.image_error_message = None
         self.markdown = markdown
+        self.source.set_editable(not self.read_only)
+        self.source.set_cursor_visible(not self.read_only)
+        if hasattr(self, "image_button"):
+            self.image_button.set_sensitive(not self.read_only)
         self._update_source()
         if self.ready and self.visual_active:
             self._load_visual()
@@ -352,6 +377,9 @@ class MarkdownEditor(Gtk.Box):
                 return
             self.pending_document = False
             self.web.set_sensitive(True)
+            pending_images, self.pending_image_results = self.pending_image_results, {}
+            for reference, data in pending_images.items():
+                self.image_result(reference, data)
             if result is not None and self.visual_active:
                 # The initial JS notification can arrive while the native bridge
                 # still considers this document pending. Retry after that state
@@ -365,7 +393,7 @@ class MarkdownEditor(Gtk.Box):
                 self.notice.set_text(self.image_error_message or tr(VISUAL_NOTICE))
             if result is not None and callback:
                 callback()
-        self._evaluate("window.notesEditor.setDocument(" + json.dumps(self.markdown) + "," + str(revision) + "," + json.dumps(get_language()) + ")", loaded)
+        self._evaluate("window.notesEditor.setDocument(" + json.dumps(self.markdown) + "," + str(revision) + "," + json.dumps(get_language()) + "," + json.dumps(self.read_only) + ")", loaded)
 
     def flush(self, callback):
         """Barrière avant publier/quitter : recevoir les toutes dernières frappes JS."""
@@ -407,5 +435,7 @@ class MarkdownEditor(Gtk.Box):
                 self._update_source()
                 self.stack.set_visible_child_name("source")
                 self.source_button.set_active(True)
+                if self.on_insert_image:
+                    self.image_button.set_visible(True)
                 self.notice.set_text(tr('Markdown : les retours simples seront rendus explicites à la publication. Les blocs de code sont préservés.'))
             self.flush(done)

@@ -12,11 +12,14 @@
   };
   new MutationObserver(localizeCopyButtons).observe(document.getElementById('editor'), {childList:true,subtree:true});
   let epoch = 0;
+  let loaded = false;
+  let readOnly = false;
   let original = '';
   let baseline = '';
   let muted = false;
   const embeddedAssets = new Map();
   const imageSources = new Map();
+  const resolvedImageSources = new Map();
   let imageSlots = [];
   const requestedAssets = new Set();
   let insertionSelection = null;
@@ -25,36 +28,29 @@
   // reserved .invalid URL as the temporary model value; CSP blocks all network
   // loads, then imageResult replaces it with the decrypted data URL.
   const imagePlaceholder = (id) => 'https://notestr-image.invalid/' + id;
+  const parseImageReference = (reference, allowLegacyEncoding = false) => {
+    if (typeof reference !== 'string') return null;
+    const match = /^notestr-image:\/\/([0-9a-f]{64})\?([^\s#]+)$/i.exec(reference);
+    if (!match) return null;
+    const params = new URLSearchParams(match[2]);
+    const server = params.get('server'), key = params.get('key'), nonce = params.get('nonce'), mime = params.get('mime');
+    if (params.getAll('server').length !== 1 || params.getAll('key').length !== 1
+        || params.getAll('nonce').length !== 1 || params.getAll('mime').length !== 1
+        || !/^https:\/\/[a-z0-9.-]+(?::[0-9]+)?$/i.test(server || '')
+        || !(allowLegacyEncoding ? /^[A-Za-z0-9_=%-]+$/ : /^[A-Za-z0-9_-]{43}$/).test(key || '')
+        || !(allowLegacyEncoding ? /^[A-Za-z0-9_=%-]+$/ : /^[A-Za-z0-9_-]{16}$/).test(nonce || '')
+        || mime !== 'image/jpeg') return null;
+    return {hash: match[1], server, key, nonce, mime};
+  };
   const validImageReference = (reference) => {
-    try {
-      const url = new URL(reference);
-      return url.protocol === 'notestr-image:' && /^[0-9a-f]{64}$/.test(url.hostname)
-        && /^https:\/\/[a-z0-9.-]+(?::[0-9]+)?$/i.test(url.searchParams.get('server') || '')
-        && url.searchParams.getAll('server').length === 1
-        && /^[A-Za-z0-9_-]{43}$/.test(url.searchParams.get('key') || '')
-        && url.searchParams.getAll('key').length === 1
-        && /^[A-Za-z0-9_-]{16}$/.test(url.searchParams.get('nonce') || '')
-        && url.searchParams.getAll('nonce').length === 1
-        && url.searchParams.get('mime') === 'image/jpeg' && url.searchParams.getAll('mime').length === 1;
-    } catch (_) { return false; }
+    return !!parseImageReference(reference);
   };
   // Older notes may have been produced by clients that percent-encode
   // base64url fields differently. Do not silently discard their image while
   // loading the document: let the native decoder validate the key and nonce,
   // and report a useful error if they are actually malformed.
   const imageReferenceCandidate = (reference) => {
-    try {
-      const url = new URL(reference);
-      return url.protocol === 'notestr-image:' && /^[0-9a-f]{64}$/i.test(url.hostname)
-        && url.searchParams.getAll('server').length === 1
-        && /^https:\/\/[a-z0-9.-]+(?::[0-9]+)?$/i.test(url.searchParams.get('server') || '')
-        && url.searchParams.getAll('key').length === 1
-        && /^[A-Za-z0-9_=%-]+$/.test(url.searchParams.get('key') || '')
-        && url.searchParams.getAll('nonce').length === 1
-        && /^[A-Za-z0-9_=%-]+$/.test(url.searchParams.get('nonce') || '')
-        && url.searchParams.getAll('mime').length === 1
-        && url.searchParams.get('mime') === 'image/jpeg';
-    } catch (_) { return false; }
+    return !!parseImageReference(reference, true);
   };
   const resolveImages = () => {
     let sent = 0;
@@ -63,6 +59,23 @@
       if (reference && !requestedAssets.has(reference)) { requestedAssets.add(reference); send({type:'loadImage', reference, epoch}); sent++; }
     }
     return sent;
+  };
+  const imageElementAt = (view, position) => {
+    const element = view.nodeDOM(position);
+    if (!element) return null;
+    if (element.nodeType === Node.ELEMENT_NODE && element.matches('img:not(.ProseMirror-separator)')) return element;
+    return element.querySelector?.('img:not(.ProseMirror-separator)') || null;
+  };
+  const restoreResolvedImageSources = () => {
+    const view = editor?.wwEditor?.view;
+    if (!view || !resolvedImageSources.size) return;
+    view.state.doc.descendants((node, position) => {
+      if (node.type.name !== 'image') return;
+      const preview = node.attrs.imageUrl;
+      const dataUrl = resolvedImageSources.get(preview);
+      const image = dataUrl ? imageElementAt(view, position) : null;
+      if (image && image.getAttribute('src') !== dataUrl) image.setAttribute('src', dataUrl);
+    });
   };
   const restoreWysiwygImageSources = () => {
     const view = editor.wwEditor?.view;
@@ -77,12 +90,14 @@
     });
     if (transaction.docChanged) view.dispatch(transaction);
   };
-  new MutationObserver(resolveImages).observe(document.getElementById('editor'), {childList:true,subtree:true});
+  new MutationObserver(() => {
+    resolveImages();
+    restoreResolvedImageSources();
+  }).observe(document.getElementById('editor'), {childList:true,subtree:true});
   const send = (message) => window.webkit.messageHandlers.notes.postMessage(JSON.stringify(message));
   DOMPurify.addHook('uponSanitizeAttribute', (node, data) => {
     if (data.attrName !== 'src') return;
-    let custom = false;
-    try { const u = new URL(data.attrValue); custom = node.nodeName === 'IMG' && u.protocol === 'notestr-image:' && /^[0-9a-f]{64}$/.test(u.hostname) && /^https:\/\/[a-z0-9.-]+(?::[0-9]+)?$/i.test(u.searchParams.get('server') || '') && /^[A-Za-z0-9_-]+$/.test(u.searchParams.get('key') || '') && /^[A-Za-z0-9_-]+$/.test(u.searchParams.get('nonce') || '') && u.searchParams.get('mime') === 'image/jpeg'; } catch (_) {}
+    const custom = node.nodeName === 'IMG' && !!parseImageReference(data.attrValue, true);
     const inline = node.nodeName === 'IMG' && /^data:image\/(?:jpeg|png);base64,[A-Za-z0-9+/=]+(?:#notestr-[a-z0-9]+)?$/i.test(data.attrValue);
     const localPreview = node.nodeName === 'IMG' && /^https:\/\/notestr-image\.invalid\/notestr-[A-Za-z0-9]+$/.test(data.attrValue);
     data.keepAttr = custom || inline || localPreview;
@@ -110,7 +125,52 @@
   document.addEventListener('notes-copy-code', (event) => {
     send({type: 'copyCode', epoch, text: event.detail});
   });
+  function installImageToolbarButton() {
+    const toolbar = document.querySelector('.toastui-editor-toolbar');
+    const table = toolbar?.querySelector('.toastui-editor-toolbar-icons.table');
+    if (!toolbar || !table || readOnly) return;
+    let button = toolbar.querySelector('.notes-insert-image');
+    if (button) {
+      button.setAttribute('aria-label', label('Insérer une image', 'Insert image'));
+      button.title = label('Insérer une image', 'Insert image');
+      return;
+    }
+    button = document.createElement('button'); button.type = 'button';
+    button.className = 'toastui-editor-toolbar-icons notes-insert-image';
+    button.setAttribute('aria-label', label('Insérer une image', 'Insert image'));
+    button.title = label('Insérer une image', 'Insert image');
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', '0 0 24 24'); svg.setAttribute('aria-hidden', 'true');
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', 'M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM19 19H5V5h14v14zM7 17l3.2-4 2.2 2.6 1.6-2 3 3.4H7zm5-6V6m-3 3 3-3 3 3');
+    path.setAttribute('fill', 'currentColor'); path.setAttribute('stroke', 'currentColor');
+    path.setAttribute('stroke-width', '1.4'); path.setAttribute('stroke-linecap', 'round');
+    path.setAttribute('stroke-linejoin', 'round'); svg.appendChild(path); button.appendChild(svg);
+    const rememberSelection = () => {
+      try {
+        const selection = editor.getSelection();
+        if (Array.isArray(selection) && selection.length === 2) insertionSelection = selection;
+      } catch (_) {}
+    };
+    button.addEventListener('pointerdown', rememberSelection);
+    button.addEventListener('touchstart', rememberSelection, {passive: true});
+    let lastActivation = 0;
+    const activate = () => {
+      const now = Date.now();
+      if (now - lastActivation < 250) return;
+      lastActivation = now;
+      if (readOnly || !loaded) return;
+      if (!insertionSelection) rememberSelection();
+      if (insertionSelection) send({type: 'pickImage', epoch});
+    };
+    button.addEventListener('pointerup', activate);
+    button.addEventListener('touchend', activate, {passive: true});
+    button.addEventListener('click', activate);
+    table.closest('button')?.after(button);
+  }
   editor = createEditor();
+  installImageToolbarButton();
+  new MutationObserver(installImageToolbarButton).observe(document.getElementById('editor'), {childList: true, subtree: true});
   // Keep code-copy controls outside ProseMirror so they never enter the note.
   const copyLayer = document.createElement('div');
   copyLayer.className = 'notes-code-actions';
@@ -151,7 +211,7 @@
   document.addEventListener('scroll', scheduleCopyButtons, true);
   window.addEventListener('resize', scheduleCopyButtons);
   const restoreImageReferences = (value) => {
-    for (const [dataUrl, reference] of embeddedAssets) value = value.replaceAll(dataUrl, reference);
+    for (const [dataUrl, reference] of embeddedAssets) value = value.split(dataUrl).join(reference);
     return value;
   };
   function state() {
@@ -267,6 +327,9 @@
   };
   document.addEventListener('click', (event) => {
     if (!(event.target instanceof Element)) return;
+    if (readOnly && !event.target.closest('a') && event.target.closest('.task-list-item')) {
+      event.preventDefault(); event.stopImmediatePropagation(); return;
+    }
     const image = event.target.closest('.toastui-editor-contents img');
     if (image) { if (showImageLightbox(image)) { event.preventDefault(); event.stopImmediatePropagation(); } return; }
     const link = event.target.closest('a');
@@ -278,20 +341,42 @@
   }, true);
   document.addEventListener('drop', (event) => { event.preventDefault(); event.stopImmediatePropagation(); }, true);
   document.addEventListener('dragover', (event) => event.preventDefault(), true);
+  document.addEventListener('beforeinput', (event) => {
+    if (readOnly) { event.preventDefault(); event.stopImmediatePropagation(); }
+  }, true);
   // Le collage ne peut introduire de fichiers ni de HTML actif.
   document.addEventListener('paste', (event) => {
     // Dialog fields (URL, link text, etc.) use native plain-text pasting.
     // Sending these pastes to insertText would modify the underlying note.
     if (event.target instanceof Element && event.target.closest('input, textarea')) return;
     event.preventDefault(); event.stopImmediatePropagation();
+    if (readOnly) return;
     const text = event.clipboardData?.getData('text/plain');
     if (text) editor.insertText(text);
   }, true);
+  function applyReadOnlyState() {
+    const host = document.getElementById('editor');
+    host.classList.toggle('notes-read-only', readOnly);
+    const view = editor?.wwEditor?.view;
+    if (view) {
+      view.setProps({editable: () => !readOnly});
+      if (view.dom) {
+        view.dom.setAttribute('contenteditable', readOnly ? 'false' : 'true');
+        view.dom.setAttribute('aria-readonly', readOnly ? 'true' : 'false');
+      }
+    }
+    host.querySelectorAll('.ProseMirror').forEach(element => {
+      element.setAttribute('contenteditable', readOnly ? 'false' : 'true');
+      element.setAttribute('aria-readonly', readOnly ? 'true' : 'false');
+    });
+  }
   window.notesEditor = Object.freeze({
-    setDocument(markdown, revision, language='fr') {
+    setDocument(markdown, revision, language='fr', readonly=false) {
       uiLanguage=language==='en'?'en':'fr';document.documentElement.lang=uiLanguage;
-      if (revision === epoch && markdown === state().markdown) return JSON.stringify(state());
+      if (revision === epoch && markdown === state().markdown && readonly === readOnly) return JSON.stringify(state());
       closeImageLightbox();
+      readOnly = readonly === true;
+      loaded = false;
       muted = true;
       // Une nouvelle note ne doit jamais hériter de l'historique Annuler d'une autre.
       editor.destroy();
@@ -301,6 +386,7 @@
       original = markdown;
       embeddedAssets.clear();
       imageSources.clear();
+      resolvedImageSources.clear();
       requestedAssets.clear();
       imageSlots = [];
       insertionSelection = null;
@@ -314,9 +400,16 @@
         return whole.replace(reference, preview);
       });
       editor.setMarkdown(displayMarkdown, false);
+      installImageToolbarButton();
       restoreWysiwygImageSources();
+      applyReadOnlyState();
       baseline = restoreImageReferences(editor.getMarkdown());
+      loaded = true;
       muted = false;
+      // setMarkdown runs while the editor is being reconstructed. Schedule a
+      // fresh layout after ProseMirror has committed its WYSIWYG nodes so the
+      // floating copy controls are attached to newly loaded code blocks too.
+      scheduleCopyButtons();
       resolveImages();
       return JSON.stringify(state());
     },
@@ -328,19 +421,23 @@
         const marker = '#notestr-' + (preview.split('/').pop() || '').replace(/^notestr-/, '');
         const dataUrl = 'data:image/jpeg;base64,' + base64 + marker;
         embeddedAssets.set(dataUrl, reference);
-        for (const image of document.querySelectorAll('#editor img')) {
-          if (image.getAttribute('src') === preview) image.setAttribute('src', dataUrl);
+        // Keep the original placeholder in ProseMirror to preserve layout and
+        // Markdown serialization. Reapply the decrypted data URL to rebuilt
+        // node views, which matters after read-only/locked view updates.
+        resolvedImageSources.set(preview, dataUrl);
+        // Bind decrypted bytes to the exact ProseMirror image node. The editor
+        // also contains hidden views and zero-size separator images; indexing
+        // all <img> elements can silently attach the second image to a spacer.
+        const view = editor?.wwEditor?.view;
+        if (view) {
+          view.state.doc.descendants((node, position) => {
+            if (node.type.name !== 'image') return;
+            if (node.attrs.imageUrl === preview) {
+              const target = imageElementAt(view, position);
+              if (target) target.setAttribute('src', dataUrl);
+            }
+          });
         }
-        // The WYSIWYG node view may omit src when Toast UI parses a sanitized
-        // Markdown image. Its model keeps the safe placeholder URL, so restore
-        // the matching visual element directly after the native loader returns.
-        const slot = imageSlots.indexOf(preview);
-        const editableImages = [...document.querySelectorAll('#editor img')]
-          .filter(image => image.closest('[contenteditable]')?.getAttribute('contenteditable') === 'true');
-        const target = (slot >= 0 ? editableImages[slot] : null)
-          || editableImages.find(image => !image.getAttribute('src') || image.getAttribute('src') === preview);
-        if (target && (!target.getAttribute('src') || target.getAttribute('src') === preview))
-          target.setAttribute('src', dataUrl);
         imageSources.delete(preview);
         found = true;
       }
@@ -348,8 +445,13 @@
     },
     rememberInsertionPoint(from, to) {
       try {
-        insertionSelection = Number.isInteger(from) && Number.isInteger(to)
-          ? [from, to] : editor.getSelection();
+        // The toolbar captures the ProseMirror selection on pointerdown,
+        // before the button or native file chooser can steal focus. Keep that
+        // range when the native bridge confirms the insertion request.
+        if (Number.isInteger(from) && Number.isInteger(to))
+          insertionSelection = [from, to];
+        else if (!insertionSelection)
+          insertionSelection = editor.getSelection();
         return Array.isArray(insertionSelection) && insertionSelection.length === 2;
       } catch (_) { insertionSelection = null; return false; }
     },

@@ -1,0 +1,22 @@
+{
+  "checkedAt": "2026-10-11",
+  "source": "Official package registries and OSV querybatch API",
+  "pythonUpdates": {
+    "aiohttp": "3.14.4 -> 3.14.5",
+    "cryptography": "50.0.1 -> 50.0.2",
+    "websockets": "17.1 -> 17.2"
+  },
+  "nativePackages": {
+    "source": "Refreshed Ubuntu Noble, noble-updates and noble-security indexes",
+    "bundledVersionsCompared": 181,
+    "newerStableCandidates": 0
+  },
+  "osv": {
+    "queries": 708,
+    "ecosystems": {"Maven": 276, "crates.io": 369, "npm": 22, "PyPI": 41},
+    "returnedAdvisories": 1,
+    "finding": "GHSA-c8x8-7fp4-3x9w refers to archived prosemirror-view 1.27.0 development/test tooling; the shipped editor bundle uses reviewed 1.42.6 code."
+  },
+  "compatibility": "Updated Python pins installed in an isolated temporary environment; pip check passed and the full Linux test suite passed.",
+  "limitations": "Advisory lookups and package-index comparisons are not proof of zero vulnerabilities. Historical native exposure exceptions and archived npm tool alerts remain documented."
+}

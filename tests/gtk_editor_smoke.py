@@ -4,8 +4,10 @@ import io
 import os
 from pathlib import Path
 import tempfile
+import threading
 import time
 from unittest.mock import patch
+from dataclasses import replace
 
 from nostr_notes.app import Application, Window
 from nostr_notes.core import Identity
@@ -74,6 +76,14 @@ with tempfile.TemporaryDirectory(prefix='notes-v2-test-') as data:
         assert editor.ready, editor.notice.get_text()
         wait_for(lambda: not editor.pending_document)
         assert editor.visual_active
+        assert not editor.image_button.get_visible()
+        assert evaluate(editor, "JSON.stringify((() => { const button=document.querySelector('.notes-insert-image'); const table=document.querySelector('.toastui-editor-toolbar-icons.table')?.closest('button'); return !!button && button.previousElementSibling===table && button.getAttribute('aria-label')==='Insérer une image'; })())")
+        image_picker_calls=[]
+        editor.on_insert_image=lambda: image_picker_calls.append(True)
+        assert evaluate(editor, "window.notesEditor.rememberInsertionPoint()")
+        evaluate(editor, "document.querySelector('.notes-insert-image').click(); true")
+        wait_for(lambda: bool(image_picker_calls))
+        editor.on_insert_image=win.insert_image
         # Encrypted attachment references stay in Markdown while WebKit displays
         # only the host-provided, decrypted in-memory image bytes.
         jpeg = io.BytesIO()
@@ -127,12 +137,18 @@ with tempfile.TemporaryDirectory(prefix='notes-v2-test-') as data:
             # et rester visible dans le même document visuel.
             editor.set_text('# Placement\n\navant\n\naprès')
             wait_for(lambda: not editor.pending_document)
+            # The native bridge calls rememberInsertionPoint() a second time
+            # after opening the file chooser. That confirmation must preserve
+            # the range captured before focus was lost.
             assert evaluate(editor, 'JSON.stringify(window.notesEditor.rememberInsertionPoint(20,20))') is True
-            inserted = evaluate(editor, "JSON.stringify(window.notesEditor.insertImageReference(" + json.dumps(image_markdown) + "))")
-            assert inserted is True, inserted
-            wait_for(lambda: visible_image_loaded(editor, 3))
+            assert evaluate(editor, 'JSON.stringify(window.notesEditor.rememberInsertionPoint())') is True
+            with patch('nostr_notes.app.load_image_for_display', return_value=jpeg.getvalue()):
+                inserted = evaluate(editor, "JSON.stringify(window.notesEditor.insertImageReference(" + json.dumps(image_markdown) + "))")
+                assert inserted is True, inserted
+                wait_for(lambda: visible_image_loaded(editor, 3))
             flush(editor)
-            assert editor.get_text().index(image_markdown) < editor.get_text().index('après'), repr(editor.get_text())
+            placed_text = editor.get_text()
+            assert placed_text.index('avant') < placed_text.index(image_markdown) < placed_text.index('après'), repr(placed_text)
             editor.switch_mode(False)
             wait_for(lambda: not editor.visual_active)
             assert image_ref in editor.get_text()
@@ -176,6 +192,11 @@ with tempfile.TemporaryDirectory(prefix='notes-v2-test-') as data:
         sample = '```python\nprint("Café ☕")\n  # espaces\n```\n\n```\nsecond bloc\n```\n'
         editor.set_text(sample)
         wait_for(lambda: not editor.pending_document)
+        try:
+            wait_for(lambda: evaluate(editor, "JSON.stringify(document.querySelectorAll('.notes-copy-code').length)") == 2)
+        except AssertionError:
+            print('CODE-BUTTON-DIAG', evaluate(editor, "JSON.stringify({buttons:document.querySelectorAll('.notes-copy-code').length,blocks:document.querySelectorAll('.toastui-editor-ww-container .toastui-editor-ww-code-block').length,editable:[...document.querySelectorAll('[contenteditable]')].map(e=>e.getAttribute('contenteditable')),text:document.querySelector('.toastui-editor-ww-container')?.innerText})"))
+            raise
         button_count = evaluate(editor, "JSON.stringify(document.querySelectorAll('.notes-copy-code').length)")
         assert button_count == 2
         assert evaluate(editor, "JSON.stringify(document.querySelector('.notes-copy-code').textContent)") == 'Copier'
@@ -355,5 +376,133 @@ with tempfile.TemporaryDirectory(prefix='notes-v2-test-') as data:
         assert editor.get_text() == original_text
         assert evaluate(editor, "JSON.stringify(DOMPurify.version)") == '3.4.16'
         assert 'onerror' not in evaluate(editor, "JSON.stringify(DOMPurify.sanitize('<img src=x onerror=alert(1)>'))")
+        # A locked note remains scrollable in visual and Markdown read-only modes.
+        long_markdown = ('# Note verrouillée\n\n' + '\n\n'.join(f'Paragraphe {n} — contenu de test.' for n in range(80))
+                         + '\n\n- [ ] Tâche protégée\n\n' + image_markdown)
+        locked_note = replace(current, markdown=long_markdown, locked=True)
+        win.current = locked_note
+        win.notes = [locked_note]
+        with patch('nostr_notes.app.load_image_for_display', return_value=jpeg.getvalue()):
+            win.display(locked_note)
+            wait_for(lambda: not editor.pending_document)
+            wait_for(lambda: visible_image_loaded(editor, 3))
+            locked_image = evaluate(editor, '''JSON.stringify((() => {
+              const image=[...document.querySelectorAll('.toastui-editor-ww-container img:not(.ProseMirror-separator)')]
+                .find(item=>item.naturalWidth===3);
+              return image && image.getAttribute('src').startsWith('data:image/jpeg;base64,')
+                && getComputedStyle(image).maxWidth==='100%';
+            })())''')
+            assert locked_image is True
+        # Regression for notes with multiple encrypted images. The original
+        # user report has two images interleaved with text; a one-image test
+        # missed that the second image could disappear in locked mode.
+        second_jpeg = io.BytesIO()
+        Image.new('RGB', (5, 3), 'orange').save(second_jpeg, format='JPEG')
+        second_image_ref = image_ref.replace('a' * 64, 'b' * 64).replace('key=' + 'A' * 43, 'key=' + 'B' * 43).replace('nonce=' + 'A' * 16, 'nonce=' + 'B' * 16)
+        second_image_markdown = '![Image](' + second_image_ref + ')'
+        multi_image_markdown = (
+            '# Test\n\n' + image_markdown + '\n\nOk\n\nTest verrouillage\n\n'
+            'Ok\n\nTest 1\n\nTest 2\n\nTest 3\n\n' + second_image_markdown + '\n\nTest 4\n\nTest 5'
+        )
+        multi_locked_note = replace(current, markdown=multi_image_markdown, locked=True)
+        win.current = multi_locked_note
+        win.notes = [multi_locked_note]
+        def multi_image_load(reference, *_args):
+            return second_jpeg.getvalue() if reference == second_image_ref else jpeg.getvalue()
+        with patch('nostr_notes.app.load_image_for_display', side_effect=multi_image_load):
+            win.display(multi_locked_note)
+            wait_for(lambda: not editor.pending_document)
+            wait_for(lambda: evaluate(editor, '''JSON.stringify((() => {
+              const images=[...document.querySelectorAll('.toastui-editor-ww-container img:not(.ProseMirror-separator)')];
+              return images.some(i=>i.naturalWidth===3) && images.some(i=>i.naturalWidth===5);
+            })())'''))
+            locked_images = evaluate(editor, '''JSON.stringify((() => {
+              const images=[...document.querySelectorAll('.toastui-editor-ww-container img:not(.ProseMirror-separator)')]
+                .filter(i=>i.getBoundingClientRect().width>0 && i.getBoundingClientRect().height>0);
+              return images.map(i=>({width:i.naturalWidth, visible:true,
+                src:i.getAttribute('src')?.startsWith('data:image/jpeg;base64,')}));
+            })())''')
+            assert locked_images == [
+                {'width': 3, 'visible': True, 'src': True},
+                {'width': 5, 'visible': True, 'src': True},
+            ], locked_images
+            assert editor.get_text() == multi_image_markdown
+        # Simulate the exact race reported: the image decryption starts for an
+        # editable note, then its locked view replaces the editor before the
+        # decrypting worker returns. The result must reach the locked view.
+        load_started = threading.Event()
+        allow_load_to_finish = threading.Event()
+        def delayed_image_load(*_args):
+            load_started.set()
+            assert allow_load_to_finish.wait(5)
+            return jpeg.getvalue()
+        race_markdown = '# Image en cours\n\n' + image_markdown
+        old_epoch = editor.epoch
+        with patch('nostr_notes.app.load_image_for_display', side_effect=delayed_image_load):
+            editor.set_text(race_markdown, read_only=False)
+            wait_for(load_started.is_set)
+            editor.set_text(race_markdown, read_only=True)
+            wait_for(lambda: not editor.pending_document)
+            allow_load_to_finish.set()
+            wait_for(lambda: visible_image_loaded(editor, 3))
+        assert editor.epoch != old_epoch
+        with patch('nostr_notes.app.load_image_for_display', return_value=jpeg.getvalue()):
+            win.display(locked_note)
+            wait_for(lambda: not editor.pending_document)
+            wait_for(lambda: visible_image_loaded(editor, 3))
+        win.update_trash_controls()
+        assert not editor.toolbar.get_visible()
+        assert win.editor.get_sensitive() and editor.web.get_sensitive()
+        readonly_ui = evaluate(editor, '''JSON.stringify((() => {
+          const toolbar=document.querySelector('.toastui-editor-toolbar');
+          const content=document.querySelector('.ProseMirror');
+          return {toolbarHidden:!toolbar || getComputedStyle(toolbar).display==='none',
+            editable:content?.getAttribute('contenteditable'),hostClass:document.getElementById('editor').classList.contains('notes-read-only')};
+        })())''')
+        assert readonly_ui == {'toolbarHidden': True, 'editable': 'false', 'hostClass': True}, readonly_ui
+        evaluate(editor, "document.querySelector('.task-list-item')?.click(); true")
+        locked_snapshot = evaluate(editor, "JSON.stringify(JSON.parse(window.notesEditor.snapshot()).markdown)")
+        assert locked_snapshot == long_markdown, repr(locked_snapshot)
+        assert editor.get_text() == long_markdown
+        evaluate(editor, "document.body.dispatchEvent(new ClipboardEvent('paste',{bubbles:true,cancelable:true})); true")
+        assert editor.get_text() == long_markdown
+        visual_scroll = evaluate(editor, '''JSON.stringify((() => {
+          const boxes=[document.documentElement,document.body,...document.querySelectorAll('*')]
+            .filter(e=>e.getBoundingClientRect().height>0 && e.scrollHeight>e.clientHeight+2)
+            .map(e=>({tag:e.tagName,cls:typeof e.className==='string'?e.className:'',id:e.id,
+              before:e.scrollTop,max:e.scrollHeight-e.clientHeight,overflow:getComputedStyle(e).overflowY}));
+          const box=boxes.find(e=>/auto|scroll/.test(e.overflow)) || boxes[0];
+          if(!box)return {boxes};
+          const node=box.id?document.getElementById(box.id):[document.documentElement,document.body,...document.querySelectorAll('*')]
+            .find(e=>e.tagName===box.tag && (typeof e.className==='string'?e.className:'')===box.cls && e.scrollHeight-e.clientHeight===box.max);
+          node.scrollTop=node.scrollHeight;
+          return {before:box.before,after:node.scrollTop,max:box.max,cls:box.cls,overflow:box.overflow,boxes};
+        })())''')
+        assert visual_scroll['max'] > 0 and visual_scroll['after'] > visual_scroll['before'], visual_scroll
+        editor.switch_mode(False)
+        wait_for(lambda: not editor.visual_active)
+        assert not editor.source.get_editable()
+        scroll_box = editor.stack.get_child_by_name('source')
+        adjustment = scroll_box.get_vadjustment()
+        assert adjustment.get_upper() > adjustment.get_page_size()
+        old_scroll = adjustment.get_value()
+        adjustment.set_value(adjustment.get_upper() - adjustment.get_page_size())
+        while GLib.MainContext.default().pending(): GLib.MainContext.default().iteration(False)
+        assert adjustment.get_value() > old_scroll
+        assert editor.get_text() == long_markdown
+        editor.switch_mode(True)
+        wait_for(lambda: editor.visual_active and not editor.pending_document)
+        unlocked_note = replace(current, locked=False)
+        win.current = unlocked_note
+        win.notes = [unlocked_note]
+        win.display(unlocked_note)
+        wait_for(lambda: editor.toolbar.get_visible() and not editor.pending_document)
+        assert editor.toolbar.get_visible()
+        editable_ui = evaluate(editor, '''JSON.stringify((() => ({
+          toolbarVisible:getComputedStyle(document.querySelector('.toastui-editor-toolbar')).display!=='none',
+          editable:document.querySelector('.ProseMirror')?.getAttribute('contenteditable'),
+          hostReadOnly:document.getElementById('editor').classList.contains('notes-read-only')
+        }))())''')
+        assert editable_ui == {'toolbarVisible': True, 'editable': 'true', 'hostReadOnly': False}, editable_ui
         win.close_clean()
-        print('GTK/WebKit OK : modes, conservation exacte, frappe, publication chiffrée, CSP et révisions.')
+        print('GTK/WebKit OK : barre d’édition masquée sur note verrouillée et rétablie au déverrouillage, défilement, conservation, frappe, publication, CSP et révisions.')

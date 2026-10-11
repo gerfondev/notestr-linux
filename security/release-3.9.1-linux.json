@@ -1,0 +1,49 @@
+{
+  "checkedAt": "2026-10-11",
+  "version": "3.9.1",
+  "artifactHashes": {
+    "AppImage": "58d059f4ee7f7b1467653735a44d16bb730cb2f5bebc92ce6cd42da3a19b09a9",
+    "wheel": "64008c2d5b1223a97119612ff0e604b0ac451ea2baf5bafa536a02edb6f30b70",
+    "sourceArchive": "1b490c4e120b83dabab867b9d4b4e1adddeeea2bfe5883ccdded82d4eef56211"
+  },
+  "dependencyUpdates": {
+    "aiohttp": "3.14.4 -> 3.14.5",
+    "cryptography": "50.0.1 -> 50.0.2",
+    "websockets": "17.1 -> 17.2",
+    "nativeUbuntuPackagesCompared": 181,
+    "newerStableCandidatesAvailable": 0,
+    "bundledWebKitGTK": "2.54.0"
+  },
+  "tests": {
+    "python": "113 passed",
+    "pipCheck": "passed",
+    "appImageGtkWebKitSmoke": "passed",
+    "lockedNotesAndImages": "passed; read-only, scroll, image visibility, toolbar state and image position verified",
+    "pdfImages": "passed; two synthetic images appear as PDF image objects",
+    "androidRelayEventsParsedByLinux": "passed; synthetic Android lock and unlock events parsed as true then false by Linux"
+  },
+  "privacyScan": {
+    "appImageExtractedEntries": 3871,
+    "sourceArchiveEntries": 139,
+    "ownerHomePath": 0,
+    "ownerEmail": 0,
+    "completeNsec": 0,
+    "githubToken": 0,
+    "sourceArchivePycFiles": 0,
+    "privateKeyFormatMarkers": 3,
+    "markerAssessment": "Known upstream parser/test/documentation strings in native libraries; no personal private key identified.",
+    "scope": "Targeted checks, not exhaustive."
+  },
+  "securityReview": {
+    "osvBatchQueries": 708,
+    "returnedAdvisories": 1,
+    "advisory": "GHSA-c8x8-7fp4-3x9w is associated with prosemirror-view 1.27.0 in archived npm development/test tooling; the shipped editor bundle uses reviewed 1.42.6 code.",
+    "nativeUbuntuComparison": "Official Noble, updates and security indexes refreshed 2026-10-11; no newer stable candidates found for the 181 bundled package versions.",
+    "carriedExceptions": "Previously documented native exposure exceptions and archived npm tool alerts remain in SECURITY-REVIEW.md; this does not establish that every component is vulnerability-free."
+  },
+  "history": "Existing public commit author identities were preserved; no history rewrite.",
+  "limitations": [
+    "Targeted privacy scans are not exhaustive.",
+    "The graphical test ran in the local AppImage test environment, not on the user's Linux device."
+  ]
+}

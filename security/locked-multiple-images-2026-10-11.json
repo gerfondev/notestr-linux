@@ -1,0 +1,27 @@
+{
+  "date": "2026-10-11",
+  "candidate": "Linux 3.9.dev61",
+  "artifact": "Notestr-3.9.dev61-x86_64.AppImage",
+  "sha256": "2ae9c8f64c8e373ef4995cd499f58cd1df26bfc93424b71a5db021ea4c647016",
+  "scope": "Linux only; no Android changes; no publication",
+  "change": "Associate decrypted image data with the exact ProseMirror image node by its reserved placeholder URL; display decrypted JPEGs in read-only visual notes. Exclude separator nodes from image-index restoration.",
+  "validation": {
+    "python_tests": "110 passed",
+    "pip_check": "No broken requirements",
+    "appimage_gui": "Passed against final candidate: GTK4/libadwaita, WebKitGTK 2.54.0, locked note with two synthetic encrypted-image references, both images visible in order, Markdown unchanged, insertion, scroll, editor, settings, language and PDF export",
+    "appdir_match": "Exact file/hash comparison: 3834 files",
+    "targeted_privacy_scan": {
+      "complete_project_path_matches": 0,
+      "github_token_pattern_matches": 0,
+      "complete_nsec_pattern_matches": 0,
+      "scope": "Extracted AppDir/source payload only; targeted patterns, not exhaustive"
+    }
+  },
+  "dependencies": {
+    "changed": false,
+    "review_basis": "2026-10-09 SECURITY-REVIEW.md reused because no dependency or build-tool changed",
+    "limitations": "Not a new complete registry/advisory audit. Existing native exposure reservations remain. 178 archived npm development/test alerts are outside the AppImage runtime. No claim of vulnerability-free status."
+  },
+  "test_data": "Synthetic JPEGs and mocked decryption; no user notes, personal captures, or public relay access.",
+  "publication": "No push, tag, release, upload, or GitHub change."
+}

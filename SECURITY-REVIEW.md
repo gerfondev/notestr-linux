@@ -1,3 +1,79 @@
+# Contrôles de sécurité — Notestr Linux 3.9.1 (11 octobre 2026)
+
+## Version 3.9.1 — contrôles avant publication
+
+La version 3.9.1 met à jour aiohttp 3.14.5, cryptography 50.0.2 et websockets 17.2. Les index Ubuntu Noble, noble-updates et noble-security ont été actualisés le 11 octobre puis comparés aux 181 versions de paquets natifs embarqués ; aucun candidat stable plus récent n’a été trouvé. WebKitGTK/JavaScriptCore 2.54.0 est conservé. L’interrogation OSV a couvert 708 coordonnées de dépendances ; un avis concerne `prosemirror-view` 1.27.0 dans l’ancien espace npm d’outils/tests archivé. Le bundle livré de l’éditeur utilise la version examinée 1.42.6. Les avis historiques de composants natifs et les alertes de l’espace npm archivé restent des exceptions documentées ; cette vérification ne démontre pas l’absence de toute vulnérabilité. Détails dans `security/release-3.9.1-dependencies.json`.
+
+La compatibilité du verrouillage Android/Linux a été vérifiée avec un relais local synthétique : Linux relit les événements Android chiffrés et reconnaît les états verrouillé puis déverrouillé. La suite Linux compte 113 tests réussis ; `pip check`, le test graphique de l’AppImage et l’export PDF avec deux images synthétiques réussissent. Côté Android : 17 tests unitaires, 18 instrumentés ciblés réussis et un test de relais local réussi ; un instrumenté est ignoré par hypothèse. Deux tests biométriques de la suite complète échouent sur l’émulateur faute d’empreinte enregistrée (`BIOMETRIC_ERROR_NONE_ENROLLED`) ; aucun défaut du verrouillage n’a été observé dans les tests ciblés. Le test de lancement APK a réussi. Android 17 physique et l’appareil Linux de l’utilisateur n’ont pas été testés.
+
+Le scan ciblé du contenu décompressé a couvert 3 871 entrées AppImage et 496 entrées APK. Il n’a trouvé aucun chemin personnel du propriétaire, adresse personnelle recherchée, nsec complet ni jeton GitHub dans les fichiers scannés. Trois marqueurs de format de clé amont sont présents dans des composants système de parsing/documentation ; ils ne correspondent pas à une clé personnelle. Les identités d’auteur déjà présentes dans l’historique public sont conservées. Le scan n’est pas exhaustif. Empreintes et limites dans `security/release-3.9.1-linux.json` et le rapport Android `security/release-3.9.1-android.json`.
+
+Les contrôles des dépendances et du paquet sont ciblés : ne pas conclure à l’absence absolue de vulnérabilités ni de données personnelles.
+
+## Contrôles de sécurité — Notestr Linux 3.9 (9 octobre 2026)
+
+## Export PDF avec images — candidat local Linux du 11 octobre 2026
+
+Linux 3.9.dev62. L’export PDF récupère les images Notestr chiffrées depuis le cache ou leur serveur, les déchiffre localement et les intègre au PDF. Une image indisponible interrompt l’export avec un message d’erreur au lieu de produire un document incomplet. Les images externes restent exclues ; les JPEG sont validés, réencodés sans métadonnées EXIF, avec limites de taille et de dimensions.
+
+Validation : 113 tests Python, `pip check` et empreintes des ressources web réussis. Test synthétique avec deux images exécuté dans l’AppImage finale : deux objets image présents dans le PDF. Test GTK/WebKit de l’AppImage réussi avec WebKitGTK 2.54.0 ; export PDF de base et contrôles de l’éditeur/paramètres réussis. Aucun test sur notes réelles ni téléchargement d’images de compte.
+
+Aucune dépendance n’a changé. La revue des dépendances du 9 octobre est réutilisée, ce n’est pas un nouvel audit complet des registres. Les réserves d’exposition natives et les 178 alertes d’outils npm archivés restent documentées ; aucune absence de vulnérabilité n’est revendiquée. Le scan ciblé des 3 834 fichiers décompressés n’a détecté aucun chemin personnel connu, nsec complet ou jeton GitHub recherché. Trois marqueurs de format de clé sont présents dans libgnutls, libssh et le code de lecture SSH de cryptography ; ce sont des données de test/documentation amont et non des clés personnelles. Aucun fichier `.pyc` ou cache Python n’est embarqué. Vérification ciblée, non exhaustive.
+
+AppImage de test locale : SHA-256 `bd95fc85888757ddeefb240f19560e84370fc5de5c8ed0d6e5dc146c11be99c8`. Aucun APK Android modifié ; aucun push, tag distant, publication ou téléversement. Détails dans `security/pdf-images-2026-10-11.json`.
+
+## Candidat local — images multiples dans les notes verrouillées — 11 octobre 2026
+
+Linux 3.9.dev61, AppImage SHA-256 `2ae9c8f64c8e373ef4995cd499f58cd1df26bfc93424b71a5db021ea4c647016`. La résolution d’image cible maintenant le nœud ProseMirror portant la référence chiffrée, et non un élément `<img>` choisi par position parmi les images internes de l’éditeur. Le rendu réaffiche les images JPEG déchiffrées dans la note en lecture seule. Aucun changement Android ni aucune dépendance modifiés.
+
+110 tests Python réussis ; `pip check` sans incompatibilité. Le test GTK/WebKit exécuté sur l’AppImage finale vérifie deux images chiffrées de tailles distinctes dans une note verrouillée, leur ordre, leur affichage, la conservation exacte du Markdown, le mode d’insertion, le défilement et les fonctions de l’éditeur. WebKitGTK embarqué : 2.54.0. Le test utilise des images synthétiques et un déchiffrement simulé ; aucune note utilisateur ou connexion à un relais n’est utilisée.
+
+Revue de dépendances du 9 octobre réutilisée, car aucune bibliothèque ni outil n’a changé pour ce correctif ; ce n’est pas un nouvel audit complet des registres. Les réserves d’exposition native déjà consignées restent applicables. Les 178 alertes npm concernent l’espace d’outils/tests archivé, hors AppImage. Aucun statut « exempt de vulnérabilité » n’est revendiqué.
+
+L’AppImage décompressée contient 3 834 fichiers et correspond exactement à l’AppDir contrôlé. Recherche ciblée dans cet AppDir et les sources embarquées : zéro occurrence du chemin personnel complet du projet, zéro jeton GitHub au format recherché et zéro clé nsec complète au format recherché. Ces contrôles ne sont pas exhaustifs. Empreinte, portée et limites dans `security/locked-multiple-images-2026-10-11.json`.
+
+Candidat local uniquement dans `livrables/test-images-linux-61` : aucune publication, aucun push ni tag.
+
+## Candidat local — barre d’édition des notes verrouillées — 11 octobre 2026
+
+Linux 3.9.dev51, AppImage SHA-256 `498fcff60fc5dac69221cb602767c0427ee38994cc8c7829449a38f16357b26e`. La barre contenant Visuel, Markdown et l’insertion d’image est masquée pendant l’affichage d’une note verrouillée. Elle revient après déverrouillage. L’éditeur reste sensible pour le défilement et les liens ; le texte Markdown demeure non éditable et les images restent visibles.
+
+108 tests Python réussis. Le test GTK/WebKit exécuté contre l’AppImage finale confirme que la barre est cachée sur la note verrouillée et rétablie après déverrouillage ; les contrôles précédents de défilement des notes longues en modes Visuel et Markdown passent également. Le test AppImage valide aussi GTK4/libadwaita, WebKitGTK 2.54.0, l’éditeur, les images, la CSP, les paramètres et l’export PDF. Côté Android, le code masque déjà Visuel/Markdown en lecture seule ; le test instrumenté sur émulateur Android 11 confirme l’absence des onglets et de la barre Toast UI, y compris pour une note avec image chiffrée.
+
+Aucune dépendance modifiée. Revue Linux du 9 octobre réutilisée ; les réserves natives documentées et les 178 alertes d’outils npm de développement/test archivés restent ouvertes et hors runtime. Contrôle ciblé de l’AppImage : 3 834 entrées décompressées, aucun chemin personnel connu, nsec complet ni jeton GitHub recherché. Une occurrence de nom est dans l’attribution tierce Adwaita ; 11 marqueurs PEM répartis entre libgnutls, libssh et un fichier de parsing SSH cryptography correspondent à du matériel de test/documentation amont. Le scan est ciblé, pas exhaustif. Voir `security/locked-toolbar-2026-10-11.json`.
+
+Candidat local uniquement : aucune publication, aucun push ni tag.
+
+## Candidat local — défilement des notes verrouillées — 11 octobre 2026
+
+Linux 3.9.dev50, AppImage SHA-256 `8de4734680bc961084f6c2963760f002323cf48e8054024be3b7eb7ffee64698`. Le lecteur reste sensible pour recevoir les événements de défilement, de sélection et de navigation. Les deux modes restent en lecture seule : le champ Markdown n’est pas éditable, les changements de texte sont ignorés et l’insertion d’image est désactivée.
+
+108 tests Python réussis. Le test graphique exécuté contre l’AppImage finale vérifie que le défilement peut atteindre le bas d’une note longue verrouillée en mode Visuel et dans le champ Markdown ; il vérifie aussi que ce champ reste non éditable. L’essai AppImage/WebKitGTK 2.54.0, l’éditeur, les images chiffrées, la CSP, les paramètres et le PDF passent.
+
+Aucune dépendance modifiée ; revue 3.9 du 9 octobre conservée, avec ses réserves natives et les alertes d’outils npm de développement/test archivés qui ne sont pas intégrés au runtime. Scan ciblé de 32 fichiers source et 3 834 entrées décompressées : aucun chemin personnel connu, nsec complet ou jeton recherché. Trois fichiers amont ont des chaînes de format PEM, pas des clés privées ; un nom ressemblant au marqueur recherché apparaît dans une attribution de copyright tierce, pas dans des données du propriétaire. Contrôle non exhaustif. Voir `security/locked-note-scroll-2026-10-11.json`.
+
+Candidat local uniquement : aucune publication, aucun push ni tag.
+
+## Candidat local — notes verrouillées — 11 octobre 2026
+
+Linux 3.9.dev49, AppImage SHA-256 `91af84d043b71c403d9371abe81f67060cec7a123c72c87f563b55a422eb5d39`. La restauration d’une ancienne version est désactivée dans l’interface et refusée par l’action elle-même pour une note verrouillée. Le retour d’une note depuis la corbeille reste possible.
+
+108 tests Python réussis, dont deux contrôles dédiés au bouton et à l’action de restauration des notes verrouillées. Le test de l’AppImage finale valide le démarrage, GTK4/libadwaita, WebKitGTK 2.54.0, l’éditeur, le chiffrement, la CSP, les images, la langue et l’export PDF.
+
+Aucune dépendance modifiée ; la revue 3.9 du 9 octobre reste la plus récente. Ses réserves natives et les 178 alertes d’outils npm de développement/test archivés restent documentées, non intégrées au runtime. Le scan ciblé a examiné 32 fichiers source et 3 834 entrées décompressées. Aucun chemin connu du propriétaire, clé nsec complète ou jeton recherché n’a été trouvé. Trois bibliothèques/fichiers amont contiennent des chaînes de format PEM de test/lecture, pas des clés privées ; une attribution de licence tierce contient un nom ressemblant au marqueur recherché. Ces éléments ont été attribués aux composants amont. Contrôle ciblé, non exhaustif.
+
+Détails et empreinte dans `security/locked-note-fix-2026-10-11.json`. Candidat local uniquement : aucune publication, aucun push ni tag.
+
+# Candidat local — icône de verrouillage — 11 octobre 2026
+
+Linux 3.9.dev48, AppImage SHA-256 `2253e386f7e44443206833da9f9da0ef8a10fac82c1f72069fd8f28fa2cad239`. L’icône du bouton représente maintenant l’état de verrouillage de la note ; son infobulle conserve le nom de l’action. Aucun changement à la publication ou au traitement des délais des relais.
+
+106 tests Python et test graphique depuis l’AppImage réussis (GTK4/libadwaita, WebKitGTK 2.54.0, éditeur, chiffrement/publication, CSP, paramètres/langues et PDF). Un test vérifie l’icône et l’infobulle selon les deux états. Aucun test de service externe n’a été ajouté. Les messages de délai dépassé sont attribués à la coupure réseau signalée par l’utilisateur.
+
+Aucune dépendance modifiée ; la revue 3.9 du 9 octobre reste la revue des dépendances actuelle, avec les réserves natives déjà documentées. Scan ciblé : aucune donnée personnelle ciblée dans les sources Python, packaging ou fichiers du paquet ; trois caches `.pyc` locaux générés par les tests contiennent le chemin de travail, mais sont exclus du paquet. Trois marqueurs PEM du paquet correspondent à des chaînes d’en-têtes amont de bibliothèques de parsing/serialization et non à des clés privées. Vérification non exhaustive. Candidat local seulement.
+
+---
+
 # Contrôles de sécurité — Notestr Linux 3.9 (9 octobre 2026)
 
 Les artefacts livrés sont l’AppImage x86_64, le wheel et l’archive source. Leurs empreintes sont enregistrées dans `SHA256SUMS` joint aux livrables. Le texte GPLv3 est inclus dans l’AppImage, le wheel et l’archive source.
@@ -97,6 +173,18 @@ Contrôle ciblé des 3 832 fichiers décompressés : aucun marqueur connu de che
 Aucune dépendance modifiée ; le moteur natif 2.54.0 et le reste du paquet dérivent du candidat contrôlé le 6 octobre. Audit général des registres non rafraîchi le 9 octobre. Réserves de sécurité de 3.8 conservées, notamment GHSA-c8x8-7fp4-3x9w / CVE-2026-104847 dans ProseMirror intégré à TOAST UI. L’interception applicative du collage limite le chemin signalé, mais ne remplace pas le correctif amont et ne démontre pas l’absence d’autres chemins. Voir `security/images-candidate-2026-10-09.json`.
 
 Paquet local uniquement, sans publication.
+
+# Candidat local — verrouillage des notes et insertion d’image — 11 octobre 2026
+
+Linux 3.9.dev47, AppImage SHA-256 `4a7725f307cd6308fdb23cd914f7f757c78b34f2a5c9db0a5d0e7f05ed0722da`. Le verrouillage des notes est synchronisé avec Android par événements Nostr chiffrés et bloque les commandes de modification, publication et mise à la corbeille dans les versions compatibles. Une icône d’insertion d’image apparaît après le bouton tableau dans la barre Visuel.
+
+105 tests Python réussis. Le test graphique de l’AppImage a validé les modes de l’éditeur, la conservation du contenu, la frappe, la publication chiffrée, la CSP, les révisions, les réglages de langue/version, l’export PDF et les parcours d’image. Les scénarios de verrouillage/synchronisation utilisent un relais synthétique ; essai sur appareils physiques recommandé.
+
+Aucune dépendance n’a été modifiée. La revue 3.9 du 9 octobre reste la revue actuelle ; ses réserves natives précédentes sont maintenues, sans prétendre certifier l’absence de vulnérabilité. Le scan ciblé des sources et du paquet n’a pas détecté de chemin personnel du propriétaire, de clé `nsec` complète ni de secret personnel recherché. Les marqueurs de format `nsec1` dans le validateur et les en-têtes PEM issus de bibliothèques tierces sont des chaînes de code, pas des clés privées. Ce contrôle n’est pas exhaustif.
+
+Candidat local uniquement ; aucun push, tag, téléversement ou publication. Détails dans le dossier local `livrables/test-verrouillage-note-image-2026-10-11` du projet Android.
+
+---
 
 # Réglages des relais — candidat Linux 3.8.dev36
 

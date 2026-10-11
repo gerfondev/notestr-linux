@@ -15,7 +15,7 @@ from .offline import Outbox
 from .core import Identity, Note, valid_event, compact_backups
 from .editor import MarkdownEditor
 from .lock import PasswordLock
-from .pdf_export import export_markdown_pdf
+from .pdf_export import export_markdown_pdf, encrypted_image_references
 from .relay import across, publish_update, query_one, query_server_profile
 from .image_attachments import upload_encrypted_image, load_image_for_display
 from .storage import Storage, load_secret, save_secret, relays_from_text
@@ -91,9 +91,10 @@ class Window(Adw.ApplicationWindow):
         self.delete_button = button(tr('Supprimer'), self.delete, "edit-delete-symbolic")
         self.restore_button = button(tr('Version précédente'), self.restore_previous, "edit-undo-symbolic")
         self.pin_button = button(tr('Épingler'), self.toggle_pin, "notestr-pin-symbolic")
+        self.note_lock_button = button(tr('Verrouiller la note'), self.toggle_note_lock, "object-locked-symbolic")
         self.pdf_button = button(tr('Exporter en PDF'), self.export_pdf, "document-save-as-symbolic")
         for action in (self.new_button, self.refresh_button, self.publish_button,
-                       self.delete_button, self.restore_button, self.pin_button, self.pdf_button):
+                       self.delete_button, self.restore_button, self.pin_button, self.note_lock_button, self.pdf_button):
             self.controls.append(action)
         self.controls.set_sensitive(False)
         self.settings_button = button(tr('Compte et relais'), self.settings, "preferences-system-symbolic")
@@ -331,9 +332,10 @@ class Window(Adw.ApplicationWindow):
     def display(self, note=None):
         self.current = note
         self.update_pin_button()
+        self.update_note_lock_button()
         self.draft_d = None
         self.loading = True
-        self.editor.set_text(note.markdown if note else "")
+        self.editor.set_text(note.markdown if note else "", read_only=bool(note and note.locked))
         self.loading = False
         self.dirty = False
         self.set_title(tr('Notes privées Nostr'))
@@ -406,6 +408,9 @@ class Window(Adw.ApplicationWindow):
 
     def update_trash_controls(self):
         trashed = bool(self.current and self.current.trashed)
+        locked = bool(self.current and self.current.locked)
+        # A locked editor is read-only, but must remain sensitive so GTK/WebKit
+        # can still receive scroll, selection and link events.
         self.editor.set_sensitive(self.identity is not None and not trashed and (not self.busy or self.refreshing))
         pending = bool(self.current and self.current.pending)
         self.pending_label.set_visible(pending)
@@ -413,10 +418,11 @@ class Window(Adw.ApplicationWindow):
         self.pending_actions.set_sensitive(not self.busy and not self.syncing)
         self.copy_button.set_visible(bool(pending and self.current.conflicted))
         self.pending_label.set_text(tr('Conflit — la version distante est conservée dans la liste.' if pending and self.current.conflicted else 'Modifications enregistrées localement, en attente de synchronisation.'))
-        self.publish_button.set_sensitive(not trashed)
-        self.delete_button.set_sensitive(not pending and not self.syncing and not self.busy)
-        self.restore_button.set_sensitive(not pending and not self.syncing and not self.busy)
+        self.publish_button.set_sensitive(not trashed and not locked)
+        self.delete_button.set_sensitive(not pending and not locked and not self.syncing and not self.busy)
+        self.restore_button.set_sensitive(not pending and not self.syncing and not self.busy and (trashed or not locked))
         self.pin_button.set_sensitive(self.current is not None and not trashed and not pending and not self.syncing and not self.busy)
+        self.update_note_lock_button()
         label = tr('Restaurer la note') if trashed else tr('Version précédente')
         self.restore_button.set_tooltip_text(label)
         self.restore_button.update_property([Gtk.AccessibleProperty.LABEL], [label])
@@ -457,7 +463,7 @@ class Window(Adw.ApplicationWindow):
                 continue
             row = Gtk.ListBoxRow()
             row.note = note
-            row.set_child(Gtk.Label(label=((tr("Conflit — version locale") + " · ") if note.conflicted else (tr("En attente de synchronisation") + " · ") if note.pending else "") + ("📌 " if note.pinned else "") + note.title, xalign=0, ellipsize=3,
+            row.set_child(Gtk.Label(label=((tr("Conflit — version locale") + " · ") if note.conflicted else (tr("En attente de synchronisation") + " · ") if note.pending else "") + ("📌 " if note.pinned else "") + ("🔒 " if note.locked else "") + note.title, xalign=0, ellipsize=3,
                                     margin_start=12, margin_end=12, margin_top=10, margin_bottom=10))
             self.listbox.append(row)
 
@@ -516,13 +522,15 @@ class Window(Adw.ApplicationWindow):
         future = self.image_pool.submit(operation)
         def finish():
             self.pending_image_loads.discard(reference)
-            if self.identity is None or epoch != self.editor.epoch:
+            if self.identity is not identity:
                 return False
             try:
                 import base64
                 payload = base64.b64encode(future.result()).decode('ascii')
                 self.editor.image_result(reference, payload)
             except Exception as exc:
+                if epoch != self.editor.epoch:
+                    return False
                 self.status.set_text(tr('Image indisponible : ') + str(exc))
                 self.editor.image_error(str(exc))
             return False
@@ -606,7 +614,24 @@ class Window(Adw.ApplicationWindow):
             if destination.suffix.lower() != ".pdf":
                 destination = destination.with_suffix(".pdf")
             markdown = self.text()
-            self.work(lambda: export_markdown_pdf(markdown, destination),
+            identity = self.identity
+            relays = tuple(self.config['relays'])
+            cache_dir = self.store.root
+            def export():
+                image_data = {}
+                failures = 0
+                for reference in encrypted_image_references(markdown):
+                    try:
+                        image_data[reference] = load_image_for_display(
+                            reference, cache_dir, relays, identity.pubkey, query_server_profile)
+                    except Exception:
+                        failures += 1
+                if failures:
+                    raise RuntimeError(tr(
+                        'PDF non créé : {0} image(s) n’ont pas pu être récupérées. Vérifiez la connexion, puis réessayez.',
+                        failures))
+                return export_markdown_pdf(markdown, destination, image_data)
+            self.work(export,
                       lambda exported: self.status.set_text(tr('PDF exporté : {0}', exported)))
 
         chooser.save(self, None, selected)
@@ -696,6 +721,9 @@ class Window(Adw.ApplicationWindow):
         if self.current and self.current.trashed:
             self.set_trashed(self.current, False)
             return
+        if self.current and self.current.locked:
+            self.status.set_text(tr('Déverrouillez la note avant de charger une version précédente.'))
+            return
         def restore():
             if not self.current:
                 self.status.set_text(tr('Sélectionner une note publiée.'))
@@ -717,6 +745,14 @@ class Window(Adw.ApplicationWindow):
         self.pin_button.set_tooltip_text(label)
         self.pin_button.update_property([Gtk.AccessibleProperty.LABEL], [label])
         self.pin_button.set_sensitive(self.current is not None)
+
+    def update_note_lock_button(self):
+        note = self.current
+        label = tr('Déverrouiller la note') if note and note.locked else tr('Verrouiller la note')
+        self.note_lock_button.set_icon_name("object-locked-symbolic" if note and note.locked else "object-unlocked-symbolic")
+        self.note_lock_button.set_tooltip_text(label)
+        self.note_lock_button.update_property([Gtk.AccessibleProperty.LABEL], [label])
+        self.note_lock_button.set_sensitive(note is not None and not note.pending and not self.syncing and not self.busy)
 
     def toggle_pin(self):
         if not self.current or self.current.trashed or self.current.pending or self.busy or self.syncing:
@@ -742,16 +778,44 @@ class Window(Adw.ApplicationWindow):
             self.status.set_text((tr('Note épinglée.') if self.current.pinned else tr('Note désépinglée.')) + "\n" + "\n".join(errors))
         self.work(operation, success)
 
+    def toggle_note_lock(self):
+        note = self.current
+        if not note or note.pending or self.busy or self.syncing:
+            return
+        def operation():
+            event = self.identity.set_locked(note, not note.locked, self.events.values())
+            good, errors = asyncio.run(across(self.config["relays"], publish_update, event, None))
+            events = compact_backups([*self.events.values(), event])
+            try:
+                self.store.save_events(self.identity.pubkey, list(events.values()))
+            except Exception:
+                errors.append(tr('Verrouillage synchronisé, mais écriture du cache local impossible. Actualisez avant de fermer.'))
+            notes, _ = self.identity.notes(events.values())
+            return events, notes, errors
+        def success(result):
+            self.events, self.notes, errors = result
+            self.notes = self.outbox.overlay(self.events.values())
+            self.current = next(n for n in self.notes if n.d == note.d)
+            # The editor's embedded WebKit instance also needs the new mode;
+            # update its read-only state when the lock is removed or applied.
+            self.display(self.current)
+            self.render_list()
+            self.status.set_text((tr('Note verrouillée.') if self.current.locked else tr('Note déverrouillée.')) + "\n" + "\n".join(errors))
+        self.guard(lambda: self.work(operation, success))
+
     def delete(self):
         note = self.current
         if not note or note.pending or self.busy or self.syncing:
+            return
+        if note.locked:
+            self.status.set_text(tr('Déverrouillez cette note avant de la supprimer définitivement.'))
             return
         if not note.trashed:
             self.confirm(tr('La note publiée sera conservée dans la corbeille commune. Les modifications non publiées seront abandonnées.'),
                          lambda: self.set_trashed(note, True), tr('Déplacer'))
         else:
             self.confirm(tr('Une demande de suppression définitive sera envoyée aux relais. L’effacement de toutes les copies n’est pas garanti.'),
-                         lambda: self.send(self.identity.delete(note), deleting=True), tr('Supprimer définitivement'))
+                         lambda: self.send(self.identity.delete(note, self.events.values()), deleting=True), tr('Supprimer définitivement'))
 
     def send(self, event, deleting, backup=None):
         def operation():

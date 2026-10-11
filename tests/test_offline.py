@@ -1,6 +1,7 @@
 import asyncio
 import json
 from dataclasses import replace
+from unittest.mock import patch
 import pytest
 from nostr_notes.core import Identity, Note, KIND, compact_backups
 from nostr_notes.offline import Outbox
@@ -134,6 +135,26 @@ def test_simultaneous_device_edit_recovers_last_acknowledged_copy(data):
     assert next(n for n in displayed if n.pending).conflicted
     box.remove(local.d, local.event['id'])
     assert len(box.overlay(merged.values())) == 1
+
+
+def test_locking_acknowledged_note_does_not_create_duplicate_conflict(data):
+    identity, store, note, events, box = data
+    accepted = box.save('# Accepted edit', note)
+    async def query(url, pubkey): return list(events.values())
+    async def publish(*args): return True
+    merged, errors = asyncio.run(box.synchronize(events, ['local'], query, publish))
+    assert not errors and accepted.event['id'] in merged
+
+    current = identity.notes(merged.values())[0][0]
+    with patch('nostr_notes.core.time.time', return_value=accepted.event['created_at'] + 1):
+        lock = identity.set_locked(current, True, merged.values())
+    merged = compact_backups([*merged.values(), lock])
+
+    displayed = Outbox(identity, store).overlay(merged.values())
+    assert len(displayed) == 1
+    assert displayed[0].locked
+    assert not displayed[0].pending
+    assert displayed[0].markdown == '# Accepted edit'
 
 
 def test_normal_remote_child_is_not_a_conflict(data):

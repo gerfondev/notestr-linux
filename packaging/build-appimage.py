@@ -26,6 +26,9 @@ parser.add_argument('--native-debs', type=Path,
 parser.add_argument('--webkit-install', type=Path, required=True,
                     help='Reviewed WebKitGTK 2.54.0 DESTDIR built with build-webkit.py')
 parser.add_argument('--webkit-runtime-root', type=Path, required=True, help='Reviewed Ubuntu build root for additional ELF dependencies')
+parser.add_argument('--dependency-python', type=Path,
+                    default=ROOT / '.venv/bin/python',
+                    help='Python environment containing the pinned runtime dependencies')
 args = parser.parse_args()
 runtime = args.runtime.resolve()
 header = runtime.read_bytes()[:20]
@@ -102,7 +105,7 @@ while pending:
 print(json.dumps(files))
 """
     files = json.loads(subprocess.check_output(
-        [str(ROOT / '.venv/bin/python'), '-c', dependency_script], cwd=ROOT, text=True))
+        [str(args.dependency_python.absolute()), '-c', dependency_script], cwd=ROOT, text=True))
     for source, relative in files:
         if (Path(source).exists() and not relative.endswith('.pyc')
                 and not {'__pycache__', 'tests', 'test', 'SelfTest'}.intersection(Path(relative).parts)):

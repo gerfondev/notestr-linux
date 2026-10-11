@@ -95,10 +95,13 @@ class Outbox:
         if any(e['kind'] == 5 and valid_event(e, self.identity.pubkey) and
                address in tag_values(e, 'a') for e in events):
             return True
-        if current and current.trashed:
-            return True
+        # The local update is already the authoritative remote note. A lock
+        # metadata event for that same note must not turn its acknowledged
+        # outbox receipt into a duplicate local conflict.
         if current and current.event['id'] == row['update']['id']:
             return False
+        if current and (current.trashed or current.locked):
+            return True
         return (current.event['id'] if current else None) != (row['base']['id'] if row['base'] else None)
 
     def overlay(self, events):

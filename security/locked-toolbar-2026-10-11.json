@@ -1,0 +1,49 @@
+{
+  "checkedAt": "2026-10-11",
+  "candidate": "Linux 3.9.dev51 x86_64 AppImage; Android 3.9-test.44 APK reused",
+  "linuxArtifact": {
+    "name": "Notestr-3.9.dev51-x86_64.AppImage",
+    "sha256": "498fcff60fc5dac69221cb602767c0427ee38994cc8c7829449a38f16357b26e"
+  },
+  "androidArtifact": {
+    "name": "Notestr-Android-3.9-test.44.apk",
+    "sha256": "e74a76fce55e5e8aaf4bfdc60e64bff051bda485027a948f7c1d91390e90c54d",
+    "rebuilt": false
+  },
+  "changes": [
+    "Hide Linux Visual/Markdown/image insertion toolbar when a note is locked; restore it when unlocked.",
+    "Add an Android regression assertion for hidden Visual/Markdown tabs in locked read-only mode; Android already hid these controls."
+  ],
+  "tests": {
+    "linuxPython": "108 passed",
+    "linuxAppImageSmoke": "passed on final AppImage; toolbar hidden while locked and restored after unlocking",
+    "linuxLockedNoteScroll": "passed in Visual and Markdown read-only modes",
+    "androidInstrumented": "lockedNoteWithEncryptedImageLoadsInReadOnlyVisualMode passed on Android 11 emulator; toolbar and tabs absent",
+    "webkitgtk": "2.54.0"
+  },
+  "dependencyReview": {
+    "reusedReview": "2026-10-09 Linux 3.9 review",
+    "changedDependencies": 0,
+    "openLimitations": [
+      "Previously documented native exposure exceptions remain open.",
+      "178 development/test npm audit alerts remain in archived workspace and are not shipped in runtime."
+    ]
+  },
+  "privacyScan": {
+    "unpackedPackageEntries": 3834,
+    "ownerPathMatches": 0,
+    "ownerNameMatches": 1,
+    "ownerNameMatchClassification": "Third-party Adwaita copyright attribution.",
+    "completeNsecMatches": 0,
+    "githubTokenMatches": 0,
+    "privatePemMarkerOccurrences": 11,
+    "privatePemMarkerFiles": [
+      "libgnutls.so.30",
+      "libssh.so.4",
+      "cryptography/hazmat/primitives/serialization/ssh.py"
+    ],
+    "privatePemMarkerClassification": "Upstream test/documentation fixtures, not account keys.",
+    "exhaustive": false
+  },
+  "publication": "Local test candidate only; no push, tag, release, or upload."
+}

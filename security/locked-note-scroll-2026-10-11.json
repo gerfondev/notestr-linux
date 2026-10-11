@@ -1,0 +1,38 @@
+{
+  "checkedAt": "2026-10-11",
+  "candidate": "Linux 3.9.dev50 x86_64 AppImage",
+  "artifact": "Notestr-Linux-3.9.dev50-x86_64.AppImage",
+  "sha256": "8de4734680bc961084f6c2963760f002323cf48e8054024be3b7eb7ffee64698",
+  "changes": [
+    "Keep the read-only locked-note editor sensitive so WebKit and GTK scrolling, selection and link events continue to work.",
+    "Keep Markdown non-editable, ignore text-change callbacks, and disable image insertion while locked."
+  ],
+  "tests": {
+    "python": "108 passed",
+    "appImageSmoke": "passed against final package; long locked note scrolled to bottom in Visual and Markdown modes",
+    "readOnlyGuard": "passed; GTK Markdown TextView remains non-editable",
+    "webkitgtk": "2.54.0"
+  },
+  "dependencyReview": {
+    "reusedReview": "2026-10-09 Linux 3.9 review",
+    "changedDependencies": 0,
+    "ubuntuPackageCoordinatesCompared": 191,
+    "nativeUpdatesIncluded": 7,
+    "openLimitations": [
+      "Previously documented native exposure exceptions remain open.",
+      "178 development/test npm audit alerts remain in the archived workspace and are not shipped in the runtime."
+    ]
+  },
+  "privacyScan": {
+    "sourceFiles": 32,
+    "unpackedPackageEntries": 3834,
+    "ownerPathMatches": 0,
+    "ownerNameMatches": 0,
+    "completeNsecMatches": 0,
+    "githubTokenMatches": 0,
+    "upstreamPemMarkerFiles": 3,
+    "upstreamAttributionMarker": "One similar-name match was verified in a third-party copyright attribution, not owner data.",
+    "exhaustive": false
+  },
+  "publication": "Local test candidate only; no push, tag, release, or upload."
+}

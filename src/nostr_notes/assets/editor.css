@@ -1,5 +1,6 @@
 html, body { height: 100%; margin: 0; background: #fff; color: #202124; }
 #editor { height: 100%; }
+#editor.notes-read-only .toastui-editor-toolbar { display: none !important; }
 .toastui-editor-defaultUI { border: 0; }
 .toastui-editor-contents { font-family: system-ui, sans-serif; font-size: 16px; }
 .toastui-editor-ww-container .toastui-editor-contents { padding: 24px; }
@@ -7,6 +8,8 @@ html, body { height: 100%; margin: 0; background: #fff; color: #202124; }
 /* Les images dans les notes ne sont pas chargées. Les icônes sont des fonds data: locaux. */
 .toastui-editor-contents img { display: none; }
 .toastui-editor-contents img { cursor: zoom-in; }
+#editor .ProseMirror img { max-width: 100%; height: auto; box-sizing: border-box; vertical-align: top; }
+#editor .ProseMirror img:not(.ProseMirror-separator)[src^="data:image/jpeg;base64,"] { display: inline-block !important; }
 .notes-image-lightbox {
   position: fixed; inset: 0; z-index: 2147483647; display: flex;
   align-items: center; justify-content: center; overflow: hidden; box-sizing: border-box;
@@ -56,3 +59,6 @@ html, body { height: 100%; margin: 0; background: #fff; color: #202124; }
 .toastui-editor-contents a[href^="https://" i],
 .toastui-editor-contents a[href^="http://" i] *,
 .toastui-editor-contents a[href^="https://" i] * { cursor: pointer; }
+
+.toastui-editor-toolbar-icons.notes-insert-image{background:none!important;display:inline-flex;align-items:center;justify-content:center;color:#555;padding:0}
+.toastui-editor-toolbar-icons.notes-insert-image svg{width:18px;height:18px}

@@ -1,0 +1,43 @@
+{
+  "checkedAt": "2026-10-11T16:19:57Z",
+  "candidate": "Linux 3.9.dev62",
+  "artifact": "Notestr-3.9.dev62-x86_64.AppImage",
+  "sha256": "bd95fc85888757ddeefb240f19560e84370fc5de5c8ed0d6e5dc146c11be99c8",
+  "backup": {
+    "path": "sauvegardes/avant-export-pdf-images-linux-2026-10-11/notestr-linux-source.tar.gz",
+    "sha256": "23903efed92e985f2e8b5a01bcf10f6367e9489db2fa2a703198f8957691f217"
+  },
+  "changes": [
+    "Retrieve encrypted Notestr image references from the local image cache or the configured Blossom server and decrypt locally before PDF generation.",
+    "Embed validated JPEGs as local data URIs; re-encode without EXIF metadata.",
+    "Abort export and report missing images instead of silently creating a text-only PDF.",
+    "Keep external image URLs excluded from PDF export."
+  ],
+  "validation": {
+    "pythonTests": "113 passed",
+    "pipCheck": "passed; no broken requirements",
+    "resourceSha256Manifest": "passed",
+    "bundledWebKit": "2.54.0",
+    "appImageGtkWebKitSmoke": "passed",
+    "appImageSyntheticPdfSmoke": "passed; two JPEG images embedded and two PDF image XObjects found",
+    "appImageCheck": "passed",
+    "dependenciesChanged": false
+  },
+  "privacyScan": {
+    "scope": "3,834 files in extracted final AppImage",
+    "ownerPath": 0,
+    "completeNsec": 0,
+    "githubToken": 0,
+    "privateKeyMarkerFiles": 3,
+    "privateKeyMarkerAttribution": [
+      "usr/lib/x86_64-linux-gnu/libgnutls.so.30",
+      "usr/lib/x86_64-linux-gnu/libssh.so.4",
+      "usr/lib/python3.12/site-packages/cryptography/hazmat/primitives/serialization/ssh.py"
+    ],
+    "privateKeyMarkerAssessment": "upstream test/documentation or parser markers; no personal private key identified",
+    "pycFiles": 0,
+    "exhaustive": false
+  },
+  "dependencyReview": "No dependency changed; reused the 2026-10-09 Linux 3.9 review rather than claiming a fresh complete registry audit. Existing native exposure exceptions and 178 archived npm development/test alerts remain documented; no vulnerability-free claim.",
+  "publication": "Local test only. No Android change, push, remote tag, GitHub release, or upload."
+}

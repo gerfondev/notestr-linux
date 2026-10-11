@@ -1,0 +1,44 @@
+{
+  "checkedAt": "2026-10-11",
+  "candidate": "Linux 3.9.dev49 x86_64 AppImage",
+  "artifact": "Notestr-Linux-3.9.dev49-x86_64.AppImage",
+  "sha256": "91af84d043b71c403d9371abe81f67060cec7a123c72c87f563b55a422eb5d39",
+  "changes": [
+    "Disable previous-version restoration for a locked note in the UI and guard the action itself.",
+    "Keep the action that returns a trashed note to the list available."
+  ],
+  "tests": {
+    "python": "108 passed",
+    "lockedRestoreButton": "passed; disabled for a locked active note and enabled after unlock",
+    "lockedRestoreAction": "passed; returns without loading a previous version",
+    "finalAppImageSmoke": "passed; GTK4/libadwaita, WebKitGTK 2.54.0, editor, encrypted image, CSP, language and PDF checks"
+  },
+  "dependencyReview": {
+    "reusedReview": "2026-10-09 Linux 3.9 review",
+    "changedDependencies": 0,
+    "ubuntuPackageCoordinatesCompared": 191,
+    "nativeUpdatesIncluded": 7,
+    "webkitgtk": "2.54.0",
+    "openLimitations": [
+      "Previously documented native exposure exceptions remain open.",
+      "178 development/test npm audit alerts remain in the archived workspace and are not shipped in the runtime."
+    ]
+  },
+  "privacyScan": {
+    "sourceFiles": 32,
+    "unpackedPackageEntries": 3834,
+    "patterns": ["known owner path/name", "complete nsec", "private PEM header", "GitHub token"],
+    "ownerPathMatches": 0,
+    "ownerNameMatches": 0,
+    "completeNsecMatches": 0,
+    "githubTokenMatches": 0,
+    "upstreamPemMarkerFiles": 3,
+    "upstreamAttributionMarker": "One similar-name match was verified in a third-party copyright attribution, not owner data.",
+    "exhaustive": false
+  },
+  "limitations": [
+    "Dependency review was not rerun because no dependency changed; the 2026-10-09 review remains current.",
+    "The recorded scans are targeted, not exhaustive."
+  ],
+  "publication": "Local test candidate only; no push, tag, release, or upload."
+}
