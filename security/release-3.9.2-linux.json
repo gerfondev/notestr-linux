@@ -39,5 +39,5 @@
     "wheel_matches": 0,
     "source_archive_matches": 0
   },
-  "publication_status": "not yet published; GitHub credential on this host reports invalid"
+  "publication_status": "Published 2026-10-14: https://github.com/gerfondev/notestr-linux/releases/tag/v3.9.2; v3.9.2 source commit fbe97dc9f2f1212e7de081a1839d5cdeef0ed1cd. The initial local GitHub credential check failed; the explicitly authorized push and release upload completed successfully."
 }
