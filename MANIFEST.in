@@ -17,8 +17,8 @@ recursive-include security release-3.7.1-*.json
 include RELEASE-NOTES-3.8.md TRASH.md OFFLINE.md
 recursive-include security release-3.8-*.json
 
-include RELEASE-NOTES-3.9.md RELEASE-NOTES-3.9.1.md
+include RELEASE-NOTES-3.9.md RELEASE-NOTES-3.9.1.md RELEASE-NOTES-3.9.2.md
 recursive-include security release-3.9-*.json
-recursive-include security release-3.9.1-*.json
+recursive-include security release-3.9.1-*.json release-3.9.2-*.json
 
 include LOCKING.md

@@ -1,2 +1,2 @@
 """Notes privées Nostr : le cœur reste utilisable sans GTK."""
-__version__ = "3.9.1"
+__version__ = "3.9.2"

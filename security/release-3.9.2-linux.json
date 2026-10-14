@@ -1,0 +1,43 @@
+{
+  "date": "2026-10-14",
+  "platform": "Linux",
+  "version": "3.9.2",
+  "security_updates": {
+    "runtime_dependencies": "The pinned runtime/native payload is inherited from the 3.9.1 release already reviewed on 2026-10-11; no new Linux runtime dependency was changed. Official PyPI records show aiohttp 3.14.5 (2026-10-11), cryptography 50.0.2, websockets 17.2, Pillow 12.3.0 and argon2-cffi-bindings 26.1.0 as the package versions used by that release. The embedded editor uses prosemirror-view 1.42.6, above the advisory fixed version 1.42.3.",
+    "advisory": "The older npm/tooling workspace for archived TOAST UI remains out of the AppImage; the shipped bundle is the reviewed patched bundle. Historical native exposure exceptions remain in SECURITY-REVIEW.md."
+  },
+  "validation": {
+    "python_tests": "119 passed",
+    "source_test_command": "pytest -q tests with candidate src on PYTHONPATH",
+    "appimage_check": "--appimage-extract-and-run --check passed",
+    "appimage_gui_smoke": "passed on local GTK/WebKit display; WebKitGTK 2.54.0; editor lock/scroll/CSP/revisions, language settings and PDF export exercised",
+    "appimage_sha256": "8062e379df1a46ad9cd1093f5e41a5f0c27bfcb0a48b1f7404d3ce1754992a89",
+    "packaging_method": "Reused the verified 3.9.1 AppImage runtime and native dependency payload, overlaid the candidate application package, and rebuilt the SquashFS image with mksquashfs. This was tested as a final AppImage but was not a full rebuild of WebKitGTK/native libraries. Python wheel and sdist were built from the candidate source; archive owner metadata was normalized."
+  },
+  "privacy": {
+    "source_matches": 0,
+    "appimage_files_scanned": 3871,
+    "searched_markers": [
+      "known local owner path",
+      "full Nostr nsec",
+      "private-key PEM header",
+      "GitHub token"
+    ],
+    "owner_paths_or_full_nsecs_or_tokens": 0,
+    "pem_header_matches": 12,
+    "pem_match_locations": [
+      "libgnutls.so.30",
+      "libssh.so.4",
+      "cryptography SSH serialization module"
+    ],
+    "assessment": "Matches are within upstream system/cryptography components; none are in Notestr source or account data. They are retained as a review finding, not evidence of absence of all personal data.",
+    "history": "previously public author identities in old commits are retained; no history rewrite",
+    "limitations": "Targeted checks only; they cannot detect unknown identities or all encoded data. No real account or user notes were used.",
+    "targeted_source_scan_files": 148,
+    "wheel_files_scanned": 35,
+    "source_archive_files_scanned": 147,
+    "wheel_matches": 0,
+    "source_archive_matches": 0
+  },
+  "publication_status": "not yet published; GitHub credential on this host reports invalid"
+}

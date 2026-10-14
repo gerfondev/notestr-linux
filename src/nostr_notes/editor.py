@@ -2,13 +2,16 @@
 from .i18n import tr, get_language
 import json
 import os
+import base64
+import re
 from pathlib import Path
 from urllib.parse import urlsplit
 
 import gi
 
+gi.require_version("Gdk", "4.0")
 gi.require_version("Gtk", "4.0")
-from gi.repository import Gio, GLib, Gtk
+from gi.repository import Gdk, Gio, GLib, Gtk
 
 try:
     gi.require_version("WebKit", "6.0")
@@ -141,6 +144,24 @@ class MarkdownEditor(Gtk.Box):
         return False
 
     def _context_menu(self, _, menu, hit):
+        if getattr(hit, 'context_is_image', lambda: False)():
+            image = self._image_data_from_uri(hit.get_image_uri())
+            if image:
+                data, mime = image
+                for item in list(menu.get_items()):
+                    if item.get_stock_action() in (
+                            WebKit.ContextMenuAction.COPY_IMAGE_TO_CLIPBOARD,
+                            WebKit.ContextMenuAction.DOWNLOAD_IMAGE_TO_DISK):
+                        menu.remove(item)
+                copy_action = Gio.SimpleAction.new("copy-note-image", None)
+                copy_action.connect("activate", lambda *_: self._copy_context_image(data))
+                menu.prepend(WebKit.ContextMenuItem.new_from_gaction(
+                    copy_action, tr('Copy Image'), None))
+                save_action = Gio.SimpleAction.new("save-note-image", None)
+                save_action.connect("activate", lambda *_: self._save_context_image(data, mime))
+                menu.prepend(WebKit.ContextMenuItem.new_from_gaction(
+                    save_action, tr('Save Image'), None))
+                return False
         if not hit.context_is_link():
             return False
         uri = hit.get_link_uri()
@@ -165,6 +186,48 @@ class MarkdownEditor(Gtk.Box):
         menu.prepend(WebKit.ContextMenuItem.new_from_gaction(
             action, tr('Ouvrir le lien dans le navigateur'), None))
         return False  # Show the modified native menu, preserving Copy Link etc.
+
+    @staticmethod
+    def _image_data_from_uri(uri):
+        if not isinstance(uri, str) or len(uri) > 38 * 1024 * 1024:
+            return None
+        match = re.fullmatch(r"data:(image/(?:jpeg|png));base64,([A-Za-z0-9+/=]+)(?:#notestr-[a-z0-9]+)?", uri, re.I)
+        if not match:
+            return None
+        try:
+            data = base64.b64decode(match.group(2), validate=True)
+        except (ValueError, base64.binascii.Error):
+            return None
+        if not data or len(data) > 28 * 1024 * 1024:
+            return None
+        return data, match.group(1).lower()
+
+    def _copy_context_image(self, data):
+        try:
+            texture = Gdk.Texture.new_from_bytes(GLib.Bytes.new(data))
+            self.web.get_display().get_clipboard().set_texture(texture)
+            self.notice.set_text(tr('Image copiée dans le presse-papiers.'))
+        except (GLib.Error, TypeError, ValueError):
+            self.notice.set_text(tr('Copie de l’image impossible.'))
+
+    def _save_context_image(self, data, mime):
+        extension = 'png' if mime == 'image/png' else 'jpg'
+        chooser = Gtk.FileDialog(title=tr('Enregistrer l’image'))
+        chooser.set_initial_name('Notestr-image.' + extension)
+
+        def selected(dialog, result):
+            try:
+                file = dialog.save_finish(result)
+                file.replace_contents(data, None, False, Gio.FileCreateFlags.REPLACE_DESTINATION, None)
+            except GLib.Error as exc:
+                if exc.matches(Gtk.dialog_error_quark(), Gtk.DialogError.CANCELLED) or \
+                        exc.matches(Gtk.dialog_error_quark(), Gtk.DialogError.DISMISSED):
+                    return
+                self.notice.set_text(tr('Enregistrement de l’image impossible : {0}', exc.message))
+                return
+            self.notice.set_text(tr('Image enregistrée.'))
+
+        chooser.save(self.get_root(), None, selected)
 
     @staticmethod
     def _deny_permission(_, request):

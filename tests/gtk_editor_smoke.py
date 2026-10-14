@@ -45,6 +45,22 @@ def visible_image_loaded(editor, width):
     return evaluate(editor, "JSON.stringify([...document.querySelectorAll('.toastui-editor-ww-container img')].some(i=>{const r=i.getBoundingClientRect();return i.naturalWidth===" + str(width) + "&&r.width>0&&r.height>0&&getComputedStyle(i).display!=='none'}))") is True
 
 
+def assert_list_marker_alignment(editor):
+    editor.set_text('# Courses\n\n- [x] Checked\n- Plain bullet\n')
+    wait_for(lambda: not editor.pending_document)
+    values = evaluate(editor, """JSON.stringify([...document.querySelectorAll('.toastui-editor-ww-container .toastui-editor-contents li')].map(li => {
+      const marker = getComputedStyle(li, '::before');
+      const item = li.getBoundingClientRect();
+      const range = document.createRange();
+      range.selectNodeContents(li.querySelector('p') || li);
+      const text = range.getBoundingClientRect();
+      return {kind: li.classList.contains('task-list-item') ? 'task' : 'bullet', delta: Math.abs(item.top + parseFloat(marker.top) + parseFloat(marker.height)/2 - (text.top + text.height/2))};
+    }))""")
+    rows = values
+    assert [row['kind'] for row in rows] == ['task', 'bullet'], rows
+    assert all(row['delta'] <= 3 for row in rows), rows
+
+
 Adw.init()
 with tempfile.TemporaryDirectory(prefix='notes-v2-test-') as data:
     os.environ['XDG_DATA_HOME'] = data
@@ -76,6 +92,7 @@ with tempfile.TemporaryDirectory(prefix='notes-v2-test-') as data:
         assert editor.ready, editor.notice.get_text()
         wait_for(lambda: not editor.pending_document)
         assert editor.visual_active
+        assert_list_marker_alignment(editor)
         assert not editor.image_button.get_visible()
         assert evaluate(editor, "JSON.stringify((() => { const button=document.querySelector('.notes-insert-image'); const table=document.querySelector('.toastui-editor-toolbar-icons.table')?.closest('button'); return !!button && button.previousElementSibling===table && button.getAttribute('aria-label')==='Insérer une image'; })())")
         image_picker_calls=[]

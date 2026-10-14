@@ -12,7 +12,7 @@ Depuis la racine du projet :
 ```bash
 curl -fL https://github.com/AppImage/type2-runtime/releases/download/continuous/runtime-x86_64 -o /tmp/notestr-runtime-x86_64
 python3 packaging/build-appimage.py /tmp/notestr-runtime-x86_64 --webkit-install /tmp/notestr-webkit-build/webkit-install --webkit-runtime-root /tmp/ubuntu-build-root
-./dist/Notestr-3.9.1-x86_64.AppImage --appimage-extract-and-run --check
+./dist/Notestr-3.9.2-x86_64.AppImage --appimage-extract-and-run --check
 ```
 
 Le runtime provient du projet officiel [AppImage/type2-runtime](https://github.com/AppImage/type2-runtime).
@@ -32,7 +32,7 @@ ni sauvegarde. Le bac à sable WebKit reste actif.
 Vérification graphique de l’image produite, dans une session Linux :
 
 ```bash
-python3 packaging/test-appimage.py dist/Notestr-3.9.1-x86_64.AppImage
+python3 packaging/test-appimage.py dist/Notestr-3.9.2-x86_64.AppImage
 ```
 
 Ce test extrait temporairement l’image et exécute le test GTK/WebKit avec son

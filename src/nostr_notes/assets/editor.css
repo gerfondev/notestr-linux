@@ -62,3 +62,13 @@ html, body { height: 100%; margin: 0; background: #fff; color: #202124; }
 
 .toastui-editor-toolbar-icons.notes-insert-image{background:none!important;display:inline-flex;align-items:center;justify-content:center;color:#555;padding:0}
 .toastui-editor-toolbar-icons.notes-insert-image svg{width:18px;height:18px}
+/* Aligne les marqueurs de liste au centre de la première ligne de texte. */
+.toastui-editor-contents ul > li { line-height: 1.55; }
+.toastui-editor-contents ul > li::before {
+  top: calc((1.55em - 5px) / 2);
+  margin-top: 0;
+}
+.toastui-editor-contents .task-list-item { line-height: 1.55; }
+.toastui-editor-contents .task-list-item::before {
+  top: calc((1.55em - 18px) / 2);
+}

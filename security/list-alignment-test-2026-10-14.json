@@ -1,0 +1,27 @@
+{
+  "date": "2026-10-14",
+  "purpose": "local Linux test only; not published",
+  "base": "published Linux v3.9.1 source",
+  "version": "3.9.1.dev1",
+  "change": "Shared editor CSS aligns checkboxes and unordered bullets vertically with the first text line; geometry smoke assertion passed (<=3 CSS px).",
+  "appimage": "Notestr-3.9.1.dev1-x86_64.AppImage",
+  "sha256": "c652d6dc09178c3c336240c4418bba48efbd7ab2954f33c4c5e6a767d6cb9e15",
+  "entriesInspected": 3834,
+  "targetedScan": {
+    "ownerPath": 0,
+    "exactNostrNsecKey": 0,
+    "githubToken": 0,
+    "pemPrivateKeyHeaderHits": 4,
+    "details": "Header matches are confined to libgnutls (fixture context), libgio, libssh and cryptography SSH parser strings; no owner personal data identified. This targeted scan is not exhaustive."
+  },
+  "tests": {
+    "python": "113 passed",
+    "appimageCheck": "passed",
+    "gtkWebkitEditorSmoke": "passed",
+    "listMarkerGeometry": "passed; center offsets <=3 CSS px",
+    "gtkSettingsSmoke": "passed",
+    "pdfExportSmoke": "passed",
+    "webkitGtk": "2.54.0"
+  },
+  "dependencies": "unchanged from reviewed published baseline; GHSA-c8x8-7fp4-3x9w remains an open upstream ProseMirror issue in the archived editor bundle; this test build is not a security-updated release."
+}
