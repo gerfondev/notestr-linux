@@ -3,6 +3,7 @@ import io
 
 import pytest
 from PIL import Image
+from weasyprint import HTML
 
 from nostr_notes.pdf_export import encrypted_image_references, export_markdown_pdf, markdown_html
 
@@ -81,3 +82,27 @@ def test_pdf_rejects_non_jpeg_image_data(tmp_path):
     reference = 'notestr-image://' + 'c' * 64 + '?server=https%3A%2F%2Fimages.example&key=' + 'C' * 43 + '&nonce=' + 'C' * 16 + '&mime=image%2Fjpeg'
     with pytest.raises(ValueError, match='Image indisponible'):
         markdown_html(f'![bad]({reference})', {reference: b'not a jpeg'})
+
+
+def test_oversized_image_is_reduced_so_following_text_uses_remaining_page_space():
+    reference = 'notestr-image://' + 'd' * 64 + '?server=https%3A%2F%2Fimages.example&key=' + 'D' * 43 + '&nonce=' + 'D' * 16 + '&mime=image%2Fjpeg'
+    stream = io.BytesIO()
+    Image.new('RGB', (2400, 6000), 'orange').save(stream, format='JPEG')
+    markdown = f'# Avant\n\nTexte avant image.\n\n![grande image]({reference})\n\nTexte après image.'
+
+    document = HTML(string=markdown_html(markdown, {reference: stream.getvalue()})).render()
+    image_pages = []
+    for page_number, page in enumerate(document.pages):
+        for box in page._page_box.descendants():
+            if getattr(box, 'element_tag', None) == 'img':
+                image_pages.append((page_number, box.height))
+
+    assert len(image_pages) == 1
+    page_number, image_height = image_pages[0]
+    assert image_height <= (165 * 96 / 25.4) + 1
+    page_text = ' '.join(
+        str(getattr(box, 'text', ''))
+        for box in document.pages[page_number]._page_box.descendants()
+        if hasattr(box, 'text')
+    )
+    assert 'Texte après image.' in page_text

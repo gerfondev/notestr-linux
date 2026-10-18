@@ -1,3 +1,17 @@
+# Contrôles Linux 3.9.3 — 18 octobre 2026
+
+Pillow passe de 12.3.0 à 13.0.0. Les notes amont de la version 13.0.0 recensent des correctifs critiques et élevés ; la version installée dans l’environnement Linux a été contrôlée à 13.0.0 et les métadonnées du projet imposent maintenant `Pillow>=13.0.0,<14`. L’audit pip-audit porte sur les 43 dépendances runtime verrouillées et ne retourne aucun avis connu ; cela ne prouve pas l’absence d’autres vulnérabilités.
+
+Les index Ubuntu Noble, updates et security ont été consultés le 18 octobre. Sur 181 paquets natifs embarqués, six versions candidates plus récentes ont été intégrées : libcurl3t64-gnutls 8.5.0-2ubuntu10.16 (CVE-2026-86409, 86414, 87862, 87863, 87864), libgbm1 25.2.8-0ubuntu0.24.04.4, libsystemd0/libudev1 255.4-1ubuntu8.18 et libx11-6/libx11-xcb1 2:1.8.7-1ubuntu0.1 (CVE-2026-88806, 94283, 94284, 94285). Aucun candidat plus récent ne restait pour ces 181 paquets après reconstruction. WebKitGTK/JavaScriptCore 2.54.0 est conservé. Les autres exceptions natives documentées plus haut restent applicables.
+
+Validation : 114 tests Python, `pip check`, contrôle `--check` du paquet et test de génération d’un PDF contenant deux images JPEG synthétiques réussissent. Le test GTK/WebKit général échoue sur l’attente de deux boutons de copie de blocs de code (0 bouton pour 2 blocs). Le même échec est observé sur l’AppImage locale 3.9.1 avec le test courant ; il est enregistré comme limite préexistante non résolue. Il n’est pas lié au test d’export PDF. WebKitGTK embarqué : 2.54.0.
+
+Le scan ciblé couvre 3 920 fichiers de sources et d’artefacts, dont 3 834 entrées AppImage décompressées. Aucun chemin personnel connu, identifiant Nostr public du propriétaire, courriel du propriétaire, `nsec` complet, jeton GitHub ou base de notes locale n’a été détecté. Onze marqueurs de format de clé privée proviennent des composants amont libgnutls (9), libssh (1) et du code de parsing SSH de cryptography (1) ; ce sont des formats/tests/documentation, pas des secrets de compte. Les contrôles sont ciblés et non exhaustifs.
+
+Empreintes des artefacts et détails dans `security/release-3.9.3-linux.json`. Les anciens auteurs des commits publics sont conservés. La publication GitHub 3.9.3 est autorisée après validation locale par l’utilisateur.
+
+---
+
 # Contrôles de sécurité — Notestr Linux 3.9.1 (11 octobre 2026)
 
 ## Version 3.9.1 — contrôles avant publication
@@ -16,7 +30,7 @@ Les contrôles des dépendances et du paquet sont ciblés : ne pas conclure à l
 
 Linux 3.9.dev62. L’export PDF récupère les images Notestr chiffrées depuis le cache ou leur serveur, les déchiffre localement et les intègre au PDF. Une image indisponible interrompt l’export avec un message d’erreur au lieu de produire un document incomplet. Les images externes restent exclues ; les JPEG sont validés, réencodés sans métadonnées EXIF, avec limites de taille et de dimensions.
 
-Validation : 113 tests Python, `pip check` et empreintes des ressources web réussis. Test synthétique avec deux images exécuté dans l’AppImage finale : deux objets image présents dans le PDF. Test GTK/WebKit de l’AppImage réussi avec WebKitGTK 2.54.0 ; export PDF de base et contrôles de l’éditeur/paramètres réussis. Aucun test sur notes réelles ni téléchargement d’images de compte.
+Validation : 114 tests Python, `pip check` et empreintes des ressources web réussis. Test synthétique avec deux images exécuté dans l’AppImage finale : deux objets image présents dans le PDF. Test GTK/WebKit de l’AppImage réussi avec WebKitGTK 2.54.0 ; export PDF de base et contrôles de l’éditeur/paramètres réussis. Aucun test sur notes réelles ni téléchargement d’images de compte.
 
 Aucune dépendance n’a changé. La revue des dépendances du 9 octobre est réutilisée, ce n’est pas un nouvel audit complet des registres. Les réserves d’exposition natives et les 178 alertes d’outils npm archivés restent documentées ; aucune absence de vulnérabilité n’est revendiquée. Le scan ciblé des 3 834 fichiers décompressés n’a détecté aucun chemin personnel connu, nsec complet ou jeton GitHub recherché. Trois marqueurs de format de clé sont présents dans libgnutls, libssh et le code de lecture SSH de cryptography ; ce sont des données de test/documentation amont et non des clés personnelles. Aucun fichier `.pyc` ou cache Python n’est embarqué. Vérification ciblée, non exhaustive.
 
@@ -296,11 +310,8 @@ Nouvelle interrogation de 699 coordonnées OSV et des métadonnées officielles 
 
 Contrôles ciblés : 1 567 entrées de sources/archives et 4 319 entrées de paquets ; aucun marqueur personnel ou secret recherché non expliqué. Les cinq clés publiques d’autotest GnuTLS sont reconnues par empreinte, pas ignorées globalement. Métadonnées d’images et historique examinés ; deux anciens commits Android et un Linux conservent leurs identités auteur. Aucun historique réécrit. La capture personnelle fournie n’est pas intégrée aux sources ou paquets. Rapports datés et empreintes dans security/paste-url-*.json. Ces contrôles ne sont pas exhaustifs.
 
+## Correction locale du rendu PDF Linux — 3.9.3.dev1 — 18 octobre 2026
 
-## Candidat Linux local — alignement des listes (14 octobre 2026)
+La limite CSS des images intégrées au PDF était de 250 mm sur le candidat Linux 3.9.3, contre 165 mm sur Android. Les grandes images pouvaient donc occuper presque toute la page et repousser le texte qui suivait. La limite Linux a été alignée sur 165 mm, en gardant les proportions et l’évitement de coupure d’image.
 
-AppImage `3.9.1.dev1`, SHA-256 `c652d6dc09178c3c336240c4418bba48efbd7ab2954f33c4c5e6a767d6cb9e15`, bâtie depuis le tag publié 3.9.1 avec WebKitGTK 2.54.0. 113 tests Python réussis. Contrôles AppImage `--check`, éditeur GTK/WebKit, réglages et PDF réussis. Test graphique ajouté à cette copie mesure l’alignement des pseudo-éléments des listes : écarts de centre limités à 3 CSS px pour case et puce. Scan ciblé des 3 834 fichiers : aucun chemin personnel connu, nsec exact ou jeton GitHub ; en-têtes PEM détectés dans des bibliothèques/parser tiers (dont une chaîne de fixture GnuTLS), pas de clé du propriétaire. Dépendances inchangées. Réserve GHSA-c8x8-7fp4-3x9w sur ProseMirror reste ouverte ; ce candidat local ne constitue pas une mise à jour de sécurité. Rapport `security/list-alignment-test-2026-10-14.json`.
-
-## Candidat Linux local — téléchargement d’images (14 octobre 2026)
-
-AppImage de développement `3.9.1.dev1`, nom de fichier suffixé `-dev`, SHA-256 `6829e04b202c2b71217edd86f6e2e45926fbf4bc8b1cae7e437d18498e3f459`. 119 tests Python réussis ; AppImage `--check` et test graphique GTK/WebKit incluant l’éditeur, les paramètres et l’export PDF réussis. Six tests ciblent la validation de l’URI d’image, le remplacement des actions natives du menu, la copie vers le presse-papiers et l’écriture du fichier sélectionné (sélecteur simulé). Scan ciblé des 3 834 fichiers : aucun chemin propriétaire connu, clé nsec complète ni jeton GitHub ; un motif `nsec` court correspond seulement à une chaîne de `libwebkitgtk`, pas à une clé. Scan de 124 fichiers source/ressource Android/Linux : aucun marqueur ciblé. Dépendances inchangées. La réserve GHSA-c8x8-7fp4-3x9w sur ProseMirror reste ouverte et requiert toujours une mise à jour compatible avant publication. Aucun compte ni note réelle utilisé. Les actions de menu n’ont pas été exercées sur le compte de l’utilisateur. Paquet local uniquement, aucune publication.
+Le test de régression avec un JPEG synthétique de 2400 × 6000 vérifie une hauteur maximale de 165 mm et la présence du texte suivant sur la même page quand l’espace le permet. Sept tests PDF, 114 tests Python et le contrôle de lancement AppImage passent. Le test PDF effectué avec les dépendances embarquées confirme une image intégrée et le texte sur la même page. Le candidat `3.9.3.dev1` est local et non publié. Son empreinte et le scan ciblé sont dans `security/pdf-layout-fix-dev1-2026-10-18.json`.

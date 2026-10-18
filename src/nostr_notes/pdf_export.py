@@ -36,7 +36,7 @@ th, td { border: 1px solid #ccc; padding: 5pt 8pt; text-align: left; }
 th { background: #555; color: white; }
 a { color: #4d267f; text-decoration: underline; }
 .image-placeholder { color: #777; font-style: italic; }
-img.note-image { display: block; max-width: 100%; max-height: 250mm; height: auto; object-fit: contain; margin: 8pt 0 12pt; break-inside: avoid; }
+img.note-image { display: block; max-width: 100%; max-height: 165mm; height: auto; object-fit: contain; margin: 8pt 0 12pt; break-inside: avoid; }
 """
 
 

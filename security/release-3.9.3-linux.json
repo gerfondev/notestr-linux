@@ -1,0 +1,68 @@
+{
+  "checkedAt": "2026-10-18",
+  "version": "3.9.3",
+  "artifactHashes": {
+    "AppImage": "f8ef66b2ab6d2fd8bc0f2f61aad4681019ef0da18952cf1155aabe1b455b770f",
+    "wheel": "0f292732e19419489fc8315aee62b1d73ed5a33884cd3eea122cb2c456838439",
+    "sourceArchive": "ceb832b4423db4dcc3be8436e7547fefb44f6620900fc8549aedea9526fc52c0"
+  },
+  "dependencyUpdates": {
+    "python": "Pillow 12.3.0 -> 13.0.0; upstream 13.0.0 release notes document critical/high security corrections. Project runtime metadata now requires Pillow >=13.0.0,<14.",
+    "pipAudit": {
+      "lockedRuntimeCoordinates": 43,
+      "knownVulnerabilitiesReturned": 0,
+      "result": "No known vulnerabilities found; registry snapshot and scanner are not exhaustive."
+    },
+    "nativeUbuntuPackagesCompared": 181,
+    "newerStableCandidatesAfterUpdate": 0,
+    "updatedNativePackages": {
+      "libcurl3t64-gnutls": "8.5.0-2ubuntu10.15 -> 8.5.0-2ubuntu10.16 (CVE-2026-86409, CVE-2026-86414, CVE-2026-87862, CVE-2026-87863, CVE-2026-87864)",
+      "libgbm1": "25.2.8-0ubuntu0.24.04.2 -> 25.2.8-0ubuntu0.24.04.4 (Mesa security and compatibility updates)",
+      "libsystemd0": "255.4-1ubuntu8.17 -> 255.4-1ubuntu8.18",
+      "libudev1": "255.4-1ubuntu8.17 -> 255.4-1ubuntu8.18",
+      "libx11-6": "2:1.8.7-1build1 -> 2:1.8.7-1ubuntu0.1 (CVE-2026-88806, CVE-2026-94283, CVE-2026-94284, CVE-2026-94285)",
+      "libx11-xcb1": "2:1.8.7-1build1 -> 2:1.8.7-1ubuntu0.1 (same libX11 security update)"
+    }
+  },
+  "tests": {
+    "python": "114 passed",
+    "pipCheck": "passed",
+    "appImageRuntimeCheck": "passed; imports GTK4/libadwaita/Nostr and cryptography/signature functions",
+    "pdfImages": "passed; two synthetic embedded images and an oversized 2400x6000 image confirmed at <=165 mm with following text sharing the page when space remains",
+    "appImageGtkEditorSmoke": "failed on copy-code toolbar assertion (0 buttons for 2 code blocks); the same failure occurred against local published 3.9.1 AppImage using the current smoke test, so it is recorded as a pre-existing/unresolved test limitation.",
+    "WebKitGTK": "2.54.0",
+    "appImageCheck": "passed; final 3.9.3 package reports version 3.9.3 and imports GTK4/libadwaita/Nostr crypto successfully"
+  },
+  "privacyScan": {
+    "scannedFiles": 3920,
+    "appImageExtractedEntries": 3834,
+    "ownerHomePath": 0,
+    "ownerPublicNostrId": 0,
+    "ownerEmail": 0,
+    "completeNsec": 0,
+    "githubToken": 0,
+    "localNoteDatabase": 0,
+    "privateKeyFormatMarkers": 11,
+    "markerAssessment": "9 markers in upstream libgnutls, 1 in upstream libssh and 1 in cryptography SSH parsing code; these are parser/test/documentation formats, not Notestr or account private keys.",
+    "scope": "Targeted checks of source, wheel, source archive and extracted AppImage; not exhaustive."
+  },
+  "nativeUbuntuComparison": {
+    "indexes": "Official Noble, noble-updates and noble-security indexes current 2026-10-18",
+    "bundledNativePackages": 181,
+    "newerCandidatesRemaining": 0
+  },
+  "history": "Existing public author identities remain in historical Git commits. This source archive contains no Git history; no history rewrite is planned.",
+  "limitations": [
+    "GTK editor smoke test described above remains unresolved and is unrelated to PDF output.",
+    "No Android device test has been performed for PDF export with Blossom images.",
+    "Targeted privacy and dependency checks do not establish absence of all vulnerabilities or personal data.",
+    "Linux GTK editor smoke retains the pre-existing copy-code button assertion mismatch; 114 Python tests and the AppImage PDF rendering test pass."
+  ],
+  "publication": "GitHub release 3.9.3 authorized by the user; final Linux PDF candidate validated by the user before publication.",
+  "artifactHashNote": "Wheel and source archive hashes are supplied in the separate SHA256SUMS file to avoid a self-referential source-archive hash.",
+  "layoutFix": "Linux PDF image max-height is 165 mm, aligned with Android; validated on the user-approved 3.9.3.dev1 candidate before producing this final 3.9.3 artifact.",
+  "limits": [
+    "GTK editor smoke test described above remains unresolved and is unrelated to PDF output.",
+    "Targeted privacy and dependency checks do not establish absence of all vulnerabilities or personal data."
+  ]
+}
