@@ -1,27 +1,33 @@
-# Notes privées Nostr — V3.9.2 Linux
+# Notes privées Nostr — Version 3.9.3 Linux
 
-Version du paquet Python : `3.9.2`.
+Version du paquet Python : `3.9.3`.
 
 Application Python 3 + GTK4/libadwaita pour lire et éditer des notes Markdown privées compatible avec la version Notestr Android. Langues disponibles : français, anglais.
 
-## Version 3.9.2
+## Version 3.9.3
 
-Téléchargement des images depuis les notes, actions « Copy Image » et « Save Image » réparées dans le menu contextuel, listes et cases à cocher mieux alignées dans l’éditeur visuel, et corrections mineures. Numéro de version aligné sur Android 3.9.2. [Notes de version 3.9.2](RELEASE-NOTES-3.9.2.md).
+Export PDF Android et corrections de mise en page PDF sur Android/Linux : les images trop grandes sont limitées à une taille lisible afin que le texte utilise l’espace restant. Mises à jour de sécurité et corrections mineures. Versions Android/Linux alignées sur 3.9.3. [Notes de version](RELEASE-NOTES-3.9.3.md).
 
-## Version 3.9.1
+## Versions précédentes
 
-Verrouillage/déverrouillage synchronisé des notes avec Android, corrections mineures, mise à jour de sécurité des dépendances déjà qualifiées et export PDF avec images chiffrées déchiffrées localement. [Notes de version 3.9.1](RELEASE-NOTES-3.9.1.md).
+### Version 3.9.2
 
-## Nouveautés de la version 3.9
+Téléchargement des images depuis les notes, actions « Copy Image » et « Save Image » réparées dans le menu contextuel, listes et cases à cocher mieux alignées dans l’éditeur visuel, et corrections mineures. [Notes de version](release-notes/RELEASE-NOTES-3.9.2.md).
 
-Insertion d’images avec zoom et déplacement sur Android/Linux ; correction Linux du bouton Enregistrer les relais dans les paramètres ; licence GPLv3. Mettre à jour les deux applications. [Notes de version 3.9](RELEASE-NOTES-3.9.md). Les notes précédentes sont dans [RELEASE-NOTES-3.8.md](RELEASE-NOTES-3.8.md).
+### Version 3.9.1
+
+Verrouillage/déverrouillage synchronisé des notes avec Android, corrections mineures, mise à jour de sécurité des dépendances et export PDF avec images chiffrées déchiffrées localement. [Notes de version](release-notes/RELEASE-NOTES-3.9.1.md).
+
+### Version 3.9
+
+Insertion d’images avec zoom et déplacement sur Android/Linux ; correction Linux du bouton Enregistrer les relais dans Paramètres ; licence GPLv3. [Notes de version](release-notes/RELEASE-NOTES-3.9.md).
 
 ## Correction de la version 3.7.1
 
 - Copier-coller des URL et du texte dans la fenêtre « Insérer un lien » corrigé : la note n’est plus modifiée pendant la saisie du lien.
 - Bibliothèque graphique Linux actualisée et contrôles de sécurité renouvelés.
 
-[Notes de version 3.7.1](RELEASE-NOTES-3.7.1.md).
+[Notes de version 3.7.1](release-notes/RELEASE-NOTES-3.7.1.md).
 
 ## Nouveautés de la version 3.7
 
@@ -30,7 +36,7 @@ Insertion d’images avec zoom et déplacement sur Android/Linux ; correction Li
 - Numéro de version dans les paramètres.
 - Français ou anglais mémorisé dans les paramètres, appliqué au prochain lancement.
 
-[Notes de version](RELEASE-NOTES-3.7.md) · [Télécharger la dernière version](https://github.com/gerfondev/notestr-linux/releases/latest).
+[Notes de version](release-notes/RELEASE-NOTES-3.7.md) · [Télécharger la dernière version](https://github.com/gerfondev/notestr-linux/releases/latest).
 
 ## Nouveautés de la version 3.5.2
 
@@ -53,7 +59,7 @@ Insertion d’images avec zoom et déplacement sur Android/Linux ; correction Li
 La version **3.5** est désormais commune à la documentation, au paquet Python et
 à l’AppImage. Les anciennes éditions étaient affichées « V3.x » avec une version
 Python « 0.3.x ». Cette harmonisation ne modifie pas l’historique des versions
-sur ngit, ni les sections historiques ci-dessous.
+dans GitHub, ni les sections historiques ci-dessous.
 
 En mode visuel, chaque bloc de code dispose d’un bouton **Copier**, à la place
 du sélecteur de langage « text ». Il copie uniquement le code dans le
@@ -69,11 +75,11 @@ ne garantit pas la compatibilité avec les distributions plus anciennes.
 Le trousseau Secret Service et la session graphique restent fournis par le système.
 
 ```bash
-chmod +x Notestr-3.9.2-x86_64.AppImage
-./Notestr-3.9.2-x86_64.AppImage
+chmod +x Notestr-3.9.3-x86_64.AppImage
+./Notestr-3.9.3-x86_64.AppImage
 ```
 
-Si FUSE est indisponible, utiliser `./Notestr-3.9.2-x86_64.AppImage --appimage-extract-and-run`.
+Si FUSE est indisponible, utiliser `./Notestr-3.9.3-x86_64.AppImage --appimage-extract-and-run`.
 Les notes et réglages existants sont réutilisés, comme avec le lancement Python.
 
 ## Nouveauté V3.4 : barre d’actions compacte
@@ -506,4 +512,4 @@ Les installations depuis le wheel ou les sources nécessitent WebKitGTK 2.54.0 o
 
 Le bouton Publier enregistre une modification chiffrée sur cet appareil avant de tenter sa synchronisation. Les modifications en attente persistent au redémarrage. La reprise nécessite une application ouverte et déverrouillée ; les conflits conservent les deux versions. Voir [OFFLINE.md](OFFLINE.md) pour le fonctionnement, les limites et le protocole de test.
 
-> **Version 3.9** — Insertion d’images avec zoom et déplacement, correction du bouton d’enregistrement des relais sous Linux. Licence GPLv3 : voir [LICENSE](LICENSE) et [notes de version](RELEASE-NOTES-3.9.md).
+> **Version 3.9** — Insertion d’images avec zoom et déplacement, correction du bouton d’enregistrement des relais sous Linux. Licence GPLv3 : voir [LICENSE](LICENSE) et [notes de version](release-notes/RELEASE-NOTES-3.9.md).
