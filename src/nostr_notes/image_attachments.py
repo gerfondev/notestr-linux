@@ -5,11 +5,13 @@ from io import BytesIO
 import json
 import secrets
 import time
-from urllib.parse import quote, urlsplit
+from urllib.parse import quote, urlsplit, parse_qs, urlunsplit
+from urllib.error import HTTPError
 from urllib.request import Request, urlopen, build_opener, HTTPRedirectHandler
 
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from PIL import Image, ImageOps
+from . import __version__
 
 DEFAULT_BLOSSOM_SERVER = "https://blossom.nostr.build"
 MAX_SOURCE_BYTES = 30 * 1024 * 1024
@@ -82,31 +84,83 @@ def decrypt_image(ciphertext: bytes, key: bytes, nonce: bytes, digest: str) -> b
     return AESGCM(key).decrypt(nonce, ciphertext, None)
 
 
-def image_markdown_reference(image: dict, server: str) -> str:
+def image_markdown_reference(image: dict, server: str, blob_url: str | None = None) -> str:
     server = normalize_server(server)
     if not server:
         raise ValueError("Serveur Blossom invalide.")
     enc = lambda value: base64.urlsafe_b64encode(value).decode().rstrip("=")
     host = urlsplit(server).hostname.lower()
-    return f"![Image](notestr-image://{image['hash']}?server={quote(server, safe='')}&key={enc(image['key'])}&nonce={enc(image['nonce'])}&mime=image%2Fjpeg)"
+    parts = [f"server={quote(server, safe='')}", f"key={enc(image['key'])}",
+             f"nonce={enc(image['nonce'])}", "mime=image%2Fjpeg"]
+    if blob_url:
+        parsed_url = urlsplit(blob_url)
+        if (parsed_url.scheme != "https" or not parsed_url.hostname or parsed_url.username or parsed_url.password
+                or image["hash"] not in parsed_url.path):
+            raise ValueError("URL du blob Blossom invalide.")
+        parts.append(f"url={quote(blob_url, safe='')}")
+    return f"![Image](notestr-image://{image['hash']}?{'&'.join(parts)})"
 
 
-def upload_blob(server: str, image: dict, identity) -> None:
+def _authorization_tokens(event: dict) -> list[str]:
+    encoded_event = json.dumps(event, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+    # BUD-11 requires unpadded base64url. Retain a padded standard-base64 fallback
+    # for deployed servers that still use a strict legacy decoder.
+    tokens = [
+        base64.urlsafe_b64encode(encoded_event).decode().rstrip("="),
+        base64.b64encode(encoded_event).decode(),
+    ]
+    return list(dict.fromkeys(tokens))
+
+
+def upload_blob(server: str, image: dict, identity) -> str | None:
     host = urlsplit(server).hostname.lower()
     auth = identity.signed(24242, [["t", "upload"], ["expiration", str(int(time.time()) + 300)],
                                    ["server", host], ["x", image["hash"]]], "Téléversement d’une image chiffrée Notestr")
-    token = base64.urlsafe_b64encode(json.dumps(auth, ensure_ascii=False, separators=(",", ":")).encode()).decode().rstrip("=")
-    request = Request(server + "/upload", data=image["ciphertext"], method="PUT", headers={
-        "Content-Type": "application/octet-stream", "Content-Length": str(len(image["ciphertext"])),
-        "X-SHA-256": image["hash"], "Authorization": "Nostr " + token,
-    })
+    tokens = _authorization_tokens(auth)
     class NoRedirect(HTTPRedirectHandler):
         def redirect_request(self, req, fp, code, msg, headers, newurl):
             return None
-    with build_opener(NoRedirect()).open(request, timeout=25) as response:
-        descriptor = json.loads(response.read(65536))
+    descriptor = None
+    last_error = None
+    for index, token in enumerate(tokens):
+        request = Request(server + "/upload", data=image["ciphertext"], method="PUT", headers={
+            "Content-Type": "application/octet-stream", "Content-Length": str(len(image["ciphertext"])),
+            "X-SHA-256": image["hash"], "Authorization": "Nostr " + token,
+        })
+        try:
+            with build_opener(NoRedirect()).open(request, timeout=25) as response:
+                descriptor = json.loads(response.read(65536))
+                break
+        except HTTPError as exc:
+            reason = exc.headers.get("X-Reason", "") if exc.headers else ""
+            try:
+                body = exc.read(2048).decode("utf-8", errors="replace")
+            except Exception:
+                body = ""
+            clean = [" ".join("".join(char if char.isprintable() else " " for char in part).split())
+                     for part in (reason, body)]
+            detail = " — ".join(dict.fromkeys(part for part in clean if part))[:300]
+            failure = RuntimeError(f"HTTP Error {exc.code}: {exc.reason}" + (f": {detail}" if detail else ""))
+            legacy_fallback = exc.code in (400, 401) and any(
+                marker in detail.lower() for marker in ("invalid auth", "signature mismatch", "invalid nostr event")
+            )
+            if index + 1 < len(tokens) and legacy_fallback:
+                last_error = failure
+                continue
+            raise failure from exc
+    if descriptor is None:
+        raise last_error or RuntimeError("Échec de l’envoi Blossom.")
     if descriptor.get("sha256", "").lower() != image["hash"]:
         raise ValueError("Le serveur Blossom a retourné une empreinte différente.")
+    blob_url = descriptor.get("url")
+    if blob_url is not None:
+        if not isinstance(blob_url, str):
+            raise ValueError("URL du blob Blossom invalide.")
+        parsed_url = urlsplit(blob_url)
+        if (parsed_url.scheme != "https" or not parsed_url.hostname or parsed_url.username or parsed_url.password
+                or image["hash"] not in parsed_url.path):
+            raise ValueError("URL du blob Blossom invalide.")
+    return blob_url
 
 
 async def discover_servers(relays, pubkey, query_profile):
@@ -128,13 +182,13 @@ async def upload_encrypted_image(data: bytes, identity, relays, query_profile, c
     failures = []
     for server in servers:
         try:
-            await asyncio.to_thread(upload_blob, server, image, identity)
+            blob_url = await asyncio.to_thread(upload_blob, server, image, identity)
         except Exception as exc:
             failures.append(f"{server}: {exc}")
             continue
         if cache_dir is not None:
             await asyncio.to_thread(_save_encrypted_cache, cache_dir, image["hash"], image["ciphertext"])
-        return image_markdown_reference(image, server)
+        return image_markdown_reference(image, server, blob_url)
     raise ConnectionError("Aucun serveur Blossom n’a accepté l’image. " + " | ".join(failures))
 
 
@@ -180,6 +234,7 @@ def load_image_reference(reference: str, cache_dir=None, allowed_servers=None) -
         raise ValueError("Référence d’image invalide.")
     values = parse_qs(parsed.query, strict_parsing=True)
     server = values.get("server", [""])[0]
+    descriptor_url = values.get("url", [""])[0]
     key_text = values.get("key", [""])[0]
     nonce_text = values.get("nonce", [""])[0]
     mime = values.get("mime", [""])[0]
@@ -200,6 +255,13 @@ def load_image_reference(reference: str, cache_dir=None, allowed_servers=None) -
         class NoRedirect(HTTPRedirectHandler):
             def redirect_request(self, req, fp, code, msg, headers, newurl):
                 return None
+        blob_urls = []
+        if descriptor_url:
+            parsed_blob = urlsplit(descriptor_url)
+            if (parsed_blob.scheme != "https" or not parsed_blob.hostname or parsed_blob.username or parsed_blob.password
+                    or digest not in parsed_blob.path):
+                raise ValueError("URL du blob Blossom invalide.")
+            blob_urls.append(descriptor_url)
         candidates = [origin]
         if allowed_servers is not None:
             accepted = list(dict.fromkeys(filter(None, (normalize_server(value) for value in allowed_servers))))
@@ -208,9 +270,20 @@ def load_image_reference(reference: str, cache_dir=None, allowed_servers=None) -
             # Old notes must remain readable after a profile removes a server.
             candidates = accepted + ([origin] if origin not in accepted else [])
         last_error = None
+        urls = list(blob_urls)
         for candidate in candidates:
+            urls.extend(f"{candidate}/{digest}{suffix}" for suffix in ("", ".jpg", ".jpeg", ".png", ".webp", ".bin"))
+            if descriptor_url:
+                parsed_blob = urlsplit(descriptor_url)
+                urls.append(urlunsplit(("https", candidate.split("://", 1)[1], parsed_blob.path,
+                                       parsed_blob.query, "")))
+        for download_url in dict.fromkeys(urls):
             try:
-                request = Request(f"{candidate}/{digest}.jpg", headers={"Accept": "application/octet-stream"})
+                request = Request(download_url, headers={
+                    "Accept": "application/octet-stream",
+                    # Some Blossom hosts reject Python-urllib's default User-Agent with 403.
+                    "User-Agent": f"Notestr/{__version__}",
+                })
                 with build_opener(NoRedirect()).open(request, timeout=20) as response:
                     candidate_bytes = response.read(MAX_UPLOAD_BYTES + 32)
                 if len(candidate_bytes) > MAX_UPLOAD_BYTES + 16 or hashlib.sha256(candidate_bytes).hexdigest() != digest:

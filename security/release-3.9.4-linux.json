@@ -1,0 +1,37 @@
+{
+  "date": "2026-10-18",
+  "version": "3.9.4",
+  "platform": "Linux",
+  "artifactHashes": {
+    "AppImage": "ded58e630966f42a8e8f52ac32204484a92351219829aa0401aec5247e3e083e",
+    "wheel": "599c54ae4c94be3f02d33e1792cbb7fa790b9ae74f2131ede898cfceb1fa8a43",
+    "sourceArchive": "331bdfb51604120febd4d8d67b18899fbd0e44a8f629412d46aa6d4b8eb0fd67"
+  },
+  "changes": [
+    "Blossom upload authorization fallback, server response URL retention, and tolerant encrypted-blob retrieval routes.",
+    "Align unordered bullets, ordered markers, and task checkboxes to the first text line."
+  ],
+  "dependencies": {
+    "changed": false,
+    "review": "Same-day Linux 3.9.3 review consulted: 43 Python runtime coordinates audited; 181 Ubuntu native package versions compared and no newer stable candidate remained after the 3.9.3 security rebuild. Existing native/dependency exceptions remain documented; this release does not claim absence of all vulnerabilities."
+  },
+  "validation": {
+    "AppImage": "SquashFS checked; final AppRun --version and --check passed; GTK4/libadwaita, WebKitGTK 6.0, Nostr, crypto and signature imports passed.",
+    "Blossom": "The local dev5 candidate had 12 attachment tests pass in the existing local runner; the user subsequently confirmed the local Android/Linux candidates work. The Blossom Python module in final AppImage matches release source byte-for-byte.",
+    "lists": "CSS rules are byte-identical to Android candidate and present in final AppImage.",
+    "fullPythonSuite": "Not rerun for 3.9.4 because pytest is unavailable in this environment; latest 3.9.3 package report recorded 114 Python tests passing.",
+    "guiSmoke": "The pre-existing GTK/WebKit copy-code toolbar smoke assertion remains an unresolved test limitation documented in SECURITY-REVIEW.md."
+  },
+  "privacy": {
+    "appImageExtractedFiles": 3834,
+    "targetedMatches": {
+      "ownerPath": 0,
+      "suppliedPublicIdentifier": 0,
+      "fullNsec": 0,
+      "privateKeyPem": "0 complete private-key blocks; 3 files contain expected PEM key-format delimiter strings in vendored GnuTLS/libssh/cryptography code",
+      "githubToken": 0
+    },
+    "assessment": "The AppImage contains expected PEM key-format delimiter strings in three vendored library/parser files, but no complete private-key blocks. nsec1 textual matches are parser/documentation markers, not complete secret keys. Source scans found no owner path, supplied public identifier, complete nsec, complete private key or GitHub token. Existing upstream key-format markers remain documented. Source history retains existing public author identities; new release commit uses a project identity. Targeted, not exhaustive."
+  },
+  "publication": "User explicitly requested GitHub publication of version 3.9.4; no history rewrite."
+}
