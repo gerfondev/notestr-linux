@@ -43,7 +43,18 @@
       "is_exhaustive": false
     }
   },
-  "publication": "not published; GitHub access currently unavailable",
+  "publication": {
+    "status": "published and verified",
+    "date": "2026-10-31",
+    "repository": "gerfondev/notestr-linux",
+    "tag": "v3.9.5",
+    "commit": "f298e64",
+    "release_url": "https://github.com/gerfondev/notestr-linux/releases/tag/v3.9.5",
+    "anonymous_download_verification": "AppImage, wheel, source archive, notes and checksum downloaded without authentication; all package hashes matched",
+    "appimage_sha256": "37c42105f8d092d84d27f2eebb0aea3fd39e63253a876cf4e5d8ade0c8ba12d2",
+    "wheel_sha256": "fe89cbaf0af5006b74fa2d1a90eff4133f65bb84c1a588ece8e0556ae6d9b5a8",
+    "sdist_sha256": "219ab021ebd0d6965a80e96fb89d5fd8c6fc22d7e1f17ef35fc457dd9207603b"
+  },
   "limits": [
     "The Python OSV query was blocked by DNS resolution in the build environment; the report does not claim a clean, complete Python dependency audit.",
     "The AppImage reuses the previously reviewed WebKitGTK 2.54.0 source-built runtime, with five refreshed Ubuntu packages; it was not rebuilt from all native sources.",
@@ -55,6 +66,7 @@
     "appimage_sha256": "37c42105f8d092d84d27f2eebb0aea3fd39e63253a876cf4e5d8ade0c8ba12d2",
     "wheel": "nostr_private_notes-3.9.5-py3-none-any.whl",
     "wheel_sha256": "fe89cbaf0af5006b74fa2d1a90eff4133f65bb84c1a588ece8e0556ae6d9b5a8",
-    "sdist": "nostr-private-notes-3.9.5.tar.gz"
+    "sdist": "nostr-private-notes-3.9.5.tar.gz",
+    "sdist_sha256": "219ab021ebd0d6965a80e96fb89d5fd8c6fc22d7e1f17ef35fc457dd9207603b"
   }
 }

@@ -20,4 +20,4 @@ Scans ciblés des sources Android/Linux, du contenu décompressé de l’APK, de
 
 ## État
 
-Aucun push, tag, téléversement ou publication GitHub n’a été effectué. Le test du candidat Android et l’autorisation de publication ont été confirmés par l’utilisateur. Il reste à rétablir l’accès GitHub et le DNS du poste pour téléverser la release.
+Publication effectuée le 31 octobre 2026 : release Linux [3.9.5](https://github.com/gerfondev/notestr-linux/releases/tag/v3.9.5), tag `v3.9.5`, commit `f298e64`. AppImage, wheel, archive source, notes et checksum téléchargés anonymement depuis GitHub ; les sommes des trois paquets sont identiques aux artefacts contrôlés. SHA-256 AppImage : `37c42105f8d092d84d27f2eebb0aea3fd39e63253a876cf4e5d8ade0c8ba12d2`. Les limites d’audit et de confidentialité décrites ci-dessus restent applicables.
