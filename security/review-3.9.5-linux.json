@@ -2,7 +2,7 @@
   "date": "2026-10-31",
   "version": "3.9.5",
   "platform": "Linux",
-  "status": "user authorized publication after testing development candidate; release publication pending GitHub access",
+  "status": "published and verified after user-reported device test",
   "changes": {
     "pillow_pin": {
       "from": "12.3.0",
