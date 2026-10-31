@@ -24,7 +24,7 @@ mdurl==0.1.2
 monstr==0.1.9
 more-itertools==11.1.0
 multidict==6.9.1
-pillow==12.3.0
+pillow==13.0.0
 propcache==0.5.4
 pycparser==3.0
 pycryptodome==3.23.0

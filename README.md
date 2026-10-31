@@ -1,167 +1,17 @@
-# Notes privées Nostr — Version 3.9.4 Linux
+# Notes privées Nostr — Version 3.9.5 Linux
 
-Version du paquet Python : `3.9.4`.
+Version du paquet Python : `3.9.5`.
 
 Application Python 3 + GTK4/libadwaita pour lire et éditer des notes Markdown privées compatible avec la version Notestr Android. Langues disponibles : français, anglais.
 
-## Version 3.9.4
+## Version 3.9.5
 
-Android et Linux : correction d’un bug lié au stockage de fichiers sur les serveurs Blossom. Les puces, listes numérotées et cases à cocher sont alignées sur la première ligne du texte. Versions Android/Linux alignées sur 3.9.4. [Notes de version](RELEASE-NOTES-3.9.4.md).
+- Mises à jour de sécurité des dépendances Python et des composants système intégrés.
+- Pillow 13.0.0, GLib 2.80.0-6ubuntu3.10, Brotli 1.1.0-2ubuntu0.1, liblzma 5.6.1+really5.4.5-1ubuntu0.4 et zlib 1:1.3.dfsg-3.1ubuntu2.3.
+- Version Linux alignée sur Android : 3.9.5. [Notes de version](RELEASE-NOTES-3.9.5.md).
+- Les notes des versions précédentes sont conservées dans [`release-notes/`](release-notes/).
 
-## Versions précédentes
-
-### Version 3.9.2
-
-Téléchargement des images depuis les notes, actions « Copy Image » et « Save Image » réparées dans le menu contextuel, listes et cases à cocher mieux alignées dans l’éditeur visuel, et corrections mineures. [Notes de version](release-notes/RELEASE-NOTES-3.9.2.md).
-
-### Version 3.9.1
-
-Verrouillage/déverrouillage synchronisé des notes avec Android, corrections mineures, mise à jour de sécurité des dépendances et export PDF avec images chiffrées déchiffrées localement. [Notes de version](release-notes/RELEASE-NOTES-3.9.1.md).
-
-### Version 3.9
-
-Insertion d’images avec zoom et déplacement sur Android/Linux ; correction Linux du bouton Enregistrer les relais dans Paramètres ; licence GPLv3. [Notes de version](release-notes/RELEASE-NOTES-3.9.md).
-
-## Correction de la version 3.7.1
-
-- Copier-coller des URL et du texte dans la fenêtre « Insérer un lien » corrigé : la note n’est plus modifiée pendant la saisie du lien.
-- Bibliothèque graphique Linux actualisée et contrôles de sécurité renouvelés.
-
-[Notes de version 3.7.1](release-notes/RELEASE-NOTES-3.7.1.md).
-
-## Nouveautés de la version 3.7
-
-- Consultation des notes en cache pendant la synchronisation, brouillon conservé.
-- Liens ouverts dans le navigateur, par clic gauche ou menu contextuel ; curseur main au survol.
-- Numéro de version dans les paramètres.
-- Français ou anglais mémorisé dans les paramètres, appliqué au prochain lancement.
-
-[Notes de version](release-notes/RELEASE-NOTES-3.7.md) · [Télécharger la dernière version](https://github.com/gerfondev/notestr-linux/releases/latest).
-
-## Nouveautés de la version 3.5.2
-
-- Conservation d’une seule version précédente chiffrée, envoyée sur les relais avant chaque mise à jour.
-- Bouton **Version précédente** pour charger le backup dans l’éditeur avant restauration par **Publier**.
-- Renouvellement du backup et demande de suppression avec la note.
-- Vérification actualisée des dépendances et de la confidentialité des paquets.
-
-## Nouveautés de la version 3.5.1
-
-- Actualisation automatique des notes à l’ouverture du compte, même pendant le chargement de l’éditeur visuel.
-- Mise à jour des dépendances Python et des bibliothèques Kerberos embarquées.
-- Audit de sécurité et contrôle des données personnelles avant publication.
-
-## Nouveautés de la version 3.5
-
-- Ajout d’un bouton **Copier** dans les champs **Code Block**.
-- Création d’un fichier **AppImage amd64** pour lancer l’application Linux.
-
-La version **3.5** est désormais commune à la documentation, au paquet Python et
-à l’AppImage. Les anciennes éditions étaient affichées « V3.x » avec une version
-Python « 0.3.x ». Cette harmonisation ne modifie pas l’historique des versions
-dans GitHub, ni les sections historiques ci-dessous.
-
-En mode visuel, chaque bloc de code dispose d’un bouton **Copier**, à la place
-du sélecteur de langage « text ». Il copie uniquement le code dans le
-presse-papiers Linux, avec ses espaces et ses retours à la ligne. Le Markdown
-et le langage déjà enregistré sont conservés. Pour modifier le langage d’un bloc,
-utiliser le mode Markdown.
-
-Un AppImage **x86_64 (amd64, Intel et AMD 64 bits)** peut être produit avec
-[les instructions de construction](packaging/README.md). Il embarque Python,
-les dépendances Python, GTK4/libadwaita et WebKitGTK. La construction actuelle
-cible Ubuntu 24.04 / Zorin OS 18 et nécessite glibc 2.39 ou ultérieure ; elle
-ne garantit pas la compatibilité avec les distributions plus anciennes.
-Le trousseau Secret Service et la session graphique restent fournis par le système.
-
-```bash
-chmod +x Notestr-3.9.4-x86_64.AppImage
-./Notestr-3.9.4-x86_64.AppImage
-```
-
-Si FUSE est indisponible, utiliser `./Notestr-3.9.4-x86_64.AppImage --appimage-extract-and-run`.
-Les notes et réglages existants sont réutilisés, comme avec le lancement Python.
-
-## Nouveauté V3.4 : barre d’actions compacte
-
-Les actions principales utilisent des icônes dans la barre supérieure : nouvelle
-note, actualisation, publication, suppression, export PDF, compte et relais. Le nom
-complet de chaque action apparaît au survol de l’icône. Il est aussi fourni aux
-outils d’accessibilité et aux lecteurs d’écran.
-
-## Nouveauté V3.3 : identité visuelle
-
-Le logo Notestr apparaît à côté du titre dans la barre supérieure et en plus grand
-sur les fenêtres de création, de saisie et de modification du mot de passe. Il est
-également déclaré comme icône de la fenêtre pour le sélecteur d’applications et la
-barre des tâches lorsque l’environnement de bureau prend cette indication en charge.
-L’image est embarquée dans l’application et ne nécessite aucune connexion réseau.
-
-## Nouveauté V3.2 : export PDF
-
-Le bouton **Exporter PDF** enregistre la note actuellement affichée dans un fichier
-PDF. L’application propose un nom tiré du premier titre ou de la première ligne,
-puis demande l’emplacement du fichier. Le document est produit directement et
-localement au format A4 avec WeasyPrint, sans passer par le système d’impression.
-Aucune note n’est envoyée vers un service externe.
-
-L’export fonctionne aussi depuis le mode Markdown : le texte courant est d’abord
-synchronisé avant la génération. Les images et pièces jointes ne sont pas exportées
-dans cette version. Le fichier est d’abord créé sous un nom temporaire privé, puis
-remplace atomiquement la destination uniquement après validation du PDF.
-
-## Nouveauté V3 : verrouillage au démarrage
-
-Au premier lancement de la V3, l’application demande de créer un mot de passe d’au
-moins huit caractères. Ce mot de passe est ensuite demandé avant le chargement de
-la clé Nostr et des notes. Après cinq erreurs, les nouvelles tentatives sont
-suspendues pendant trente secondes.
-
-Le mot de passe n’est jamais enregistré. Un sel aléatoire et une empreinte dérivée
-avec Argon2id sont conservés dans `~/.local/share/nostr-notes/lock.json`, avec des
-permissions limitées au compte Linux. Cette protection bloque l’accès ordinaire
-depuis une session déjà ouverte ; elle ne remplace pas le chiffrement du disque ni
-le verrouillage de la session Linux. Comme toute application exécutée sous le même
-compte, elle ne peut pas résister à une personne capable d’en modifier le code ou
-les fichiers locaux.
-
-### Modifier le mot de passe
-
-Ouvrir **Compte et relais**, puis cliquer sur **Modifier le mot de passe**. Saisir
-le mot de passe actuel, le nouveau mot de passe et sa confirmation. Le changement
-est immédiat et un nouveau sel aléatoire est créé. Une erreur sur le mot de passe
-actuel ou un nouveau mot de passe trop court laisse l’ancien verrouillage intact.
-
-## Nouveautés V2 : éditeur visuel
-
-Deux modes sont disponibles au-dessus de la note :
-
-- **Visuel** : mise en forme immédiate, titres, gras, italique, texte barré,
-  listes, tâches à cocher, citations, liens, tableaux et blocs de code.
-- **Markdown** : modification directe du texte source ; les retours simples du texte deviennent explicites à la publication.
-
-Le mode visuel est sélectionné par défaut lorsque WebKitGTK est disponible.
-La barre d’outils et les raccourcis usuels (Ctrl+B, Ctrl+I, Ctrl+Z) permettent la
-mise en forme. Le collage insère du texte simple ; les fichiers, images collées
-et dépôts de fichiers ne sont pas pris en charge. Les liens sont éditables mais
-ne s’ouvrent pas depuis la note ; les images distantes ne sont pas chargées.
-
-Une simple consultation ou un aller-retour Visuel/Markdown **sans modification**
-conserve exactement le Markdown original. Une édition visuelle peut normaliser
-les marqueurs et les espaces et ne préserve pas nécessairement toutes les syntaxes
-spéciales (HTML brut, extensions Markdown, images). Pour ces documents, utiliser
-le mode Markdown. À la publication, les simples retours de paragraphe deviennent des sauts Markdown explicites ; le code et la structure Markdown sont préservés.
-Le texte courant est récupéré avant publication, changement de
-note ou fermeture, y compris les dernières frappes de l’éditeur visuel.
-
-Le contenu envoyé reste du **Markdown chiffré NIP-44**, kind `33457`, avec le même
-identifiant `d` lors d’une modification. La clé privée ne passe jamais dans le
-composant web. Aucun service web n’est nécessaire pour afficher l’éditeur :
-TOAST UI Editor 3.2.2, sa traduction française et DOMPurify 3.4.15 sont embarqués.
-Les statistiques d’usage sont désactivées. Une politique CSP interdit les
-connexions, cadres et ressources externes ; WebKit utilise une session éphémère,
-sans stockage local HTML ni cache de pages. Le moteur visuel accède seulement
-aux fichiers explicitement autorisés via un protocole interne.
+Télécharger [Notestr Linux 3.9.5 — AppImage x86_64](https://github.com/gerfondev/notestr-linux/releases/latest/download/Notestr-3.9.5-x86_64.AppImage) ou consulter [la release GitHub](https://github.com/gerfondev/notestr-linux/releases/latest). Les empreintes des fichiers sont dans `SHA256SUMS-3.9.5-Linux.txt`.
 
 ## Installation Debian, Ubuntu et Zorin
 
@@ -488,22 +338,6 @@ Les notes stockées ne sont pas modifiées en arrière-plan : ouvrir une ancienn
 note puis cliquer **Publier** suffit à enregistrer ses sauts explicites. Une simple
 consultation sans publication conserve exactement le texte source existant.
 
-## Version précédente (3.5.2)
-
-Chaque mise à jour publiée sauvegarde le contenu chiffré de la note courante
-dans un événement distinct (kind 30078), remplacé à la mise à jour suivante.
-Le bouton « Version précédente » charge ce contenu dans l’éditeur ; cliquer
-sur « Publier » après vérification pour restaurer la note. Aucun backup n’existe
-avant la première mise à jour réalisée avec cette version.
-
-Chaque relais doit accepter le backup avant de recevoir la nouvelle note. Les
-deux envois ne sont pas atomiques : si le second échoue, le backup peut déjà
-contenir la note encore courante. Éviter les modifications simultanées depuis
-plusieurs appareils et actualiser avant de modifier une note sur un autre appareil.
-Le cache ne conserve qu’un événement de backup par note ; les relais peuvent
-conserver leurs anciennes copies. La suppression d’une note demande également
-la suppression de son backup. Les anciens clients ne mettent pas ce backup à jour.
-
 ### Moteur visuel et sécurité
 
 Les installations depuis le wheel ou les sources nécessitent WebKitGTK 2.54.0 ou ultérieur pour le mode Visuel. Un moteur plus ancien conserve uniquement le mode Markdown. Utiliser l’AppImage pour bénéficier du moteur corrigé embarqué.
@@ -511,5 +345,3 @@ Les installations depuis le wheel ou les sources nécessitent WebKitGTK 2.54.0 o
 ## Modifications hors connexion
 
 Le bouton Publier enregistre une modification chiffrée sur cet appareil avant de tenter sa synchronisation. Les modifications en attente persistent au redémarrage. La reprise nécessite une application ouverte et déverrouillée ; les conflits conservent les deux versions. Voir [OFFLINE.md](OFFLINE.md) pour le fonctionnement, les limites et le protocole de test.
-
-> **Version 3.9** — Insertion d’images avec zoom et déplacement, correction du bouton d’enregistrement des relais sous Linux. Licence GPLv3 : voir [LICENSE](LICENSE) et [notes de version](release-notes/RELEASE-NOTES-3.9.md).

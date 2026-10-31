@@ -1,0 +1,60 @@
+{
+  "date": "2026-10-31",
+  "version": "3.9.5",
+  "platform": "Linux",
+  "status": "user authorized publication after testing development candidate; release publication pending GitHub access",
+  "changes": {
+    "pillow_pin": {
+      "from": "12.3.0",
+      "to": "13.0.0",
+      "reason": "Pillow security advisories indicate 12.3.0 affected, 13.0.0 patched"
+    },
+    "runtime": "AppImage 3.9.4 runtime already contained Pillow 13.0.0; reused",
+    "native_security_updates": {
+      "gir1.2-glib-2.0": "2.80.0-6ubuntu3.9 -> 2.80.0-6ubuntu3.10",
+      "libbrotli1": "1.1.0-2build2 -> 1.1.0-2ubuntu0.1",
+      "libglib2.0-0t64": "2.80.0-6ubuntu3.9 -> 2.80.0-6ubuntu3.10",
+      "liblzma5": "5.6.1+really5.4.5-1ubuntu0.3 -> 5.6.1+really5.4.5-1ubuntu0.4",
+      "zlib1g": "1:1.3.dfsg-3.1ubuntu2.2 -> 1:1.3.dfsg-3.1ubuntu2.3"
+    }
+  },
+  "validation": {
+    "appimage_version": "passed through --appimage-extract-and-run: Notestr 3.9.5",
+    "appimage_check": "passed: GTK4/libadwaita, WebKitGTK 6.0, Nostr and crypto imports; fontconfig reports unwritable system cache in sandbox",
+    "fresh_osv_audit": "blocked: pip-audit could not resolve api.osv.dev; no clean audit result claimed",
+    "ubuntu_native_index_refresh": "completed 2026-10-31; 5 newer packages applied from refreshed Ubuntu Noble package indexes",
+    "elf_dependencies": {
+      "checked": 389,
+      "missing": 0
+    }
+  },
+  "privacy": {
+    "scope": "targeted scan of clean source clone and extracted local AppImage candidate",
+    "is_exhaustive": false,
+    "source_files_scanned": 222,
+    "appdir_entries_scanned": 3865,
+    "targeted_scan": {
+      "owner_path_matches": 0,
+      "known_public_id_matches": 0,
+      "complete_nsec_matches": 0,
+      "complete_private_key_blocks": 5,
+      "private_key_blocks_assessment": "Five bundled public GnuTLS cryptographic self-test vectors in libgnutls; confirmed by the upstream crypto self-test implementation. Not owner credentials. Additional PEM delimiters in libssh/cryptography parser code are not complete keys.",
+      "github_token_matches": 0,
+      "is_exhaustive": false
+    }
+  },
+  "publication": "not published; GitHub access currently unavailable",
+  "limits": [
+    "The Python OSV query was blocked by DNS resolution in the build environment; the report does not claim a clean, complete Python dependency audit.",
+    "The AppImage reuses the previously reviewed WebKitGTK 2.54.0 source-built runtime, with five refreshed Ubuntu packages; it was not rebuilt from all native sources.",
+    "Full Android Maven/OSV audit was not refreshed. Existing AndroidX, TOAST UI and native FFI review limitations remain.",
+    "Privacy scans are targeted and not exhaustive; full remote Git history retains previously documented author identities."
+  ],
+  "artifact": {
+    "appimage": "Notestr-3.9.5-x86_64.AppImage",
+    "appimage_sha256": "37c42105f8d092d84d27f2eebb0aea3fd39e63253a876cf4e5d8ade0c8ba12d2",
+    "wheel": "nostr_private_notes-3.9.5-py3-none-any.whl",
+    "wheel_sha256": "fe89cbaf0af5006b74fa2d1a90eff4133f65bb84c1a588ece8e0556ae6d9b5a8",
+    "sdist": "nostr-private-notes-3.9.5.tar.gz"
+  }
+}
