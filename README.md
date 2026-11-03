@@ -242,7 +242,7 @@ relais et ne crée aucun compte. Il importe aussi GTK4/libadwaita sans ouvrir de
 Les tests vérifient notamment : chiffrement/déchiffrement Unicode, signature et
 contenu altéré, identifiant `d`, mise à jour, égalité d’horodatage, suppressions par
 adresse et événement, faux auteur, limites de taille, permissions du cache,
-pagination, accusés `OK`, refus et pannes partielles. Le transport y est simulé. Le bilan de cette exécution figure dans [VALIDATION.md](VALIDATION.md).
+pagination, accusés `OK`, refus et pannes partielles. Le transport y est simulé. Le bilan de cette exécution figure dans [validation historique](release-notes/history/VALIDATION.md).
 
 ### Test graphique (facultatif)
 
@@ -276,4 +276,4 @@ Les installations depuis le wheel ou les sources nécessitent WebKitGTK 2.54.0 o
 
 ## Modifications hors connexion
 
-Le bouton Publier enregistre une modification chiffrée sur cet appareil avant de tenter sa synchronisation. Les modifications en attente persistent au redémarrage. La reprise nécessite une application ouverte et déverrouillée ; les conflits conservent les deux versions. Voir [OFFLINE.md](OFFLINE.md) pour le fonctionnement, les limites et le protocole de test.
+Le bouton Publier enregistre une modification chiffrée sur cet appareil avant de tenter sa synchronisation. Les modifications en attente persistent au redémarrage. La reprise nécessite une application ouverte et déverrouillée ; les conflits conservent les deux versions. Voir [guide des modifications hors connexion](release-notes/history/OFFLINE.md) pour le fonctionnement, les limites et le protocole de test.
