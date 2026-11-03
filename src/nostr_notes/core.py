@@ -7,6 +7,7 @@ import re
 import secrets
 import string
 import time
+import unicodedata
 
 from monstr.encrypt import Keys, NIP44Encrypt
 from monstr.event.event import Event
@@ -17,6 +18,7 @@ BACKUP_KIND = 30078
 BACKUP_PREFIX = "notestr/previous/"
 TRASH_PREFIX = "notestr/trash/"
 LOCK_PREFIX = "notestr/lock/"
+FOLDER_ADDRESS = "notestr/folders/v1"
 
 def trash_address(d):
     return TRASH_PREFIX + hashlib.sha256(d.encode()).hexdigest()
@@ -50,7 +52,8 @@ def compact_backups(events):
             result[event["id"]] = event
             continue
         ds = tag_values(event, "d")
-        if not ds or not ds[0].startswith((BACKUP_PREFIX, PIN_PREFIX, TRASH_PREFIX, LOCK_PREFIX)):
+        if not ds or not (ds[0].startswith((BACKUP_PREFIX, PIN_PREFIX, TRASH_PREFIX, LOCK_PREFIX))
+                          or ds[0] == FOLDER_ADDRESS):
             continue
         old = latest.get(ds[0])
         if old is None or (-event["created_at"], event["id"]) < (-old["created_at"], old["id"]):
@@ -106,6 +109,7 @@ class Note:
     pending: bool = False
     conflicted: bool = False
     locked: bool = False
+    folder_id: str | None = None
 
     @property
     def title(self):
@@ -157,6 +161,59 @@ class Identity:
             raise ValueError(tr('Attendre la seconde suivante avant de changer l’épinglage ; vérifier l’horloge si nécessaire.'))
         return self.signed(BACKUP_KIND, [["d", address]],
                            self.cipher.encrypt("true" if pinned else "false", self.pubkey), now)
+
+    @staticmethod
+    def validate_folder_state(folders, assignments):
+        if not isinstance(folders, list) or not isinstance(assignments, dict) or len(folders) > 500:
+            raise ValueError(tr("Données de dossiers invalides."))
+        normalized = []
+        ids, names = set(), set()
+        for item in folders:
+            if not isinstance(item, dict) or set(item) != {"id", "name"}:
+                raise ValueError(tr("Données de dossiers invalides."))
+            folder_id, name = item["id"], unicodedata.normalize("NFC", item["name"].strip()) if isinstance(item["name"], str) else ""
+            if (not isinstance(folder_id, str) or not re.fullmatch(r"[a-f0-9]{32}", folder_id)
+                    or not name or len(name) > 80 or any(ord(c) < 32 for c in name)
+                    or folder_id in ids or name.casefold() in names):
+                raise ValueError(tr("Nom ou identifiant de dossier invalide ou déjà utilisé."))
+            ids.add(folder_id); names.add(name.casefold())
+            normalized.append({"id": folder_id, "name": name})
+        if len(assignments) > 10000:
+            raise ValueError(tr("Trop d’affectations de dossiers."))
+        clean = {}
+        for note_id, folder_id in assignments.items():
+            if not isinstance(note_id, str) or not note_id or len(note_id) > 4096 or any(ord(c) < 32 for c in note_id):
+                raise ValueError(tr("Affectation de note invalide."))
+            if folder_id is not None:
+                if folder_id not in ids:
+                    raise ValueError(tr("Le dossier choisi n’existe pas."))
+                clean[note_id] = folder_id
+        return normalized, clean
+
+    def folder_state(self, events):
+        metadata, _ = self.notes(events, kind=BACKUP_KIND)
+        item = next((n for n in metadata if n.d == FOLDER_ADDRESS), None)
+        if item is None:
+            return {"version": 1, "folders": [], "assignments": {}}
+        try:
+            data = json.loads(item.markdown)
+            if not isinstance(data, dict) or data.get("version") != 1 or set(data) != {"version", "folders", "assignments"}:
+                raise ValueError()
+            folders, assignments = self.validate_folder_state(data["folders"], data["assignments"])
+            return {"version": 1, "folders": folders, "assignments": assignments}
+        except Exception as exc:
+            raise ValueError(tr("Les métadonnées de dossiers sont illisibles ou invalides.")) from exc
+
+    def set_folder_state(self, folders, assignments, events):
+        folders, assignments = self.validate_folder_state(folders, assignments)
+        metadata, _ = self.notes(events, kind=BACKUP_KIND)
+        old = next((n for n in metadata if n.d == FOLDER_ADDRESS), None)
+        now = int(time.time())
+        if old and old.event["created_at"] >= now:
+            raise ValueError(tr("Attendre la seconde suivante avant de modifier les dossiers."))
+        payload = json.dumps({"version": 1, "folders": folders, "assignments": assignments},
+                             ensure_ascii=False, separators=(",", ":"), sort_keys=True)
+        return self.signed(BACKUP_KIND, [["d", FOLDER_ADDRESS]], self.cipher.encrypt(payload, self.pubkey), now)
 
     def set_locked(self, note, locked, events):
         events = list(events)
@@ -250,9 +307,15 @@ class Identity:
             trash_addresses = {tag_values(e, "d")[0] for e in events
                                if valid_event(e, self.pubkey) and e["kind"] == BACKUP_KIND
                                and tag_values(e, "d") and tag_values(e, "d")[0].startswith(TRASH_PREFIX)}
+            try:
+                folder_state = self.folder_state(events)
+            except ValueError:
+                folder_state = {"version": 1, "folders": [], "assignments": {}}
+                failed += 1
             notes = [replace(n, pinned=pin_address(n.d) in pins,
                              trashed=trash.get(trash_address(n.d)) == "true",
-                             locked=(lock_address(n.d) in lock_addresses and locks.get(lock_address(n.d)) != "false")) for n in notes
+                             locked=(lock_address(n.d) in lock_addresses and locks.get(lock_address(n.d)) != "false"),
+                             folder_id=folder_state["assignments"].get(n.d)) for n in notes
                      if f"{KIND}:{self.pubkey}:{n.d}" not in destroyed
                      and (trash_address(n.d) not in trash_addresses or
                           trash.get(trash_address(n.d)) in ("true", "false"))]

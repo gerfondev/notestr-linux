@@ -553,3 +553,22 @@ ENGLISH.update({'Modifications enregistrées sur cet appareil, en attente de syn
 ENGLISH["Fichier de modifications locales invalide."] = "Invalid local changes file."
 
 ENGLISH.update({'Verrouiller la note': 'Lock note', 'Déverrouiller la note': 'Unlock note', 'Note verrouillée': 'Locked note', 'Déverrouillez cette note avant de la modifier.': 'Unlock this note before editing it.', 'Déverrouillez cette note avant de la déplacer vers la corbeille.': 'Unlock this note before moving it to trash.', 'Déverrouillez cette note avant de la supprimer définitivement.': 'Unlock this note before permanently deleting it.', 'Déverrouillez la note avant de charger une version précédente.': 'Unlock the note before loading a previous version.', 'La note a changé ou est verrouillée. Actualisez avant de la supprimer.': 'The note has changed or is locked. Refresh before deleting it.', 'Publiez d’abord cette note avant de la verrouiller.': 'Publish this note before locking it.', 'Attendre la seconde suivante avant de changer le verrouillage.': 'Wait until the next second before changing the lock state.', 'Verrouillage synchronisé, mais écriture du cache local impossible. Actualisez avant de fermer.': 'Lock synchronized, but the local cache could not be written. Refresh before closing.', 'Note verrouillée.': 'Note locked.', 'Note déverrouillée.': 'Note unlocked.'})
+
+ENGLISH.update({
+    'Dossiers': 'Folders', 'Épinglées': 'Pinned', 'Toutes': 'All notes', 'Sans dossier': 'Unfiled',
+    'Créer': 'Create', 'Renommer': 'Rename', 'Supprimer': 'Delete', 'Créer un dossier': 'Create folder',
+    'Renommer le dossier': 'Rename folder', 'Nom du dossier': 'Folder name', 'Enregistrer': 'Save',
+    'Supprimer le dossier « {0} » ? Les notes ne seront pas détruites mais déplacées dans « Sans dossier ».':
+        'Delete folder “{0}”? Its notes will not be deleted; they will be moved to “Unfiled”.',
+    'Déplacer la note': 'Move note', 'Déplacer dans un dossier': 'Move to folder',
+    'Dossier créé.': 'Folder created.', 'Dossier renommé.': 'Folder renamed.',
+    'Dossier supprimé. Ses notes sont maintenant dans Sans dossier.': 'Folder deleted. Its notes are now unfiled.',
+    'Dossier de la note modifié.': 'Note folder changed.', 'Données de dossiers invalides.': 'Invalid folder data.',
+    'Nom ou identifiant de dossier invalide ou déjà utilisé.': 'Invalid or duplicate folder name or ID.',
+    'Trop d’affectations de dossiers.': 'Too many folder assignments.', 'Affectation de note invalide.': 'Invalid note assignment.',
+    'Le dossier choisi n’existe pas.': 'The selected folder does not exist.',
+    'Les métadonnées de dossiers sont illisibles ou invalides.': 'Folder metadata is unreadable or invalid.',
+    'Attendre la seconde suivante avant de modifier les dossiers.': 'Wait until the next second before changing folders.',
+    'Aucun relais n’a accepté la modification des dossiers. Réessayez après reconnexion.': 'No relay accepted the folder change. Try again after reconnecting.',
+    'Dossiers synchronisés, mais écriture du cache local impossible. Actualisez avant de fermer.': 'Folders synchronized, but local cache write failed. Refresh before closing.',
+})

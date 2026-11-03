@@ -1,17 +1,18 @@
-# Notes privées Nostr — Version 3.9.5 Linux
+# Notes privées Nostr — Version 4.0 Linux
 
-Version du paquet Python : `3.9.5`.
+Version du paquet Python : `4.0`.
 
 Application Python 3 + GTK4/libadwaita pour lire et éditer des notes Markdown privées compatible avec la version Notestr Android. Langues disponibles : français, anglais.
 
-## Version 3.9.5
+## Version 4.0
 
-- Mises à jour de sécurité des dépendances Python et des composants système intégrés.
-- Pillow 13.0.0, GLib 2.80.0-6ubuntu3.10, Brotli 1.1.0-2ubuntu0.1, liblzma 5.6.1+really5.4.5-1ubuntu0.4 et zlib 1:1.3.dfsg-3.1ubuntu2.3.
-- Version Linux alignée sur Android : 3.9.5. [Notes de version](RELEASE-NOTES-3.9.5.md).
+- Ajout de dossiers nommés, création, renommage et suppression sécurisée sans effacer les notes.
+- Notes épinglées visibles en tête de liste et dans leur dossier ; « Sans dossier » en fin de liste.
+- Mises à jour de sécurité Python : Pillow 13.0.0, cryptography 50.0.2 et websockets 17.4.
+- Version Linux alignée sur Android : 4.0. [Notes de version](RELEASE-NOTES-4.0.md).
 - Les notes des versions précédentes sont conservées dans [`release-notes/`](release-notes/).
 
-Télécharger [Notestr Linux 3.9.5 — AppImage x86_64](https://github.com/gerfondev/notestr-linux/releases/latest/download/Notestr-3.9.5-x86_64.AppImage) ou consulter [la release GitHub](https://github.com/gerfondev/notestr-linux/releases/latest). Les empreintes des fichiers sont dans `SHA256SUMS-3.9.5-Linux.txt`.
+Télécharger [Notestr Linux 4.0 — AppImage x86_64](https://github.com/gerfondev/notestr-linux/releases/latest/download/Notestr-4.0-x86_64.AppImage) ou consulter [la release GitHub](https://github.com/gerfondev/notestr-linux/releases/latest). Les empreintes des fichiers sont dans `SHA256SUMS-4.0-Linux.txt`.
 
 ## Installation Debian, Ubuntu et Zorin
 
@@ -38,12 +39,10 @@ une distribution fournissant cette bibliothèque.
 
 ### 2. Installer le projet Python
 
-Placer le projet dans un dossier contenant `pyproject.toml`, `src` et
-`lancer-notes.sh`. La sauvegarde actuelle s’extrait dans un dossier nommé `notes`.
-Les exemples utilisent `/home/user/notestr` comme dossier d’installation.
-Remplacer `user` par le nom du compte Linux et adapter le chemin si nécessaire.
-Si l’archive crée un dossier `notes`, renommer ce dossier en `notestr` ou déplacer
-son contenu dans `/home/user/notestr` avant de suivre les commandes.
+Extraire l’archive source 4.0 dans le dossier choisi. Elle crée le dossier
+`nostr-private-notes-4.0`, qui contient `pyproject.toml`, `src` et
+`lancer-notes.sh`. Les exemples ci-dessous utilisent `/home/user/notestr` ;
+adapter ce chemin au dossier réellement extrait.
 
 ```bash
 cd /home/user/notestr
@@ -103,27 +102,21 @@ Si le mode visuel est ajouté pour la première fois, installer aussi
 `gir1.2-webkit-6.0` avec apt. La configuration, le cache et le trousseau existants
 sont réutilisés ; aucune migration des notes n’est nécessaire pour cette version.
 
-### Restaurer une sauvegarde ou installer sur un autre PC
+### Recréer l’environnement Python
 
-Extraire l’archive dans le dossier choisi et adapter le chemin utilisé ci-dessus.
-L’archive comprend un `.venv`, mais celui-ci dépend du Python et des chemins du
-poste d’origine. **Le recréer après un déplacement ou sur un autre PC.**
-
-Depuis le dossier extrait, conserver l’ancien environnement sous un autre nom
-(par exemple `.venv-ancienne`, si ce nom n’existe pas déjà) :
+L’archive source ne transporte pas de venv lié à une machine particulière. Après
+extraction ou déplacement du projet, créer un environnement adapté au système :
 
 ```bash
-mv .venv .venv-ancienne
+cd /home/user/notestr
+/usr/bin/python3 -m venv --system-site-packages .venv
+.venv/bin/python -m pip install --upgrade pip
+.venv/bin/python -m pip install -e .
 ```
 
-Installer les paquets système puis reprendre les étapes 2 et 3. Le nouveau venv
-sera construit pour le poste cible.
-
-Les sauvegardes du dossier de l’application ne comprennent ni le cache situé dans
-`~/.local/share/nostr-notes`, ni la clé privée du trousseau Linux. Sur un autre PC,
-importer la même clé privée dans l’application et configurer les relais pour
-récupérer les notes qui y sont encore disponibles. Conserver une sauvegarde
-personnelle de la clé privée indépendamment du projet.
+Les notes chiffrées en cache et la clé du trousseau ne sont pas incluses dans
+l’archive source. Pour récupérer ses notes sur un autre ordinateur, connecter le
+même compte et configurer au moins un relais commun.
 
 ### Dépannage rapide
 
@@ -140,10 +133,10 @@ personnelle de la clé privée indépendamment du projet.
 
 ## Première utilisation
 
-1. Dans **Compte et relais**, saisir la clé privée du même compte que Pages :
+1. Dans **Compte et relais**, saisir la clé privée du compte Nostr utilisé pour les notes :
    `nsec1…` ou 64 caractères hexadécimaux. Une `npub` ne permet pas de déchiffrer.
 2. Garder `wss://relay.decentralia.fr` ou ajouter plusieurs relais, un par ligne.
-   Pour l’interopérabilité, configurer au moins un relais commun dans Pages.
+   Pour synchroniser les notes entre Notestr Android et Linux, configurer au moins un relais commun.
 3. Choisir d’enregistrer la clé dans le trousseau Linux, ou seulement en mémoire
    pour cette session. Le compte mémorisé se rouvre au lancement suivant.
 4. **Actualiser** charge les notes et les demandes de suppression de l’utilisateur.
@@ -163,62 +156,17 @@ un arrêt brutal peut perdre les modifications en mémoire.
 
 La barre inférieure indique combien de relais ont accepté la publication et les
 échecs éventuels. **Un succès partiel n’est pas une réplication complète.** Il n’y a
-pas de file persistante de retransmission automatique dans cette version. Une publication
-sans accusé peut néanmoins avoir atteint un relais : actualiser pour vérifier avant
-de réessayer. Après une suppression partielle, sa diffusion vers les relais en échec
-nécessite de republier la demande depuis un autre client ou un outil Nostr.
+les erreurs et états en attente sont affichés. Une publication sans accusé peut néanmoins avoir atteint un relais : actualiser pour vérifier avant de réessayer.
 
-## Format et compatibilité Pages
+## Format des notes
 
-Le code de référence inspecté est `formstr-hq/nostr-docs`, commit
-`57f6d3e2ac8a0c965ded8b2f70ea23c349b2eb2d`.
+Chaque note utilise un événement Nostr `kind 33457`. Son Markdown est chiffré NIP-44 v2 avec la clé privée et la clé publique du même compte. Les métadonnées de dossiers, d’épinglage, de verrouillage et de corbeille sont publiées chiffrées dans des événements de sauvegarde dédiés.
 
-- [Chiffrement personnel et clés de partage](https://github.com/formstr-hq/nostr-docs/blob/57f6d3e2ac8a0c965ded8b2f70ea23c349b2eb2d/src/utils/encryption.ts)
-- [Création et mise à jour des documents](https://github.com/formstr-hq/nostr-docs/blob/57f6d3e2ac8a0c965ded8b2f70ea23c349b2eb2d/src/components/editor/DocEditorController.tsx)
-- [Recherche des suppressions avec le tag k](https://github.com/formstr-hq/nostr-docs/blob/57f6d3e2ac8a0c965ded8b2f70ea23c349b2eb2d/src/nostr/fetchDelete.ts)
+La suppression publie un événement NIP-09 (`kind 5`) qui référence la version courante et l’adresse de la note. Elle ne peut pas garantir l’effacement des copies conservées par des relais ou d’autres clients. Les notes indéchiffrables sont comptées et ne sont pas ouvertes pour édition.
 
-```json
-{
-  "kind": 33457,
-  "tags": [["d", "a1b2c3"]],
-  "content": "<Markdown brut chiffré NIP-44 v2>",
-  "created_at": 1789200000
-}
-```
+Les événements reçus sont vérifiés : auteur, structure, empreinte du contenu et signature. La version la plus récente est retenue ; en cas d’égalité temporelle, l’identifiant lexicalement le plus petit gagne. L’application refuse de modifier une note dans la même seconde que sa version précédente pour éviter les égalités.
 
-`monstr==0.1.9` fournit `Keys`, `NIP44Encrypt` et les signatures Schnorr `Event`.
-Le chiffrement utilise la clé privée et la clé publique du **même utilisateur**.
-Il n’y a pas d’enveloppe JSON autour du Markdown. Les nouveaux identifiants ont
-six caractères aléatoires parmi `abcdefghijklmnopqrstuvwxyz0123456789`, obtenus
-avec le générateur sécurisé de Python. Les identifiants existants sont conservés,
-y compris si leur format diffère. Les autres tags d’un document ne sont pas repris
-lors de sa modification : l’application republie le format personnel minimal de Pages.
-
-La suppression signe un événement kind `5`, contenu vide, avec :
-
-```text
-["e", "<id de la version courante>"]
-["a", "33457:<pubkey>:<d>"]
-["k", "33457"]
-```
-
-Le tag `a` vise les versions jusqu’à la date de suppression. Une version réellement
-plus récente peut réapparaître conformément à [NIP-09](https://github.com/nostr-protocol/nips/blob/master/09.md).
-La suppression ne peut garantir l’effacement de copies conservées ailleurs.
-
-Les événements reçus sont vérifiés : auteur, structure, empreinte du contenu et
-signature. Parmi les versions, la plus récente gagne ; en cas d’égalité temporelle,
-l’id lexicalement le plus petit gagne, conformément à
-[NIP-01](https://github.com/nostr-protocol/nips/blob/master/01.md).
-L’application refuse de modifier une note dans la même seconde que sa version précédente
-pour éviter les égalités ; attendre une seconde. Une horloge locale correcte est nécessaire.
-
-**Périmètre :** documents personnels chiffrés vers soi. Les documents partagés avec
-`viewKey`/`editKey`, la collaboration CRDT, les pièces jointes, les commentaires,
-les métadonnées kind `34579`, NIP-46 et l’authentification relais NIP-42 ne sont pas
-gérés. Les notes indéchiffrables sont comptées et ne sont pas ouvertes pour édition.
-Le format a été vérifié dans le code Pages ; une session interactive entre les deux
-applications avec un compte réel n’a pas encore été testée.
+**Périmètre :** notes personnelles chiffrées vers soi. Les notes indéchiffrables ne sont pas ouvertes pour édition. Le format des événements est documenté et implémenté dans ce dépôt.
 
 ## Stockage local
 
@@ -249,8 +197,7 @@ séparément `33457` et `5`, recouvrent la seconde frontière, puis dédupliquen
 saturations détectées sont signalées ; un relais peut néanmoins omettre des données.
 La récupération n’est donc pas une garantie d’exhaustivité globale.
 
-Les notes sont actualisées automatiquement à l’ouverture du compte. Ensuite, les actualisations sont manuelles. Il n’y a pas de fusion de modifications simultanées
-entre clients : actualiser avant de modifier un document aussi utilisé dans Pages.
+Les notes sont actualisées automatiquement à l’ouverture du compte. Ensuite, les actualisations sont manuelles. Les modifications hors connexion restent chiffrées dans la file locale et sont proposées à la synchronisation lorsque la connexion revient. Il n’y a pas de fusion de modifications simultanées entre clients : actualiser avant de modifier une note utilisée sur un autre appareil.
 Le dernier événement retenu par le relais fait foi. Les relais doivent autoriser
 `33457` et `5`, accepter les connexions sans NIP-42 et les tailles de messages utilisées.
 L’application limite le Markdown à 1–65 535 octets UTF-8, le format historique NIP-44 v2
@@ -268,7 +215,7 @@ src/nostr_notes/
     editor.py     modes Visuel/Markdown et pont WebKit sécurisé
     assets/       éditeur web local, traduction, styles et licences
     markdown.py   sauts de ligne explicites avant chiffrement
-    core.py       format Pages, chiffrement via monstr, versions et suppressions
+    core.py       notes Nostr, chiffrement, dossiers, versions et suppressions
     relay.py      requêtes WebSocket, pagination, EOSE et OK
     storage.py    configuration, cache et trousseau
 tests/
@@ -297,22 +244,7 @@ contenu altéré, identifiant `d`, mise à jour, égalité d’horodatage, suppr
 adresse et événement, faux auteur, limites de taille, permissions du cache,
 pagination, accusés `OK`, refus et pannes partielles. Le transport y est simulé. Le bilan de cette exécution figure dans [VALIDATION.md](VALIDATION.md).
 
-### Recette manuelle avec Pages
-
-Avec une note jetable et le même compte/relais dans les deux applications :
-
-1. Créer dans Pages `# Test Pages` suivi d’une phrase ; actualiser dans cette application.
-2. Modifier ici et publier ; recharger Pages et vérifier le Markdown et le même `d`.
-3. Créer ici une deuxième note ; vérifier sa présence dans Pages après actualisation.
-4. Supprimer une note ici ; vérifier sa disparition après actualisation dans Pages.
-5. Supprimer l’autre dans Pages ; actualiser ici.
-6. Tester un relais indisponible : l’erreur doit être visible et un brouillon doit rester éditable.
-
-Ne jamais communiquer la nsec pour cette recette : la saisir uniquement dans les
-applications locales de confiance. Aucun événement n’a été publié sur votre relais
-pendant la construction de ce projet.
-
-### Test graphique V2 (facultatif)
+### Test graphique (facultatif)
 
 Dans une session graphique, après avoir installé les dépendances de test :
 
@@ -326,7 +258,7 @@ vérifie les modes, les allers-retours Markdown, la synchronisation avant chiffr
 la politique de connexion et le rejet des mises à jour provenant d’une ancienne note.
 Une fenêtre temporaire est affichée, puis fermée.
 
-### Retours à la ligne dans la V2.2
+### Retours à la ligne
 
 Le mode visuel lit les sauts Markdown explicites. À la publication depuis les
 deux modes, les simples retours de paragraphe deviennent des sauts explicites

@@ -1,0 +1,3 @@
+d95e06ae5c1fb2c460908d0f7dadbabeb5706637844ca868f79f0851a837c063  Notestr-4.0-x86_64.AppImage
+c2cebfc378e935831e1507c40d2cca58556585c51a28a8ec045861d1aa6a5832  nostr_private_notes-4.0-py3-none-any.whl
+ceb0a25a454f6c999448970f0a68aea7fd1d2e40c3962a1a9e4a4f4be0de87cd  nostr-private-notes-4.0.tar.gz

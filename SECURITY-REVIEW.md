@@ -1,3 +1,7 @@
+# Revue de sécurité — candidat Notestr Linux 4.0 — 3 novembre 2026
+
+Rapport courant : [`security/release-4.0-review.md`](security/release-4.0-review.md). AppImage SHA-256 `d95e06ae5c1fb2c460908d0f7dadbabeb5706637844ca868f79f0851a837c063`; wheel et archive source empreintes et versions détaillées dans le rapport et `SHA256SUMS-4.0-Linux.txt`. 128 tests Python réussis, contrôles AppImage de version, imports et chiffrement réussis. Le test GTK graphique n’a pas pu s’exécuter sans affichage. La revue de dépendances, les scans ciblés et leurs limites sont consignés ; candidat local seulement, sans publication.
+
 # Revue de sécurité et confidentialité — Notestr 3.9.5 — 31 octobre 2026
 
 ## Linux

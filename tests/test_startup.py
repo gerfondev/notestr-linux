@@ -22,7 +22,8 @@ def test_login_refreshes_even_while_visual_document_is_loading(visual_ready):
     editor.set_text = set_text
     editor.set_sensitive = Mock()
     editor.flush = lambda callback: MarkdownEditor.flush(editor, callback)
-    identity = SimpleNamespace(pubkey="test-account", notes=Mock(return_value=([], 0)))
+    identity = SimpleNamespace(pubkey="test-account", notes=Mock(return_value=([], 0)),
+                               folder_state=Mock(return_value={"version": 1, "folders": [], "assignments": {}}))
     window = SimpleNamespace(
         store=SimpleNamespace(events=Mock(return_value=[]), read=Mock(return_value=[])),
         stop_sync=Mock(), syncing=False,

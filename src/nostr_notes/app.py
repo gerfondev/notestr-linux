@@ -5,6 +5,7 @@ import asyncio
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 import re
+import secrets
 import gi
 
 gi.require_version("Gtk", "4.0")
@@ -62,6 +63,9 @@ class Window(Adw.ApplicationWindow):
         self.identity = None
         self.events = {}
         self.notes = []
+        self.folders = []
+        self.folder_assignments = {}
+        self.selected_folder_id = None
         self.showing_trash = False
         self.current = None
         self.draft_d = None
@@ -458,14 +462,145 @@ class Window(Adw.ApplicationWindow):
             self.listbox.remove(child)
             child = following
         query = self.search.get_text().casefold()
-        for note in self.notes:
-            if note.trashed != self.showing_trash or query not in note.markdown.casefold():
-                continue
+        sorted_folders = sorted(self.folders, key=lambda folder: folder["name"].casefold())
+
+        def heading(text):
+            row = Gtk.ListBoxRow(selectable=False, activatable=False)
+            row.set_child(Gtk.Label(label=text, xalign=0, margin_start=10, margin_top=8, margin_bottom=4))
+            self.listbox.append(row)
+
+        def add_note(note):
             row = Gtk.ListBoxRow()
             row.note = note
-            row.set_child(Gtk.Label(label=((tr("Conflit — version locale") + " · ") if note.conflicted else (tr("En attente de synchronisation") + " · ") if note.pending else "") + ("📌 " if note.pinned else "") + ("🔒 " if note.locked else "") + note.title, xalign=0, ellipsize=3,
-                                    margin_start=12, margin_end=12, margin_top=10, margin_bottom=10))
+            content = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=4, margin_start=5, margin_end=5, margin_top=4, margin_bottom=4)
+            content.append(Gtk.Label(label=((tr("Conflit — version locale") + " · ") if note.conflicted else (tr("En attente de synchronisation") + " · ") if note.pending else "") + ("📌 " if note.pinned else "") + ("🔒 " if note.locked else "") + note.title, xalign=0, ellipsize=3, hexpand=True))
+            folder_name = next((folder["name"] for folder in self.folders if folder["id"] == note.folder_id), tr("Sans dossier"))
+            folder_label = Gtk.Label(label=f"📁 {folder_name}", xalign=1, ellipsize=3)
+            folder_label.add_css_class("dim-label")
+            content.append(folder_label)
+            if not note.trashed and not note.pending:
+                content.append(button(tr("Déplacer dans un dossier"), lambda n=note: self.move_note_dialog(n), "folder-symbolic"))
+            row.set_child(content)
             self.listbox.append(row)
+
+        notes = [n for n in self.notes if n.trashed == self.showing_trash and query in n.markdown.casefold()]
+        pinned = [] if self.showing_trash else [n for n in notes if n.pinned]
+        for note in pinned:
+            add_note(note)
+
+        if not self.showing_trash:
+            heading(tr("Dossiers"))
+            actions = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=4, margin_start=6, margin_end=6)
+            actions.append(button(tr("Créer"), self.create_folder, "list-add-symbolic"))
+            rename = button(tr("Renommer"), self.rename_folder, "document-edit-symbolic")
+            rename.set_sensitive(self.selected_folder_id in {f["id"] for f in self.folders})
+            actions.append(rename)
+            delete = button(tr("Supprimer"), self.confirm_delete_folder, "edit-delete-symbolic")
+            delete.set_sensitive(self.selected_folder_id in {f["id"] for f in self.folders})
+            actions.append(delete)
+            action_row = Gtk.ListBoxRow(selectable=False, activatable=False)
+            action_row.set_child(actions)
+            self.listbox.append(action_row)
+            choices = [(None, tr("Toutes"))] + [(f["id"], f["name"]) for f in sorted_folders] + [("__none__", tr("Sans dossier"))]
+            for folder_id, label in choices:
+                choice = Gtk.Button(label=("● " if self.selected_folder_id == folder_id else "") + label, halign=Gtk.Align.FILL)
+                choice.connect("clicked", lambda _button, selected=folder_id: self.select_folder(selected))
+                choice_row = Gtk.ListBoxRow(selectable=False, activatable=False)
+                choice_row.set_child(choice)
+                self.listbox.append(choice_row)
+
+        for note in notes:
+            if note.pinned and not self.showing_trash and self.selected_folder_id in (None, "__none__"):
+                continue
+            if not self.showing_trash:
+                if self.selected_folder_id == "__none__" and note.folder_id is not None:
+                    continue
+                if self.selected_folder_id not in (None, "__none__") and note.folder_id != self.selected_folder_id:
+                    continue
+            add_note(note)
+
+    def select_folder(self, folder_id):
+        self.selected_folder_id = folder_id
+        self.render_list()
+
+    def save_folder_state(self, folders, assignments, success_message):
+        def operation():
+            event = self.identity.set_folder_state(folders, assignments, self.events.values())
+            good, errors = asyncio.run(across(self.config["relays"], publish_update, event, None))
+            events = compact_backups([*self.events.values(), event])
+            try:
+                self.store.save_events(self.identity.pubkey, list(events.values()))
+            except Exception:
+                errors.append(tr("Dossiers synchronisés, mais écriture du cache local impossible. Actualisez avant de fermer."))
+            notes, _ = self.identity.notes(events.values())
+            return events, self.outbox.overlay(events.values()), folders, assignments, errors
+
+        def success(result):
+            self.events, self.notes, self.folders, self.folder_assignments, errors = result
+            if self.selected_folder_id not in {None, "__none__", *(f["id"] for f in self.folders)}:
+                self.selected_folder_id = "__none__"
+            self.render_list()
+            self.status.set_text(success_message + "\n" + "\n".join(errors))
+        self.work(operation, success)
+
+    def folder_name_dialog(self, title, initial="", on_save=None):
+        dialog = Gtk.Dialog(title=title, transient_for=self, modal=True)
+        dialog.add_button(tr("Annuler"), Gtk.ResponseType.CANCEL)
+        dialog.add_button(tr("Enregistrer"), Gtk.ResponseType.ACCEPT)
+        entry = Gtk.Entry(text=initial, placeholder_text=tr("Nom du dossier"), margin_start=12, margin_end=12, margin_top=12, margin_bottom=12)
+        dialog.get_content_area().append(entry)
+        def response(widget, code):
+            value = entry.get_text()
+            widget.destroy()
+            if code == Gtk.ResponseType.ACCEPT and value.strip():
+                on_save(value)
+        dialog.connect("response", response)
+        dialog.present()
+        entry.grab_focus()
+
+    def create_folder(self):
+        self.folder_name_dialog(tr("Créer un dossier"), on_save=lambda name: self.save_folder_state(
+            [*self.folders, {"id": secrets.token_hex(16), "name": name}], dict(self.folder_assignments), tr("Dossier créé.")))
+
+    def rename_folder(self):
+        folder = next((f for f in self.folders if f["id"] == self.selected_folder_id), None)
+        if folder:
+            self.folder_name_dialog(tr("Renommer le dossier"), folder["name"], lambda name: self.save_folder_state(
+                [{**f, "name": name} if f["id"] == folder["id"] else f for f in self.folders],
+                dict(self.folder_assignments), tr("Dossier renommé.")))
+
+    def confirm_delete_folder(self):
+        folder = next((f for f in self.folders if f["id"] == self.selected_folder_id), None)
+        if not folder:
+            return
+        text = tr("Supprimer le dossier « {0} » ? Les notes ne seront pas détruites mais déplacées dans « Sans dossier ».", folder["name"])
+        self.confirm(text, lambda: self.save_folder_state(
+            [f for f in self.folders if f["id"] != folder["id"]],
+            {d: folder_id for d, folder_id in self.folder_assignments.items() if folder_id != folder["id"]},
+            tr("Dossier supprimé. Ses notes sont maintenant dans Sans dossier.")), tr("Supprimer"))
+
+    def move_note_dialog(self, note):
+        dialog = Gtk.Dialog(title=tr("Déplacer la note"), transient_for=self, modal=True)
+        dialog.add_button(tr("Annuler"), Gtk.ResponseType.CANCEL)
+        dialog.add_button(tr("Déplacer"), Gtk.ResponseType.ACCEPT)
+        chooser = Gtk.ComboBoxText(margin_start=12, margin_end=12, margin_top=12, margin_bottom=12)
+        chooser.append("", tr("Sans dossier"))
+        for folder in sorted(self.folders, key=lambda item: item["name"].casefold()):
+            chooser.append(folder["id"], folder["name"])
+        chooser.set_active_id(note.folder_id or "")
+        dialog.get_content_area().append(chooser)
+        def response(widget, code):
+            folder_id = chooser.get_active_id()
+            widget.destroy()
+            if code == Gtk.ResponseType.ACCEPT:
+                assignments = dict(self.folder_assignments)
+                if folder_id:
+                    assignments[note.d] = folder_id
+                else:
+                    assignments.pop(note.d, None)
+                self.save_folder_state(list(self.folders), assignments, tr("Dossier de la note modifié."))
+        dialog.connect("response", response)
+        dialog.present()
 
     def login(self, identity):
         self.stop_sync()
@@ -474,6 +609,11 @@ class Window(Adw.ApplicationWindow):
         self.events = {e["id"]: e for e in self.store.events(identity.pubkey)
                        if valid_event(e, identity.pubkey)}
         self.notes, unreadable = identity.notes(self.events.values())
+        try:
+            folder_state = identity.folder_state(self.events.values())
+            self.folders, self.folder_assignments = folder_state["folders"], folder_state["assignments"]
+        except ValueError:
+            self.folders, self.folder_assignments = [], {}
         self.notes = self.outbox.overlay(self.events.values())
         self.display()
         self.render_list()
@@ -498,11 +638,17 @@ class Window(Adw.ApplicationWindow):
             events = compact_backups(events.values())
             notes, unreadable = self.identity.notes(events.values())
             self.store.save_events(self.identity.pubkey, list(events.values()))
-            return events, notes, unreadable, errors
+            try:
+                folders = self.identity.folder_state(events.values())
+            except ValueError:
+                folders = {"folders": [], "assignments": {}}
+                errors.append(tr("Les métadonnées de dossiers sont illisibles ou invalides."))
+            return events, notes, unreadable, errors, folders
         def success(result):
-            events, notes, unreadable, errors = result
+            events, notes, unreadable, errors, folders = result
             self.events = events
             self.notes = self.outbox.overlay(events.values())
+            self.folders, self.folder_assignments = folders["folders"], folders["assignments"]
             # Never replace an editor draft while a background refresh finishes.
             # Keep the opened version so publish can detect a conflicting update.
             self.render_list()

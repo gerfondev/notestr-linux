@@ -125,7 +125,9 @@ class Outbox:
             if not conflict:
                 result = [n for n in result if n.d != d]
             result.append(Note(d, self.identity.cipher.decrypt(row['update']['content'], self.identity.pubkey), row['update'],
-                               pinned=current.pinned if current else False, pending=True, conflicted=conflict))
+                               pinned=current.pinned if current else False,
+                               folder_id=current.folder_id if current else None,
+                               pending=True, conflicted=conflict))
         return sorted(result, key=lambda n: (not n.pinned, -n.event['created_at'], n.d, n.pending))
 
     async def synchronize(self, events, relays, query, publish):

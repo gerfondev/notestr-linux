@@ -1,4 +1,5 @@
-include LICENSE RELEASE-NOTES-3.9.5.md
+include LICENSE RELEASE-NOTES-4.0.md packaging/requirements-4.0.txt
+include release-notes/RELEASE-NOTES-3.9.5.md
 recursive-include release-notes *.md
 include README.md SECURITY.md VALIDATION.md lancer-notes.sh
 recursive-include packaging *.py *.md *.txt *.json *.desktop AppRun

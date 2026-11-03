@@ -29,7 +29,7 @@ def test_refresh_preserves_open_draft():
     window=SimpleNamespace(outbox=SimpleNamespace(overlay=Mock(return_value=["updated"])),retry_pending=Mock(),current=original,dirty=True,notes=[original],display=Mock(),render_list=Mock(),status=Mock())
     def work(operation,success,readable=False):
         assert readable
-        success(({'new':'event'},['updated'],0,[]))
+        success(({'new':'event'},['updated'],0,[],{'version':1,'folders':[],'assignments':{}}))
     window.work=work
     Window.do_refresh(window)
     assert window.current is original and window.dirty

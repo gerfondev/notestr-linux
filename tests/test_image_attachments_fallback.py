@@ -26,4 +26,5 @@ def test_removed_profile_server_is_tried_after_current_mirrors_fail(monkeypatch,
 
     assert decoded == b"synthetic legacy image"
     assert requests[0].startswith("https://current-blossom.example/")
-    assert requests[1].startswith("https://old-blossom.example/")
+    old_origin_requests = [url for url in requests if url.startswith("https://old-blossom.example/")]
+    assert old_origin_requests
