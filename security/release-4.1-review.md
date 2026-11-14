@@ -21,6 +21,10 @@
 - L’AppImage contient des données de clés de test intégrées en amont dans `libgnutls.so.30` pour les auto-tests cryptographiques GnuTLS. Elles correspondent à des vecteurs synthétiques de test de signature/DH, pas aux clés de l’application ou du propriétaire ; les sources amont les situent dans `lib/crypto-selftests-pk.c`. Des chaînes de format de clé dans libssh et cryptography sont des marqueurs de parseurs, pas des clés complètes.
 - Les auteurs/committers de l’historique local sont des identités génériques du projet. Scan ciblé non exhaustif : il ne peut pas garantir l’absence de donnée personnelle inconnue ni remplacer un audit natif complet.
 
-## État de publication
+## Publication et vérification publique
 
-Paquet local préparé pour test. Aucun commit de release, push, tag, création de release ou téléversement GitHub effectué. La revue graphique et la validation du paquet par l’utilisateur restent nécessaires avant publication.
+- L’utilisateur a autorisé explicitement la publication le 15 novembre 2026.
+- GitHub : release [v4.1](https://github.com/gerfondev/notestr-linux/releases/tag/v4.1), commit `949d57a`, tag `v4.1`.
+- AppImage et fichier SHA-256 téléchargés depuis les URLs publiques après publication. L’AppImage public est identique au candidat contrôlé : SHA-256 `605183316b5a08098e4c22bb13105ad8a0908d36fb97d0d09a7486c3137a955f`.
+- Le contrôle GTK graphique n’était pas disponible dans l’environnement de compilation ; l’utilisateur a autorisé la publication après les versions de test. Le contrôle non graphique `--check` réussit.
+- Le commit et le tag ont été ajoutés sans réécriture de l’historique existant.
