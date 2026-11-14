@@ -76,6 +76,9 @@ class Window(Adw.ApplicationWindow):
         self.store = Storage()
         self.password_lock = PasswordLock(self.store)
         self.config = self.store.config()
+        self.preferences = self.store.read("preferences.json", {})
+        self.theme_mode = self.preferences.get("theme", "system")
+        self._apply_theme()
         root = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.set_content(root)
         self.header = Adw.HeaderBar()
@@ -88,6 +91,7 @@ class Window(Adw.ApplicationWindow):
         title.append(title_label)
         self.header.set_title_widget(title)
         self.controls = Gtk.Box(spacing=6)
+        self.controls.add_css_class("toolbar-actions")
         self.header.pack_start(self.controls)
         self.new_button = button(tr('Nouvelle note'), self.new_note, "document-new-symbolic")
         self.refresh_button = button(tr('Actualiser'), self.refresh, "view-refresh-symbolic")
@@ -106,12 +110,18 @@ class Window(Adw.ApplicationWindow):
         paned = Gtk.Paned(orientation=Gtk.Orientation.HORIZONTAL, position=280, vexpand=True)
         root.append(paned)
         sidebar = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8, width_request=220)
+        sidebar.add_css_class("notestr-sidebar")
         self.search = Gtk.SearchEntry(placeholder_text=tr('Rechercher dans les notes'))
         self.search.connect("search-changed", lambda _: self.render_list())
+        self.notes_button = Gtk.ToggleButton(label=tr("Notes"))
         self.trash_button = Gtk.ToggleButton(label=tr("Corbeille"))
+        self.trash_button.set_group(self.notes_button)
+        self.notes_button.set_active(True)
+        self.notes_button.connect("clicked", lambda _: self.show_notes_view())
         self.trash_button.connect("clicked", lambda _: self.toggle_trash_view())
         self.trash_toolbar = Gtk.Box(spacing=8, margin_start=12, margin_end=12,
                                      margin_top=6, margin_bottom=6)
+        self.trash_toolbar.append(self.notes_button)
         self.trash_toolbar.append(self.trash_button)
         sidebar.append(self.trash_toolbar)
         sidebar.append(self.search)
@@ -122,8 +132,10 @@ class Window(Adw.ApplicationWindow):
         sidebar.append(scroll)
         paned.set_start_child(sidebar)
         self.editor = MarkdownEditor(self.changed, self.insert_image, self.load_image)
+        self.editor.set_theme(self.theme_mode)
         self.editor.set_sensitive(False)
         editor_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        editor_box.add_css_class("notestr-editor-pane")
         self.pending_label = Gtk.Label(wrap=True, xalign=0, margin_start=8, margin_end=8)
         self.pending_actions = Gtk.Box(spacing=8)
         self.copy_button = button(tr('Publier comme nouvelle note'), lambda: self.editor.flush(lambda: self.publish_synced(as_copy=True)))
@@ -395,20 +407,106 @@ class Window(Adw.ApplicationWindow):
     def new_note(self):
         def create():
             self.showing_trash = False
+            self.notes_button.set_active(True)
             self.trash_button.set_active(False)
             self.render_list()
             self.display()
         self.guard(create, allow_read=True)
 
     def toggle_trash_view(self):
-        # Restore button state until draft confirmation has been accepted.
+        self.notes_button.set_active(not self.showing_trash)
         self.trash_button.set_active(self.showing_trash)
+        if self.showing_trash:
+            return
         def change():
-            self.showing_trash = not self.showing_trash
-            self.trash_button.set_active(self.showing_trash)
+            self.showing_trash = True
+            self.notes_button.set_active(False)
+            self.trash_button.set_active(True)
             self.display()
             self.render_list()
         self.guard(change, allow_read=True)
+
+    def show_notes_view(self):
+        self.notes_button.set_active(not self.showing_trash)
+        self.trash_button.set_active(self.showing_trash)
+        if not self.showing_trash:
+            return
+        def change():
+            self.showing_trash = False
+            self.notes_button.set_active(True)
+            self.trash_button.set_active(False)
+            self.display()
+            self.render_list()
+        self.guard(change, allow_read=True)
+
+    def _apply_theme(self):
+        manager = Adw.StyleManager.get_default()
+        schemes = {
+            "system": Adw.ColorScheme.DEFAULT,
+            "light": Adw.ColorScheme.FORCE_LIGHT,
+            "dark": Adw.ColorScheme.FORCE_DARK,
+        }
+        manager.set_color_scheme(schemes.get(self.theme_mode, Adw.ColorScheme.DEFAULT))
+        dark = self.theme_mode == "dark" or (self.theme_mode == "system" and manager.get_dark())
+        background = "#17141d" if dark else "#eee9f2"
+        surface = "#211b2a" if dark else "#e6dfee"
+        card = "#282132" if dark else "#f8f5fa"
+        foreground = "#f1ecf7" if dark else "#211a28"
+        secondary = "#c6bbd2" if dark else "#655a70"
+        outline = "#4b405a" if dark else "#c9bdd6"
+        css = f"""
+            @define-color accent_color #8549d3;
+            @define-color accent_bg_color #8549d3;
+            @define-color accent_fg_color #ffffff;
+            window {{ background-color: {background}; color: {foreground}; }}
+            headerbar {{ background-color: {surface}; color: {foreground}; }}
+            .notestr-sidebar {{ background-color: {surface}; color: {foreground}; }}
+            .notestr-editor-pane {{ background-color: {background}; color: {foreground}; }}
+            listbox {{ background-color: transparent; color: {foreground}; }}
+            listbox row.note-card {{
+                background-color: {card}; color: {foreground};
+                border: 1px solid {outline}; border-radius: 12px;
+                margin: 3px 5px; padding: 4px;
+            }}
+            listbox row.note-card:hover {{ border-color: #8549d3; }}
+            .dim-label {{ color: {secondary}; }}
+            entry, searchentry, textview {{
+                background-color: {card}; color: {foreground};
+                border-color: {outline}; border-radius: 12px;
+            }}
+            togglebutton {{
+                min-height: 34px; min-width: 74px; padding: 0 14px;
+                border: 1px solid {outline}; border-radius: 999px;
+                background-color: transparent; color: {secondary};
+            }}
+            togglebutton:checked, togglebutton:checked:hover {{
+                background-color: #8549d3; border-color: #8549d3; color: #ffffff;
+            }}
+            togglebutton:checked label, .folder-chip.suggested-action label,
+            .toolbar-actions button.suggested-action label {{ color: #ffffff; }}
+            .toolbar-actions button {{
+                min-width: 34px; min-height: 34px; padding: 0;
+                border-radius: 999px; background-color: {surface}; color: {foreground};
+            }}
+            .toolbar-actions button.suggested-action {{
+                background-color: #8549d3; border-color: #8549d3; color: #ffffff;
+            }}
+            .folder-chip {{
+                min-height: 32px; padding: 0 12px; border: 1px solid {outline};
+                border-radius: 999px; background-color: transparent; color: {secondary};
+            }}
+            .folder-chip.suggested-action {{ background-color: #8549d3; border-color: #8549d3; color: #ffffff; }}
+        """
+        if not hasattr(self, "theme_provider"):
+            self.theme_provider = Gtk.CssProvider()
+            Gtk.StyleContext.add_provider_for_display(self.get_display(), self.theme_provider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
+        self.theme_provider.load_from_data(css.encode("utf-8"))
+        if not hasattr(self, "theme_manager_handler"):
+            self.theme_manager_handler = manager.connect("notify::dark", self._system_theme_changed)
+
+    def _system_theme_changed(self, *_args):
+        if self.theme_mode == "system":
+            self._apply_theme()
 
     def update_trash_controls(self):
         trashed = bool(self.current and self.current.trashed)
@@ -471,6 +569,7 @@ class Window(Adw.ApplicationWindow):
 
         def add_note(note):
             row = Gtk.ListBoxRow()
+            row.add_css_class("note-card")
             row.note = note
             content = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=4, margin_start=5, margin_end=5, margin_top=4, margin_bottom=4)
             content.append(Gtk.Label(label=((tr("Conflit — version locale") + " · ") if note.conflicted else (tr("En attente de synchronisation") + " · ") if note.pending else "") + ("📌 " if note.pinned else "") + ("🔒 " if note.locked else "") + note.title, xalign=0, ellipsize=3, hexpand=True))
@@ -503,7 +602,10 @@ class Window(Adw.ApplicationWindow):
             self.listbox.append(action_row)
             choices = [(None, tr("Toutes"))] + [(f["id"], f["name"]) for f in sorted_folders] + [("__none__", tr("Sans dossier"))]
             for folder_id, label in choices:
-                choice = Gtk.Button(label=("● " if self.selected_folder_id == folder_id else "") + label, halign=Gtk.Align.FILL)
+                choice = Gtk.Button(label=label, halign=Gtk.Align.FILL)
+                choice.add_css_class("folder-chip")
+                if self.selected_folder_id == folder_id:
+                    choice.add_css_class("suggested-action")
                 choice.connect("clicked", lambda _button, selected=folder_id: self.select_folder(selected))
                 choice_row = Gtk.ListBoxRow(selectable=False, activatable=False)
                 choice_row.set_child(choice)
@@ -1033,6 +1135,27 @@ class Window(Adw.ApplicationWindow):
             except (OSError, ValueError) as exc:
                 language_info.set_text(str(exc))
         box.append(button(tr("Enregistrer la langue"), save_language))
+        box.append(Gtk.Label(label=tr("Thème"), xalign=0))
+        theme = Gtk.DropDown.new_from_strings([tr("Système"), tr("Clair"), tr("Sombre")])
+        saved_theme = self.store.read("preferences.json", {}).get("theme", "system")
+        theme.set_selected({"system": 0, "light": 1, "dark": 2}.get(saved_theme, 0))
+        box.append(theme)
+        theme_info = Gtk.Label(wrap=True, xalign=0)
+        def save_theme():
+            preferences = self.store.read("preferences.json", {})
+            preferences["theme"] = ("system", "light", "dark")[min(theme.get_selected(), 2)]
+            try:
+                self.store.write("preferences.json", preferences)
+                self.preferences = preferences
+                self.theme_mode = preferences["theme"]
+                self._apply_theme()
+                if hasattr(self, "editor"):
+                    self.editor.set_theme(self.theme_mode)
+                theme_info.set_text(tr("Thème enregistré."))
+            except (OSError, ValueError) as exc:
+                theme_info.set_text(str(exc))
+        box.append(button(tr("Enregistrer le thème"), save_theme))
+        box.append(theme_info)
         account = self.identity.keys.public_key_bech32() if self.identity else tr('Aucun compte ouvert')
         box.append(Gtk.Label(label=account, selectable=True, wrap=True))
         box.append(Gtk.Label(label=tr('Clé privée nsec ou hex (laisser vide pour garder le compte ouvert)'), wrap=True))

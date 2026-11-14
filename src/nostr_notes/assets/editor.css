@@ -1,4 +1,50 @@
 html, body { height: 100%; margin: 0; background: #fff; color: #202124; }
+html[data-notestr-theme="dark"] body,
+html[data-notestr-theme="dark"] #editor,
+html[data-notestr-theme="dark"] .toastui-editor-defaultUI,
+html[data-notestr-theme="dark"] .toastui-editor-main,
+html[data-notestr-theme="dark"] .toastui-editor-md-container,
+html[data-notestr-theme="dark"] .toastui-editor-ww-container,
+html[data-notestr-theme="dark"] .toastui-editor-contents,
+html[data-notestr-theme="dark"] .ProseMirror { background: #17141d !important; color: #f1ecf7 !important; }
+html[data-notestr-theme="dark"] .toastui-editor-contents *,
+html[data-notestr-theme="dark"] .ProseMirror * { color: #f1ecf7 !important; }
+html[data-notestr-theme="dark"] .toastui-editor-toolbar,
+html[data-notestr-theme="dark"] .toastui-editor-defaultUI-toolbar { background: #24202b !important; border-color: #494052 !important; }
+html[data-notestr-theme="dark"] .toastui-editor-toolbar-icons { filter: invert(.88); }
+html[data-notestr-theme="dark"] .toastui-editor-contents a { color: #c5a0f4 !important; }
+html[data-notestr-theme="dark"] .notes-copy-code { background: #302a39; border-color: #62566f; color: #f1ecf7; }
+html[data-notestr-theme="dark"] .toastui-editor-contents code { background: #302a39 !important; color: #f1ecf7 !important; }
+html[data-notestr-theme="dark"] .toastui-editor-contents pre,
+html[data-notestr-theme="dark"] .toastui-editor-ww-code-block,
+html[data-notestr-theme="dark"] .toastui-editor-ww-code-block pre,
+html[data-notestr-theme="dark"] .toastui-editor-md-code-block,
+html[data-notestr-theme="dark"] .toastui-editor-md-code-block-line-background { background: #24202b !important; color: #f1ecf7 !important; }
+html[data-notestr-theme="dark"] .toastui-editor-contents pre code { background: transparent !important; color: inherit !important; }
+@media (prefers-color-scheme: dark) {
+  html[data-notestr-theme="system"] body,
+  html[data-notestr-theme="system"] #editor,
+  html[data-notestr-theme="system"] .toastui-editor-defaultUI,
+  html[data-notestr-theme="system"] .toastui-editor-main,
+  html[data-notestr-theme="system"] .toastui-editor-md-container,
+  html[data-notestr-theme="system"] .toastui-editor-ww-container,
+  html[data-notestr-theme="system"] .toastui-editor-contents,
+  html[data-notestr-theme="system"] .ProseMirror { background: #17141d !important; color: #f1ecf7 !important; }
+  html[data-notestr-theme="system"] .toastui-editor-contents *,
+  html[data-notestr-theme="system"] .ProseMirror * { color: #f1ecf7 !important; }
+  html[data-notestr-theme="system"] .toastui-editor-toolbar,
+  html[data-notestr-theme="system"] .toastui-editor-defaultUI-toolbar { background: #24202b !important; border-color: #494052 !important; }
+  html[data-notestr-theme="system"] .toastui-editor-toolbar-icons { filter: invert(.88); }
+  html[data-notestr-theme="system"] .toastui-editor-contents a { color: #c5a0f4 !important; }
+  html[data-notestr-theme="system"] .notes-copy-code { background: #302a39; border-color: #62566f; color: #f1ecf7; }
+  html[data-notestr-theme="system"] .toastui-editor-contents code { background: #302a39 !important; color: #f1ecf7 !important; }
+  html[data-notestr-theme="system"] .toastui-editor-contents pre,
+  html[data-notestr-theme="system"] .toastui-editor-ww-code-block,
+  html[data-notestr-theme="system"] .toastui-editor-ww-code-block pre,
+  html[data-notestr-theme="system"] .toastui-editor-md-code-block,
+  html[data-notestr-theme="system"] .toastui-editor-md-code-block-line-background { background: #24202b !important; color: #f1ecf7 !important; }
+  html[data-notestr-theme="system"] .toastui-editor-contents pre code { background: transparent !important; color: inherit !important; }
+}
 #editor { height: 100%; }
 #editor.notes-read-only .toastui-editor-toolbar { display: none !important; }
 .toastui-editor-defaultUI { border: 0; }

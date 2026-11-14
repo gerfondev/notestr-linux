@@ -13,6 +13,18 @@ def tr(message, *values):
     return text.format(*values) if values else text
 
 ENGLISH = {
+ 'Thème': 'Theme',
+ 'Système': 'System',
+ 'Clair': 'Light',
+ 'Sombre': 'Dark',
+ 'Enregistrer le thème': 'Save theme',
+ 'Thème enregistré.': 'Theme saved.',
+ 'Thème': 'Theme',
+ 'Système': 'System',
+ 'Clair': 'Light',
+ 'Sombre': 'Dark',
+ 'Enregistrer le thème': 'Save theme',
+ 'Thème enregistré.': 'Theme saved.',
  'Licence GPLv3': 'GPLv3 License',
  'La licence GPLv3 garantit que les versions modifiées distribuées restent sous GPLv3. Aucune garantie n’est fournie.': 'GPLv3 requires distributed modified versions to remain under GPLv3. The software comes with no warranty.',
  'Fermer': 'Close',

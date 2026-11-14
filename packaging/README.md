@@ -1,13 +1,13 @@
-# Construction AppImage — Notestr 4.0
+# Construction AppImage — Notestr 4.1
 
-La version courante est **4.0**. Les nouveautés sont décrites dans
-[la note de version](../RELEASE-NOTES-4.0.md) et les dépendances Python de
-construction sont verrouillées dans [`requirements-4.0.txt`](requirements-4.0.txt).
+La version courante est **4.1**. Les nouveautés sont décrites dans
+[la note de version](../RELEASE-NOTES-4.1.md) et les dépendances Python de
+construction sont verrouillées dans [`requirements-4.1.txt`](requirements-4.1.txt).
 
 ## Prérequis
 
 Construire sur Ubuntu 24.04 / Zorin OS 18 amd64, avec Python 3.12, un venv
-installé depuis `requirements-4.0.txt`, `squashfs-tools`, `curl` et
+installé depuis `requirements-4.1.txt`, `squashfs-tools`, `curl` et
 `python3-packaging`. Le paquet cible glibc ≥ 2.39 ; les autres distributions
 doivent être testées avant d’annoncer leur compatibilité. Les pilotes, certificats
 TLS et le service de trousseau restent fournis par le système hôte.
@@ -19,8 +19,8 @@ installation WebKitGTK 2.54.0 validée, puis lancer :
 python3 packaging/build-appimage.py /chemin/vers/runtime-x86_64 \
   --webkit-install /chemin/vers/webkit-install \
   --webkit-runtime-root /chemin/vers/ubuntu-build-root
-./dist/Notestr-4.0-x86_64.AppImage --appimage-extract-and-run --check
-python3 packaging/test-appimage.py dist/Notestr-4.0-x86_64.AppImage
+./dist/Notestr-4.1-x86_64.AppImage --appimage-extract-and-run --check
+python3 packaging/test-appimage.py dist/Notestr-4.1-x86_64.AppImage
 ```
 
 Le constructeur écrit l’AppImage et son SHA-256 dans `dist/`, exclut les caches,

@@ -51,6 +51,7 @@ class MarkdownEditor(Gtk.Box):
         self.pending_image_results = {}
         self.image_error_message = None
         self.read_only = False
+        self.theme_mode = "system"
         self.toolbar = Gtk.Box(spacing=8, margin_start=12, margin_top=6, margin_bottom=6)
         self.visual_button = Gtk.ToggleButton(label=tr('Visuel'))
         self.source_button = Gtk.ToggleButton(label="Markdown")
@@ -251,6 +252,7 @@ class MarkdownEditor(Gtk.Box):
                 if self.failed:
                     return
                 self.ready = True
+                self._apply_theme()
                 self.visual_button.set_sensitive(True)
                 self.switch_mode(True)
             elif (message.get("type") == "copyCode" and self.visual_active
@@ -352,6 +354,14 @@ class MarkdownEditor(Gtk.Box):
                 return
             callback(message)
         self.web.evaluate_javascript(script, -1, None, None, None, finished, None)
+
+    def set_theme(self, mode):
+        self.theme_mode = mode if mode in ("system", "light", "dark") else "system"
+        self._apply_theme()
+
+    def _apply_theme(self):
+        if self.ready and self.web:
+            self._evaluate("document.documentElement.dataset.notestrTheme=" + json.dumps(self.theme_mode) + ";true", lambda _: None)
 
     def _source_changed(self, _):
         if not self.loading_source and not self.read_only:

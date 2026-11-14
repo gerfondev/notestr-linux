@@ -1,22 +1,23 @@
-# Notes privées Nostr — Version 4.0 Linux
+# Notes privées Nostr — Version 4.1 Linux
 
-Version du paquet Python : `4.0`.
+Version du paquet Python : `4.1`.
 
 Application Python 3 + GTK4/libadwaita pour lire et éditer des notes Markdown privées compatible avec la version Notestr Android. Langues disponibles : français, anglais.
 
-## Version 4.0
+## Version 4.1
 
-- Ajout de dossiers nommés, création, renommage et suppression sécurisée sans effacer les notes.
-- Notes épinglées visibles en tête de liste et dans leur dossier ; « Sans dossier » en fin de liste.
-- Mises à jour de sécurité Python : Pillow 13.0.0, cryptography 50.0.2 et websockets 17.4.
-- Version Linux alignée sur Android : 4.0. [Notes de version](RELEASE-NOTES-4.0.md).
-- Les notes des versions précédentes sont conservées dans [`release-notes/`](release-notes/).
+- Refonte visuelle et ajout du thème sombre aux couleurs de Notestr/Nostr, en plus du thème clair.
+- Recherche dans les notes, dossiers nommés et notes épinglées visibles en tête de liste et dans leur dossier.
+- Dépendances Python sur versions corrigées et vérifiées ; WebKitGTK 2.54.0 ou ultérieur fourni par le système hôte inclut les correctifs de sécurité WSA-2026-0006.
+- [Notes de version](RELEASE-NOTES-4.1.md).
 
-Télécharger [Notestr Linux 4.0 — AppImage x86_64](https://github.com/gerfondev/notestr-linux/releases/latest/download/Notestr-4.0-x86_64.AppImage) ou consulter [la release GitHub](https://github.com/gerfondev/notestr-linux/releases/latest). Les empreintes des fichiers sont dans `SHA256SUMS-4.0-Linux.txt`.
+Les notes des versions précédentes sont conservées dans [`release-notes/`](release-notes/).
+
+Télécharger [Notestr Linux 4.1 — AppImage x86_64](https://github.com/gerfondev/notestr-linux/releases/latest/download/Notestr-4.1-x86_64.AppImage) ou consulter [la release GitHub](https://github.com/gerfondev/notestr-linux/releases/latest). Les empreintes des fichiers sont dans `SHA256SUMS-4.1-Linux.txt`.
 
 ## Installation Debian, Ubuntu et Zorin
 
-L’application nécessite Python ≥ 3.10, GTK4 et libadwaita. Le mode visuel utilise
+L’application nécessite Python ≥ 3.11, GTK4 et libadwaita. Le mode visuel utilise
 **WebKitGTK 6.0 (GTK4)**, différent de WebKit2 4.0/4.1 (GTK3).
 La version actuelle a été vérifiée sous Zorin OS 18.1. Le paquet WebKitGTK requis
 est également proposé pour [Ubuntu 24.04](https://packages.ubuntu.com/noble/gir1.2-webkit-6.0)
@@ -39,8 +40,8 @@ une distribution fournissant cette bibliothèque.
 
 ### 2. Installer le projet Python
 
-Extraire l’archive source 4.0 dans le dossier choisi. Elle crée le dossier
-`nostr-private-notes-4.0`, qui contient `pyproject.toml`, `src` et
+Extraire l’archive source 4.1 dans le dossier choisi. Elle crée le dossier
+`nostr-private-notes-4.1`, qui contient `pyproject.toml`, `src` et
 `lancer-notes.sh`. Les exemples ci-dessous utilisent `/home/user/notestr` ;
 adapter ce chemin au dossier réellement extrait.
 
