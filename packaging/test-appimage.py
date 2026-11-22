@@ -22,7 +22,7 @@ with tempfile.TemporaryDirectory(prefix='notestr-image-test-') as work:
                     'from nostr_notes.editor import WebKit, supported_webkit; '
                     'assert supported_webkit(); '
                     'version = (WebKit.get_major_version(), WebKit.get_minor_version(), WebKit.get_micro_version()); '
-                    'assert version == (2, 54, 0), version; print("WebKitGTK embarqué :", version)'],
+                    'assert version == (2, 54, 3), version; print("WebKitGTK embarqué :", version)'],
                    env=env, check=True)
     subprocess.run(['/bin/sh', '-c', launcher, 'AppRun-test',
                     str(root / 'tests/gtk_editor_smoke.py')], env=env, check=True)

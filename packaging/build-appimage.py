@@ -24,7 +24,7 @@ parser.add_argument('runtime', type=Path)
 parser.add_argument('--native-debs', type=Path,
                     help='Directory of trusted Ubuntu updates downloaded with apt-get download')
 parser.add_argument('--webkit-install', type=Path, required=True,
-                    help='Reviewed WebKitGTK 2.54.0 DESTDIR built with build-webkit.py')
+                    help='Reviewed WebKitGTK 2.54.3 DESTDIR built with build-webkit.py')
 parser.add_argument('--webkit-runtime-root', type=Path, required=True, help='Reviewed Ubuntu build root for additional ELF dependencies')
 parser.add_argument('--dependency-python', type=Path,
                     default=ROOT / '.venv/bin/python',
@@ -69,6 +69,8 @@ with tempfile.TemporaryDirectory(prefix='notestr-appimage-') as work:
     site = 'usr/lib/python3.12/site-packages'
     for name in ('gi', 'cairo'):
         source = Path('/usr/lib/python3/dist-packages') / name
+        if not source.exists():
+            source = Path('/runtime/usr/lib/python3.12/site-packages') / name
         if source.exists():
             copy(source, f'{site}/{name}')
     # Resolve runtime requirements through the build venv, including packages

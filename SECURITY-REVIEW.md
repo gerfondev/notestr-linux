@@ -1,3 +1,3 @@
-# Revue de sécurité — Notestr Linux 4.1 — 14 novembre 2026
+# Revue de sécurité — Notestr Linux 4.1.1 — 22 novembre 2026
 
-Rapport courant : [`security/release-4.1-review.md`](security/release-4.1-review.md). Notestr Linux 4.1 publié sur GitHub le 15 novembre 2026. AppImage SHA-256 `605183316b5a08098e4c22bb13105ad8a0908d36fb97d0d09a7486c3137a955f` ; asset public téléchargé et comparé après publication. Versions Python corrigées contrôlées ; WebKitGTK embarqué 2.54.0 corrige WSA-2026-0006. Vérifications de version, imports et chiffrement réussies. Le contrôle graphique n’a pas pu être exécuté sans affichage et aucune analyse en ligne exhaustive des dépendances natives/transitives n’est revendiquée.
+Rapport courant : [`security/release-4.1.1-review.md`](security/release-4.1.1-review.md). AppImage candidat 4.1.1, SHA-256 `985811ecd9ee00da480220769da4c2e1bdc0b46ba0fc06fbf82dfb87f823ca45`. WebKitGTK/JavaScriptCore 2.54.3 corrigent WSA-2026-0007 ; le contrôle AppImage `--check` et les contrôles ELF ont réussi. L’audit exhaustif en ligne des composants natifs transitifs reste incomplet. Le paquet n’a pas encore été publié.

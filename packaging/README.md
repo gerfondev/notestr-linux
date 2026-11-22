@@ -1,8 +1,8 @@
-# Construction AppImage — Notestr 4.1
+# Construction AppImage — Notestr 4.1.1
 
-La version courante est **4.1**. Les nouveautés sont décrites dans
-[la note de version](../RELEASE-NOTES-4.1.md) et les dépendances Python de
-construction sont verrouillées dans [`requirements-4.1.txt`](requirements-4.1.txt).
+La version courante est **4.1.1**. Les nouveautés sont décrites dans
+[la note de version](../RELEASE-NOTES-4.1.1.md). Les dépendances Python de
+construction restent verrouillées dans [`requirements-4.1.txt`](requirements-4.1.txt).
 
 ## Prérequis
 
@@ -13,14 +13,14 @@ doivent être testées avant d’annoncer leur compatibilité. Les pilotes, cert
 TLS et le service de trousseau restent fournis par le système hôte.
 
 Depuis la racine du projet, fournir un runtime AppImage type 2 vérifié et une
-installation WebKitGTK 2.54.0 validée, puis lancer :
+installation WebKitGTK 2.54.3 validée, puis lancer :
 
 ```bash
 python3 packaging/build-appimage.py /chemin/vers/runtime-x86_64 \
   --webkit-install /chemin/vers/webkit-install \
   --webkit-runtime-root /chemin/vers/ubuntu-build-root
-./dist/Notestr-4.1-x86_64.AppImage --appimage-extract-and-run --check
-python3 packaging/test-appimage.py dist/Notestr-4.1-x86_64.AppImage
+./dist/Notestr-4.1.1-x86_64.AppImage --appimage-extract-and-run --check
+python3 packaging/test-appimage.py dist/Notestr-4.1.1-x86_64.AppImage
 ```
 
 Le constructeur écrit l’AppImage et son SHA-256 dans `dist/`, exclut les caches,

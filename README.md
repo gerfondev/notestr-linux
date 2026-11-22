@@ -1,19 +1,19 @@
-# Notes privées Nostr — Version 4.1 Linux
+# Notes privées Nostr — Version 4.1.1 Linux
 
-Version du paquet Python : `4.1`.
+Version du paquet Python : `4.1.1`.
 
 Application Python 3 + GTK4/libadwaita pour lire et éditer des notes Markdown privées compatible avec la version Notestr Android. Langues disponibles : français, anglais.
 
-## Version 4.1
+## Version 4.1.1
 
 - Refonte visuelle et ajout du thème sombre aux couleurs de Notestr/Nostr, en plus du thème clair.
 - Recherche dans les notes, dossiers nommés et notes épinglées visibles en tête de liste et dans leur dossier.
-- Dépendances Python sur versions corrigées et vérifiées ; WebKitGTK 2.54.0 ou ultérieur fourni par le système hôte inclut les correctifs de sécurité WSA-2026-0006.
-- [Notes de version](RELEASE-NOTES-4.1.md).
+- WebKitGTK et JavaScriptCore 2.54.3 embarqués, avec le correctif WSA-2026-0007.
+- [Notes de version](RELEASE-NOTES-4.1.1.md).
 
 Les notes des versions précédentes sont conservées dans [`release-notes/`](release-notes/).
 
-Télécharger [Notestr Linux 4.1 — AppImage x86_64](https://github.com/gerfondev/notestr-linux/releases/latest/download/Notestr-4.1-x86_64.AppImage) ou consulter [la release GitHub](https://github.com/gerfondev/notestr-linux/releases/latest). Les empreintes des fichiers sont dans `SHA256SUMS-4.1-Linux.txt`.
+Télécharger [Notestr Linux 4.1.1 — AppImage x86_64](https://github.com/gerfondev/notestr-linux/releases/latest/download/Notestr-4.1.1-x86_64.AppImage) ou consulter [la release GitHub](https://github.com/gerfondev/notestr-linux/releases/latest). Les empreintes des fichiers sont dans `SHA256SUMS-4.1.1-Linux.txt`.
 
 ## Installation Debian, Ubuntu et Zorin
 
@@ -40,8 +40,8 @@ une distribution fournissant cette bibliothèque.
 
 ### 2. Installer le projet Python
 
-Extraire l’archive source 4.1 dans le dossier choisi. Elle crée le dossier
-`nostr-private-notes-4.1`, qui contient `pyproject.toml`, `src` et
+Extraire l’archive source 4.1.1 dans le dossier choisi. Elle crée le dossier
+`nostr-private-notes-4.1.1`, qui contient `pyproject.toml`, `src` et
 `lancer-notes.sh`. Les exemples ci-dessous utilisent `/home/user/notestr` ;
 adapter ce chemin au dossier réellement extrait.
 
@@ -273,7 +273,7 @@ consultation sans publication conserve exactement le texte source existant.
 
 ### Moteur visuel et sécurité
 
-Les installations depuis le wheel ou les sources nécessitent WebKitGTK 2.54.0 ou ultérieur pour le mode Visuel. Un moteur plus ancien conserve uniquement le mode Markdown. Utiliser l’AppImage pour bénéficier du moteur corrigé embarqué.
+Les installations depuis le wheel ou les sources nécessitent WebKitGTK 2.54.3 ou ultérieur pour le mode Visuel. Un moteur plus ancien conserve uniquement le mode Markdown. Utiliser l’AppImage pour bénéficier du moteur corrigé embarqué.
 
 ## Modifications hors connexion
 

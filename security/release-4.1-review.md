@@ -17,7 +17,7 @@
 
 ## Sources, paquet et données personnelles
 
-- Scan ciblé de 165 fichiers source et de 3 853 fichiers extraits de l’AppImage : aucun chemin personnel `/home/gerald`, nsec complète, npub fourni, jeton GitHub/Bearer ni métadonnée de construction `direct_url.json` ou bytecode Python restant.
+- Scan ciblé de 165 fichiers source et de 3 853 fichiers extraits de l’AppImage : aucun chemin personnel, nsec complète, npub fourni, jeton GitHub/Bearer ni métadonnée de construction `direct_url.json` ou bytecode Python restant.
 - L’AppImage contient des données de clés de test intégrées en amont dans `libgnutls.so.30` pour les auto-tests cryptographiques GnuTLS. Elles correspondent à des vecteurs synthétiques de test de signature/DH, pas aux clés de l’application ou du propriétaire ; les sources amont les situent dans `lib/crypto-selftests-pk.c`. Des chaînes de format de clé dans libssh et cryptography sont des marqueurs de parseurs, pas des clés complètes.
 - Les auteurs/committers de l’historique local sont des identités génériques du projet. Scan ciblé non exhaustif : il ne peut pas garantir l’absence de donnée personnelle inconnue ni remplacer un audit natif complet.
 
